@@ -27,65 +27,50 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.engine.plugin.settings;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This class represents an object to control an entry inside the settings dialog.
  */
-public abstract class Plugin {
+public class SettingsObject {
 	
-	private Manifest mainfest;
-	protected boolean loaded = false;
+	private String identifier;
+	private String title;
 
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * @return the title
 	 */
-	protected Plugin(Manifest m) {
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * The title should be localized using the lang package
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the identifier
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * This constructor generates an empty settings object doing nothing
+	 * @param identifier used to identify the object. This should be somehow unique.
+	 */
+	public SettingsObject(String identifier) {
 		super();
-		this.setMainfest(m);
+		this.identifier = identifier;
 	}
-	
-	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
-	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
-	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
 
 }

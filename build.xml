@@ -17,7 +17,7 @@
 				 destdir="${dir.buildfolder}/compile/tests"
 				 optimize="on"
 				 target="${settings.target}"
-         classpath="${dir.buildfolder}/compile/,${dir.projectfolder}/lib/Utils.jar"
+         classpath="${clp.testall}"
 				 includeAntRuntime="no"/>
 </target>
 
@@ -25,13 +25,20 @@
 
 <!-- ======================== Start of hidden procedures ================== -->
 
+<property name="clp.testall" value="
+  ${dir.buildfolder}/compile/engine,
+  ${dir.buildfolder}/compile/core,
+  ${dir.projectfolder}/lib/Utils.jar,
+  ${dir.projectfolder}/lib/junit-4.12.jar,
+  ${dir.projectfolder}/lib/hamcrest-core-1.3.jar" />
+
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
   <javac srcdir="${dir.projectfolder}/src/core"
 				 destdir="${dir.buildfolder}/compile/core"
 				 optimize="on"
 				 target="${settings.target}"
-         classpath="${dir.projectfolder}/lib/Utils.jar"
+         classpath="${dir.projectfolder}/lib/Utils.jar,${dir.buildfolder}/compile/engine"
 				 includeAntRuntime="no"/>
 </target>
 

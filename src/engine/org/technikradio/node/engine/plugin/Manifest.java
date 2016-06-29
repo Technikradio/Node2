@@ -207,6 +207,17 @@ public final class Manifest {
 
 	public Manifest() {
 		super();
+		version = -1;
+		compatibleVersion = -1;
+		name = "";
+		maintainer = "";
+		updateSite = "";
+		license = "none";
+		website = "";
+		description = "";
+		longInfoText = "";
+		dependancys = new ArrayList<String>();
+		identifier = "";
 	}
 
 }

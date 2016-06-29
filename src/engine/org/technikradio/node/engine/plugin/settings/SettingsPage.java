@@ -27,65 +27,43 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.engine.plugin.settings;
+
+import javax.swing.JPanel;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This class represents a settings page.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
+public class SettingsPage extends SettingsObject implements Displayable {
 
-	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
-	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
+	private JPanel panel;
 	
 	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
+	 * @param identifier used to identify this page
 	 */
-	protected void setLoadedFlag(){
-		loaded = true;
+	public SettingsPage(String identifier) {
+		super(identifier);
+		panel = null;
 	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
+
+	/* (non-Javadoc)
+	 * @see org.technikradio.node.engine.plugin.settings.Displayable#getPanel()
 	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
+	@Override
+	public JPanel getPanel() {
+		return panel;
 	}
 
 	/**
-	 * @return the mainfest
+	 * @param panel the panel to set
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
+	public void setPanel(JPanel panel) {
+		this.panel = panel;
 	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
-	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
 
 }

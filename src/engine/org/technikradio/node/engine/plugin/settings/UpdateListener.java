@@ -27,65 +27,22 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.engine.plugin.settings;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This interface defines a listener dedicated to changes in the UI behavior.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
-
+public interface UpdateListener {
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * This method should get called when an UI update is necessary.
+	 * If tree gets a true value it will update the settings tree
+	 * otherwise the current active pane.
+	 * @param tree to indicate the desired update
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
-	
-	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
-	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
-	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
-
+	public abstract void updateUI(boolean tree);
 }

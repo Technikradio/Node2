@@ -27,65 +27,62 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/**
+ * 
+ */
 package org.technikradio.node.engine.plugin;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * this method gets raised when something try's to access data that has not been loaded yet.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
+public class DataNotYetLoadedException extends RuntimeException {
+
+	private static final long serialVersionUID = 5875240080547358562L;
 
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * This initializes an empty exception.
 	 */
-	protected Plugin(Manifest m) {
+	public DataNotYetLoadedException() {
 		super();
-		this.setMainfest(m);
-	}
-	
-	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
-	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
 	}
 
 	/**
-	 * @return the mainfest
+	 * This initializes an exception containing a message
+	 * @param message The message to contain
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
+	public DataNotYetLoadedException(String message) {
+		super(message);
 	}
 
 	/**
-	 * @param mainfest the mainfest of the plugin to set
+	 * This initializes an exception containing the cause of the exception
+	 * @param cause The cause to provide
 	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
+	public DataNotYetLoadedException(Throwable cause) {
+		super(cause);
 	}
-	
+
 	/**
-	 * This method gets called when the plugin should initialize itself
+	 * This initializes an exception containing the cause of the exception and a message
+	 * @param message The message to use
+	 * @param cause The cause to provide
 	 */
-	public abstract void load();
-	
+	public DataNotYetLoadedException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
+	 * This initializes an exception providing all kind of rich data.
+	 * @param message The message to throw
+	 * @param cause The cause to declare
+	 * @param enableSuppression Should the exception be ignore able?
+	 * @param writableStackTrace The stack trace to write down
 	 */
-	public abstract void unload();
+	public DataNotYetLoadedException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 
 }

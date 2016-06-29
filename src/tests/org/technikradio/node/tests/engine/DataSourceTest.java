@@ -27,65 +27,87 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.tests.engine;
+
+import static org.junit.Assert.*;
+
+import java.net.URI;
+import java.util.Iterator;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.DataSource;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * Unit test to test the DataSource abstract class
  */
-public abstract class Plugin {
+public class DataSourceTest {
 	
-	private Manifest mainfest;
-	protected boolean loaded = false;
+	private TestClass cl;
+	
+	private class TestClass extends DataSource{
+
+		public TestClass(String identifier) {
+			super(identifier);
+		}
+
+		@Override
+		public Iterator<DataObject> getChildObjects() {
+			return null;
+		}
+
+		@Override
+		public boolean save(URI uri) {
+			return true;
+		}
+
+		@Override
+		public boolean load(URI uri) {
+			return false;
+		}
+
+		@Override
+		public URI showResourceOpenDialog() {
+			return null;
+		}
+
+		@Override
+		public boolean saveDataObject(DataObject o) {
+			return false;
+		}
+		
+	}
 
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * @throws java.lang.Exception
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
-	
-	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
-	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
+	@Before
+	public void setUp() throws Exception {
+		cl = new TestClass("blah");
 	}
 
 	/**
-	 * @return the mainfest
+	 * @throws java.lang.Exception
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
+	@After
+	public void tearDown() throws Exception {
 	}
 
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
+	@Test
+	public final void test() {
+		assertEquals("blah", cl.getIdentifier());
+		assertEquals(null, cl.getChildObjects());
+		assertEquals(true, cl.save(null));
+		assertEquals(false, cl.load(null));
+		assertEquals(null, cl.showResourceOpenDialog());
+		assertEquals(false, cl.saveDataObject(null));
 	}
-	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
 
 }

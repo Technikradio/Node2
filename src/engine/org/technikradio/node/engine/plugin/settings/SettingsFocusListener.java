@@ -27,65 +27,28 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.engine.plugin.settings;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This interface is used to notify the Settings object about the windowing events.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
-
-	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
-	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
+public interface SettingsFocusListener {
 	
 	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
+	 * This method gets called when the user clicked on the abort button.
+	 * Use this to discard all changes.
 	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
+	public abstract void onAbortClicked();
 	
 	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
+	 * This method gets called when the user clicked on the OK button.
+	 * Use this method to apply all changes.
 	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
+	public abstract void onOKClicked();
 	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
-
 }

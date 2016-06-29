@@ -27,65 +27,22 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/**
+ * 
+ */
 package org.technikradio.node.engine.plugin;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This interface tells node that the content of an DataObject can be summed up.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
-
+public interface Calculatable {
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * This calculates the sum of the DataObject.
+	 * Not that 1.02$ will result in 102 due to
+	 * the fact that there is now type like 'long float'.
+	 * @return the sum
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
-	
-	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
-	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
-	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
-
+	public abstract long getSum();
 }

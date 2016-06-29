@@ -27,65 +27,36 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.engine.plugin.settings;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This interface extends the SettingsFocusListener interface to some more advanced notifications.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
+public interface AdvancedSettingsFocusListener extends SettingsFocusListener {
 
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * This method gets called when the settings dialog becomes visible.
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
+	public abstract void onLoad();
 	
 	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
+	 * This method gets called after the settings dialog closed.
 	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
+	public abstract void onClosed();
 	
 	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
+	 * This method gets called when the current SettingsObject becomes visible inside the panel.
 	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
+	public abstract void onFocus();
 	
 	/**
-	 * This method gets called when the plugin should initialize itself
+	 * This method gets called when the current SettingsObject looses focus inside the panel.
+	 * A.k.a. it becomes invisible to the user because he clicked on an other SettingsObject.
 	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
-
+	public abstract void onFocusLost();
 }

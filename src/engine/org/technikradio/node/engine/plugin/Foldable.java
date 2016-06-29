@@ -27,65 +27,31 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/**
+ * 
+ */
 package org.technikradio.node.engine.plugin;
+
+import java.util.Iterator;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This interface tells node that the content of
+ * the object can be expanded inside the tree.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
-
-	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
-	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
+public interface Foldable {
 	
 	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
+	 * This method will return an iterator of all containing entries.
+	 * @return the iterator
 	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
+	public abstract Iterator<String> getMembers();
 	
 	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
+	 * This method tells the Object to select a specific member.
+	 * @param member The member to select
+	 * @return true if it successfully selected the member or false otherwise
 	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
-	}
-	
-	/**
-	 * This method gets called when the plugin should initialize itself
-	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
-
+	public abstract boolean selectMember(String member);
 }

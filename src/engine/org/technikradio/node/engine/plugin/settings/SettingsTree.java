@@ -27,65 +27,71 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
+
+/**
+ * 
+ */
+package org.technikradio.node.engine.plugin.settings;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author doralitze
- * This class represents an abstract plugin
+ * This class represents a kind of folder displayed inside the settings the of the settings dialog.
  */
-public abstract class Plugin {
-	
-	private Manifest mainfest;
-	protected boolean loaded = false;
+public class SettingsTree extends SettingsObject implements Browsable, Updater{
 
+	private ArrayList<SettingsObject> childreen;
+	private UpdateListener ul;
+	
 	/**
-	 * This contructor initalizes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * This constructor initializes an empty tree.
+	 * @param identifier to use
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
+	public SettingsTree(String identifier) {
+		this(identifier, null);
 	}
 	
 	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
+	 * This constructor initializes a new tree containing the SettingObject's provided by objects
+	 * @param identifier to use
+	 * @param objects to contain
 	 */
-	protected void setLoadedFlag(){
-		loaded = true;
-	}
-	
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded(){
-		return loaded;
+	public SettingsTree(String identifier, SettingsObject[] objects) {
+		super(identifier);
+		childreen = new ArrayList<SettingsObject>();
+		for(SettingsObject o : objects){
+			childreen.add(o);
+		}
 	}
 
+	@Override
+	public Iterator<SettingsObject> getAllObjects() {
+		return childreen.listIterator();
+	}
+	
 	/**
-	 * @return the mainfest
+	 * This adds an object to the current list
+	 * @param o the object to add
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
+	public void addObject(SettingsObject o){
+		childreen.add(o);
+		if(ul != null)
+			ul.updateUI(true);
 	}
 
-	/**
-	 * @param mainfest the mainfest of the plugin to set
-	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
+	@Override
+	public void registerUpdater(UpdateListener listener) {
+		ul = listener;
 	}
 	
 	/**
-	 * This method gets called when the plugin should initialize itself
+	 * This returns all child objects as an array
+	 * @return the created array
 	 */
-	public abstract void load();
-	
-	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
-	 */
-	public abstract void unload();
+	public SettingsObject[] getAllObjectsAsArray(){
+		return (SettingsObject[]) childreen.toArray();
+	}
 
 }
