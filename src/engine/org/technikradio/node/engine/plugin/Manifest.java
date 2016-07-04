@@ -48,6 +48,7 @@ public final class Manifest {
 	private String longInfoText;
 	private ArrayList<String> dependancys;
 	private String identifier;
+	private String mainClass;
 	
 	/**
 	 * @param version the version to set
@@ -127,6 +128,20 @@ public final class Manifest {
 	}
 	
 	
+
+	/**
+	 * @return the mainClass
+	 */
+	protected String getMainClass() {
+		return mainClass;
+	}
+
+	/**
+	 * @param mainClass the mainClass to set
+	 */
+	protected void setMainClass(String mainClass) {
+		this.mainClass = mainClass;
+	}
 
 	/**
 	 * @return the version

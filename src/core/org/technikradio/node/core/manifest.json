@@ -1,0 +1,14 @@
+{
+	"version" : "2.0.0d",
+	"compatibleVersion" : "2.0.0+",
+	"name" : "Core Plugin",
+	"maintainer" : "TechnikRadio",
+	"updateSide" : "https://technikradio.org/tools/nodequerry?plugin=core",
+	"license" : "3-Clause BSD license",
+	"website" : "http://technikradio.org",
+	"description" : "This plugin adds some fundamental user interaction.",
+	"longInfoText" : "Most other plugins will rely on this plugin and user interaction will not be possible without this package.",
+	"dependancys" : {},
+	"identifier" : "org.technikradio.node.plugins.core",
+	"mainClass" : "org.technikradio.node.core.CorePlugin"
+}
