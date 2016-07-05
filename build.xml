@@ -34,29 +34,67 @@
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
+  <mkdir dir="${dir.buildfolder}/tmp/plugins/core" />
   <javac srcdir="${dir.projectfolder}/src/core"
 				 destdir="${dir.buildfolder}/compile/core"
 				 optimize="on"
 				 target="${settings.target}"
-         classpath="${dir.projectfolder}/lib/Utils.jar,${dir.buildfolder}/compile/engine"
+         classpath="${dir.projectfolder}/lib/Utils.jar,${dir.buildfolder}/tmp/bin/engine.jar"
+         excludes="manifest.json"
 				 includeAntRuntime="no"/>
+  <jar destfile="${dir.buildfolder}/tmp/plugins/core/core.jar">
+    <fileset dir="${dir.buildfolder}/compile/core" />
+  </jar>
+  <copy file="${dir.projectfolder}/src/core/org/technikradio/node/core/manifest.json"
+        todir="${dir.buildfolder}/tmp/plugins/core/" />
 </target>
 
-<target name="engine" depends="create-build-folders">
+<target name="compile-json-lib" depends="create-build-folders">
+  <mkdir dir="${dir.buildfolder}/compile/json-java" />
+  <javac srcdir="${dir.projectfolder}/lib/JSON-java-20160212"
+				 destdir="${dir.buildfolder}/compile/json-java"
+				 optimize="on"
+				 target="${settings.target}"
+         classpath="${dir.projectfolder}/lib/Utils.jar"
+         excludes="README"
+				 includeAntRuntime="no"/>
+  <jar destfile="${dir.buildfolder}/tmp/lib/json.jar">
+    <fileset dir="${dir.buildfolder}/compile/json-java" />
+  </jar>
+</target>
+
+<target name="engine" depends="create-build-folders,compile-json-lib">
   <mkdir dir="${dir.buildfolder}/compile/engine" />
+  <copy file="${dir.projectfolder}/lib/Utils.jar" todir="${dir.buildfolder}/tmp/lib/" />
   <javac srcdir="${dir.projectfolder}/src/engine"
 				 destdir="${dir.buildfolder}/compile/engine"
 				 optimize="on"
 				 target="${settings.target}"
-         classpath="${dir.buildfolder}/compile/engine,${dir.projectfolder}/lib/Utils.jar"
+         classpath="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
+         classpathref="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
 				 includeAntRuntime="no"/>
+  <jar destfile="${dir.buildfolder}/tmp/bin/engine.jar">
+    <fileset dir="${dir.buildfolder}/compile/engine" />
+    <manifest>
+        <attribute name="Main-Class" value="org.technikradio.node.engine.action.Main"/>
+        <attribute name="Class-Path" value="../lib/json.jar"/>
+    </manifest>
+  </jar>
 </target>
 
 <target name="create-build-folders">
   <mkdir dir="${dir.buildfolder}" />
 	<mkdir dir="${dir.buildfolder}/compile" />
+  <mkdir dir="${dir.buildfolder}/tmp" />
   <mkdir dir="${dir.buildfolder}/export" />
   <mkdir dir="${dir.buildfolder}/test" />
+  <!-- create app structure -->
+  <mkdir dir="${dir.buildfolder}/tmp/lib" />
+  <mkdir dir="${dir.buildfolder}/tmp/lang" />
+  <mkdir dir="${dir.buildfolder}/tmp/bin" />
+  <mkdir dir="${dir.buildfolder}/tmp/cfg" />
+  <mkdir dir="${dir.buildfolder}/tmp/rsc" />
+  <mkdir dir="${dir.buildfolder}/tmp/plugins" />
 </target>
 
 </project>
