@@ -17,31 +17,59 @@
 				 destdir="${dir.buildfolder}/compile/tests"
 				 optimize="on"
 				 target="${settings.target}"
-         classpath="${clp.testall}"
-				 includeAntRuntime="no"/>
+				 includeAntRuntime="no">
+    <classpath refid="test.classpath"/>
+  </javac>
+  <jar destfile="${dir.buildfolder}/test/tests.jar">
+    <fileset dir="${dir.buildfolder}/compile/tests" />
+  </jar>
+  <junit>
+      <classpath refid="test.classpath" />
+      <formatter type="brief" usefile="false" />
+      <test name="*" />
+    </junit>
 </target>
 
 <target name="install" />
 
 <!-- ======================== Start of hidden procedures ================== -->
 
-<property name="clp.testall" value="
-  ${dir.buildfolder}/compile/engine,
-  ${dir.buildfolder}/compile/core,
-  ${dir.projectfolder}/lib/Utils.jar,
-  ${dir.projectfolder}/lib/junit-4.12.jar,
-  ${dir.projectfolder}/lib/hamcrest-core-1.3.jar" />
+  <path id="build.classpath">
+    <fileset dir="${dir.buildfolder}/tmp/lib">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.buildfolder}/tmp/bin">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="test.classpath">
+    <fileset dir="${dir.buildfolder}/test">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.buildfolder}/tmp/lib">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.buildfolder}/tmp/bin">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.projectfolder}/lib">
+      <include name="**/hamcrest-core-1.3.jar" />
+      <include name="**/junit-4.12.jar" />
+    </fileset>
+  </path>
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
   <mkdir dir="${dir.buildfolder}/tmp/plugins/core" />
-  <javac srcdir="${dir.projectfolder}/src/core"
-				 destdir="${dir.buildfolder}/compile/core"
+  <javac destdir="${dir.buildfolder}/compile/core"
 				 optimize="on"
 				 target="${settings.target}"
-         classpath="${dir.projectfolder}/lib/Utils.jar,${dir.buildfolder}/tmp/bin/engine.jar"
          excludes="manifest.json"
-				 includeAntRuntime="no"/>
+				 includeAntRuntime="no">
+    <src path="${dir.projectfolder}/src/core" />
+    <classpath refid="build.classpath"/>
+  </javac>
   <jar destfile="${dir.buildfolder}/tmp/plugins/core/core.jar">
     <fileset dir="${dir.buildfolder}/compile/core" />
   </jar>
@@ -66,13 +94,15 @@
 <target name="engine" depends="create-build-folders,compile-json-lib">
   <mkdir dir="${dir.buildfolder}/compile/engine" />
   <copy file="${dir.projectfolder}/lib/Utils.jar" todir="${dir.buildfolder}/tmp/lib/" />
-  <javac srcdir="${dir.projectfolder}/src/engine"
-				 destdir="${dir.buildfolder}/compile/engine"
+  <!-- classpathref="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar" -->
+  <javac destdir="${dir.buildfolder}/compile/engine"
 				 optimize="on"
 				 target="${settings.target}"
          classpath="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
-         classpathref="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
-				 includeAntRuntime="no"/>
+				 includeAntRuntime="no">
+    <src path="${dir.projectfolder}/src/engine" />
+    <classpath refid="build.classpath"/>
+  </javac>
   <jar destfile="${dir.buildfolder}/tmp/bin/engine.jar">
     <fileset dir="${dir.buildfolder}/compile/engine" />
     <manifest>
