@@ -26,13 +26,20 @@
   <junit>
       <classpath refid="test.classpath" />
       <formatter type="brief" usefile="false" />
-      <test name="*" />
+      <batchtest todir="${test.report.dir}">
+        <fileset dir="${dir.projectfolder}/src/tests">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
     </junit>
 </target>
 
 <target name="install" />
 
 <!-- ======================== Start of hidden procedures ================== -->
+
+  <property name="test.pack" value="org.technikradio.node.tests" />
+  <property name="test.report.dir" location="${dir.buildfolder}/testresults" />
 
   <path id="build.classpath">
     <fileset dir="${dir.buildfolder}/tmp/lib">
