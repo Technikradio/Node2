@@ -44,7 +44,7 @@ public class Main {
 
 	/**
 	 * This method is the main entry point for node.
-	 * @param args
+	 * @param args The args provided by the VM.
 	 */
 	public static void main(String[] args) {
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");

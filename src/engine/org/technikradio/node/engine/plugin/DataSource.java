@@ -49,7 +49,7 @@ public abstract class DataSource {
 	/**
 	 * This is the most basic constructor. It only sets the identifier.
 	 * The identifier should be set at all time.
-	 * @param identifier
+	 * @param identifier The identifier used to identify the data source
 	 */
 	public DataSource(String identifier){
 		super();

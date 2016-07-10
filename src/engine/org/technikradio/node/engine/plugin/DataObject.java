@@ -50,7 +50,7 @@ public abstract class DataObject {
 	/**
 	 * This is the most basic constructor. It only sets the identifier.
 	 * The identifier should be set at all time.
-	 * @param identifier
+	 * @param identifier The identifier used to identify the data object
 	 */
 	public DataObject(String identifier){
 		this(identifier, "");
@@ -58,8 +58,8 @@ public abstract class DataObject {
 	
 	/**
 	 * This constructor sets beside the identifier also the title of the data object.
-	 * @param identifier
-	 * @param title
+	 * @param identifier The identifier used to identify the data object
+	 * @param title The title displayed inside the tree of data objects
 	 */
 	public DataObject(String identifier, String title){
 		super();
@@ -90,7 +90,7 @@ public abstract class DataObject {
 	}
 
 	/**
-	 * @return the icon
+	 * @return the icon displayed inside the data object tree
 	 */
 	public BufferedImage getIcon() {
 		return icon;

@@ -58,6 +58,7 @@ public class EventResponder<E> {
 	/**
 	 * This method is used to submit an response to an event.
 	 * @param response The response to submit
+	 * @return true if it was able to register the response or otherwise false.
 	 */
 	public boolean respond(EventResponse<E> response){
 		return respond(response, false);

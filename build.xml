@@ -5,13 +5,13 @@
 <property name="dir.projectfolder" value="." />
 <property name="settings.target" value="1.8" />
 
-<target name="all" depends="core" />
+<target name="all" depends="core" description="This compiles a working program."/>
 
-<target name="clean">
+<target name="clean" description="This target cleans the build environment.">
   <delete dir="${dir.buildfolder}" />
 </target>
 
-<target name="test" depends="all">
+<target name="test" depends="all" description="This target runns the unit tests.">
   <mkdir dir="${dir.buildfolder}/compile/tests" />
   <javac srcdir="${dir.projectfolder}/src/tests"
 				 destdir="${dir.buildfolder}/compile/tests"
@@ -32,6 +32,20 @@
         </fileset>
       </batchtest>
     </junit>
+</target>
+
+<target name="doc" depends="create-build-folders" description="This target creates the javadoc.">
+  <mkdir dir="${dir.buildfolder}/doc" />
+  <mkdir dir="${dir.buildfolder}/doc/engine" />
+  <mkdir dir="${dir.buildfolder}/doc/core" />
+  <javadoc sourcepath="${dir.projectfolder}/src/engine"
+           destdir="${dir.buildfolder}/doc/engine"
+           includenosourcepackages="true"
+           classpathref="test.classpath"/>
+  <javadoc sourcepath="${dir.projectfolder}/src/core"
+           destdir="${dir.buildfolder}/doc/core"
+           includenosourcepackages="true"
+           classpathref="test.classpath" />
 </target>
 
 <target name="install" />
@@ -65,6 +79,8 @@
       <include name="**/junit-4.12.jar" />
     </fileset>
   </path>
+
+<target name="cycle" depends="all,test,doc" />
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
