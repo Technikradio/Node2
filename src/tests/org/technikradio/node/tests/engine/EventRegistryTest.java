@@ -44,6 +44,8 @@ import org.technikradio.node.engine.event.EventHandler;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.event.EventResponder;
 import org.technikradio.node.engine.event.EventType;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * @author doralitze
@@ -52,7 +54,7 @@ import org.technikradio.node.engine.event.EventType;
 public class EventRegistryTest {
 	
 	@Rule
-    public Timeout globalTimeout = Timeout.seconds(1200);
+    public Timeout globalTimeout = Timeout.seconds(120);
 	
 	private int handledA = 0;
 
@@ -71,6 +73,7 @@ public class EventRegistryTest {
 			@Override
 			public void handleEvent(Event e) {
 				handledA++;
+				Console.log(LogType.StdOut, this, "Executed event handler...");
 				if(handledA > 2){
 					fail("Handled event too often!");
 				}
@@ -86,7 +89,6 @@ public class EventRegistryTest {
 	public final void testRaiseEvent() {
 		assertEquals(er, EventRegistry.raiseEvent(e, true));
 		assertEquals(er, EventRegistry.raiseEvent(e, false));
-		while(handledA < 2);
 	}
 
 	/**
