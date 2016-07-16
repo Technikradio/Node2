@@ -3,7 +3,7 @@
 
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
-<property name="settings.target" value="1.7" />
+<!-- <property name="settings.target" value="1.7" /> -->
 
 <target name="all" depends="core" description="This compiles a working program."/>
 
@@ -16,8 +16,8 @@
   <javac srcdir="${dir.projectfolder}/src/tests"
 				 destdir="${dir.buildfolder}/compile/tests"
 				 optimize="on"
-				 target="${settings.target}"
 				 includeAntRuntime="no">
+         <!-- target="${settings.target}" -->
     <classpath refid="test.classpath"/>
   </javac>
   <jar destfile="${dir.buildfolder}/test/tests.jar">
@@ -87,9 +87,10 @@
   <mkdir dir="${dir.buildfolder}/tmp/plugins/core" />
   <javac destdir="${dir.buildfolder}/compile/core"
 				 optimize="on"
-				 target="${settings.target}"
          excludes="manifest.json"
 				 includeAntRuntime="no">
+         <!--
+				 target="${settings.target}" -->
     <src path="${dir.projectfolder}/src/core" />
     <classpath refid="build.classpath"/>
   </javac>
@@ -105,10 +106,11 @@
   <javac srcdir="${dir.projectfolder}/lib/JSON-java-20160212"
 				 destdir="${dir.buildfolder}/compile/json-java"
 				 optimize="on"
-				 target="${settings.target}"
          classpath="${dir.projectfolder}/lib/Utils.jar"
          excludes="README"
 				 includeAntRuntime="no"/>
+         <!--
+				 target="${settings.target}" -->
   <jar destfile="${dir.buildfolder}/tmp/lib/json.jar">
     <fileset dir="${dir.buildfolder}/compile/json-java" />
   </jar>
@@ -120,9 +122,10 @@
   <!-- classpathref="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar" -->
   <javac destdir="${dir.buildfolder}/compile/engine"
 				 optimize="on"
-				 target="${settings.target}"
          classpath="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
 				 includeAntRuntime="no">
+         <!--
+				 target="${settings.target}" -->
     <src path="${dir.projectfolder}/src/engine" />
     <classpath refid="build.classpath"/>
   </javac>
