@@ -3,6 +3,4 @@ install: ant doc
 jdk:
   - oraclejdk8
   - oraclejdk7
-  - oraclejdk6
   - openjdk7
-  - openjdk6
