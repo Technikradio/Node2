@@ -52,7 +52,7 @@ import org.technikradio.node.engine.event.EventType;
 public class EventRegistryTest {
 	
 	@Rule
-    public Timeout globalTimeout = Timeout.seconds(120);
+    public Timeout globalTimeout = Timeout.seconds(1200);
 	
 	private int handledA = 0;
 
