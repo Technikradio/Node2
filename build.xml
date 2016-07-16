@@ -3,7 +3,7 @@
 
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
-<property name="settings.target" value="1.8" />
+<property name="settings.target" value="1.7" />
 
 <target name="all" depends="core" description="This compiles a working program."/>
 
