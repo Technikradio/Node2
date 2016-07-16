@@ -14,7 +14,3 @@ matrix:
         - brew update
         - brew install ant
       osx_image: xcode8
-      env: JAVA_HOME=/usr/libexec/java_home
-os:
-  - linux
-  - osx
