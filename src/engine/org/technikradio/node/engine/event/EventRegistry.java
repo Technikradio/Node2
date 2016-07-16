@@ -233,4 +233,16 @@ public class EventRegistry {
 		}
 		return first;
 	}
+	
+	/**
+	 * This method is used to get the number of event processors currently active.
+	 * @return The number of currently running processors.
+	 */
+	public static int getNumberOfRunningProcessors(){
+		int running = 0;
+		for(int i = 0; i < processors.length; i++)
+			if(processors[i].isRunning())
+				running++;
+		return running;
+	}
 }
