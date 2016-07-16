@@ -38,17 +38,35 @@ import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * @author doralitze
- * This class starts all the loading of plugins.
+ * This class handles the application interaction.
  */
-public class Main {
+public class Application {
 
 	/**
-	 * This method is the main entry point for node.
-	 * @param args The args provided by the VM.
+	 * This method gets called to initialize stuff like the look and feel
 	 */
-	public static void main(String[] args) {
-		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
-		Application.setupUIBehaviour();
+	protected static void setupUIBehaviour(){
+		
 	}
-
+	
+	/**
+	 * Use this method to invoke the crash routines. This method
+	 * uses 1 as the error code.
+	 * @param reason The reason why the application crashed
+	 */
+	public static void crash(Object reason){
+		crash(reason, 1);
+	}
+	
+	/**
+	 * Use this method to invoke the crash routines.
+	 * @param reason The reason why the application crashed
+	 * @param code The error code to use
+	 */
+	public static void crash(Object reason, int code){
+		Console.log(LogType.Error, "Application", "The application is about to crash");
+		//TODO implement the rest of the method
+		System.err.println(reason.toString());
+		System.exit(code);
+	}
 }

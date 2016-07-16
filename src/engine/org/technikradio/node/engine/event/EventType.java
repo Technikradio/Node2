@@ -41,6 +41,9 @@ package org.technikradio.node.engine.event;
  * an another one an load event.
  */
 public class EventType {
+	
+	public static final int MINIMUM_PRIORITY = 1;
+	public static final int MAXIMUM_PRIORITY = 100;
 
 	private final String identifier;
 	private final int priority;

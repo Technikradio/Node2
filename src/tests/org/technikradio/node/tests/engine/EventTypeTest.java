@@ -78,5 +78,16 @@ public class EventTypeTest {
 	public final void testShouldAutomaticallyThrowCrash() {
 		assertFalse(et.shouldAutomaticallyThrowCrash());
 	}
+	
+	/**
+	 * Test method for {@link org.technikradio.node.engine.event.EventType#MAXIMUM_PRIORITY} and
+	 * {@link org.technikradio.node.engine.event.EventType#MINIMUM_PRIORITY}.
+	 */
+	@Test
+	public final void testMaxPriorityGreaterThanMinPriority(){
+		assertTrue(EventType.MAXIMUM_PRIORITY > EventType.MINIMUM_PRIORITY);
+		assertTrue(EventType.MINIMUM_PRIORITY > 0);
+		assertTrue(EventType.MAXIMUM_PRIORITY > 0);
+	}
 
 }

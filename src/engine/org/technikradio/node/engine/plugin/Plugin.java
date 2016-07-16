@@ -39,7 +39,7 @@ public abstract class Plugin {
 	protected boolean loaded = false;
 
 	/**
-	 * This contructor initalizes a new plugin instance.
+	 * This constructor initializes a new plugin instance.
 	 * @param m the manifest of the plugin to use
 	 */
 	protected Plugin(Manifest m) {
