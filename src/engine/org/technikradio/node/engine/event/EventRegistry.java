@@ -127,8 +127,8 @@ public class EventRegistry {
 	private static class SynchronizedEventProcessor extends EventProcessor{
 		
 		/**
-		 * 
-		 * @return
+		 * This method overrides the super on in order to use the synchronized list.
+		 * @return The next item from the stack.
 		 */
 		@Override
 		protected synchronized Event getNextEvent(){
