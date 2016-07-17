@@ -35,6 +35,7 @@ package org.technikradio.node.engine.plugin.settings;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -75,18 +76,21 @@ public class Settings {
 							value.replace("${58}", ":").replace("${13}", "\n"));
 				}
 			} else {
-				Console.log(LogType.Warning, "Settings", "Cannot load settings file. APPDATA folder not aviable. Falling back to empty dictionary");
+				Console.log(LogType.Warning, "Settings",
+						"Cannot load settings file. APPDATA folder not aviable. Falling back to empty dictionary");
 			}
 		} catch (IOException e) {
 			Console.log(LogType.Error, "Settings", "Cannot load settings file. Falling back to empty dictionary:");
-			e.printStackTrace();
+			if (!(e instanceof FileNotFoundException))
+				e.printStackTrace();
 		} finally {
 			if (br != null)
 				try {
 					br.close();
 				} catch (IOException e) {
 					Console.log(LogType.Error, "Settings", "An error occured while closing the buffered reader:");
-					e.printStackTrace();
+					if (!(e instanceof FileNotFoundException))
+						e.printStackTrace();
 				}
 		}
 	}
