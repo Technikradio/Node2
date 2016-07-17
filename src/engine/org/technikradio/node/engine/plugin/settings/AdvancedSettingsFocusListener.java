@@ -34,8 +34,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.settings;
 
 /**
+ * This interface extends the SettingsFocusListener interface to some more
+ * advanced notifications.
+ * 
  * @author doralitze
- * This interface extends the SettingsFocusListener interface to some more advanced notifications.
  */
 public interface AdvancedSettingsFocusListener extends SettingsFocusListener {
 
@@ -43,20 +45,22 @@ public interface AdvancedSettingsFocusListener extends SettingsFocusListener {
 	 * This method gets called when the settings dialog becomes visible.
 	 */
 	public abstract void onLoad();
-	
+
 	/**
 	 * This method gets called after the settings dialog closed.
 	 */
 	public abstract void onClosed();
-	
+
 	/**
-	 * This method gets called when the current SettingsObject becomes visible inside the panel.
+	 * This method gets called when the current SettingsObject becomes visible
+	 * inside the panel.
 	 */
 	public abstract void onFocus();
-	
+
 	/**
-	 * This method gets called when the current SettingsObject looses focus inside the panel.
-	 * A.k.a. it becomes invisible to the user because he clicked on an other SettingsObject.
+	 * This method gets called when the current SettingsObject looses focus
+	 * inside the panel. A.k.a. it becomes invisible to the user because he
+	 * clicked on an other SettingsObject.
 	 */
 	public abstract void onFocusLost();
 }

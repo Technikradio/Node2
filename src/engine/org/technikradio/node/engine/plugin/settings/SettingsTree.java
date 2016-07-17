@@ -37,31 +37,40 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * This class represents a kind of folder displayed inside the settings the of
+ * the settings dialog.
+ * 
  * @author doralitze
- * This class represents a kind of folder displayed inside the settings the of the settings dialog.
+ * 
  */
-public class SettingsTree extends SettingsObject implements Browsable, Updater{
+public class SettingsTree extends SettingsObject implements Browsable, Updater {
 
 	private ArrayList<SettingsObject> childreen;
 	private UpdateListener ul;
-	
+
 	/**
 	 * This constructor initializes an empty tree.
-	 * @param identifier to use
+	 * 
+	 * @param identifier
+	 *            to use
 	 */
 	public SettingsTree(String identifier) {
 		this(identifier, null);
 	}
-	
+
 	/**
-	 * This constructor initializes a new tree containing the SettingObject's provided by objects
-	 * @param identifier to use
-	 * @param objects to contain
+	 * This constructor initializes a new tree containing the SettingObject's
+	 * provided by objects
+	 * 
+	 * @param identifier
+	 *            to use
+	 * @param objects
+	 *            to contain
 	 */
 	public SettingsTree(String identifier, SettingsObject[] objects) {
 		super(identifier);
 		childreen = new ArrayList<SettingsObject>();
-		for(SettingsObject o : objects){
+		for (SettingsObject o : objects) {
 			childreen.add(o);
 		}
 	}
@@ -70,14 +79,16 @@ public class SettingsTree extends SettingsObject implements Browsable, Updater{
 	public Iterator<SettingsObject> getAllObjects() {
 		return childreen.listIterator();
 	}
-	
+
 	/**
 	 * This adds an object to the current list
-	 * @param o the object to add
+	 * 
+	 * @param o
+	 *            the object to add
 	 */
-	public void addObject(SettingsObject o){
+	public void addObject(SettingsObject o) {
 		childreen.add(o);
-		if(ul != null)
+		if (ul != null)
 			ul.updateUI(true);
 	}
 
@@ -85,12 +96,13 @@ public class SettingsTree extends SettingsObject implements Browsable, Updater{
 	public void registerUpdater(UpdateListener listener) {
 		ul = listener;
 	}
-	
+
 	/**
 	 * This returns all child objects as an array
+	 * 
 	 * @return the created array
 	 */
-	public SettingsObject[] getAllObjectsAsArray(){
+	public SettingsObject[] getAllObjectsAsArray() {
 		return (SettingsObject[]) childreen.toArray();
 	}
 

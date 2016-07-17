@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
- * @author doralitze
  * This package contains the event sub system.
+ * @author doralitze
  */
 package org.technikradio.node.engine.event;

@@ -36,13 +36,16 @@ package org.technikradio.node.engine.plugin.settings;
 import java.util.Iterator;
 
 /**
- * @author doralitze
  * This interface indicates that the Object is capable of displaying subtrees
+ * 
+ * @author doralitze
+ * 
  */
 public interface Browsable {
 	/**
-	 * This function gets called by the settings frame.
-	 * It's used to generate the page tree.
+	 * This function gets called by the settings frame. It's used to generate
+	 * the page tree.
+	 * 
 	 * @return An iterator of all sub objects
 	 */
 	public abstract Iterator<SettingsObject> getAllObjects();

@@ -36,15 +36,14 @@ package org.technikradio.node.engine.action;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * @author doralitze
  * This class handles the application interaction.
+ * @author doralitze
  */
 public class Application {
 	

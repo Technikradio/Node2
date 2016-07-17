@@ -34,11 +34,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.event;
 
 /**
- * @author doralitze
  * This class represents a way to separate different events
  * from each other so that the behavior doesn't get ridiculous.
  * For example an instance of this class may define a save event
  * an another one an load event.
+ * @author doralitze
  */
 public class EventType {
 	

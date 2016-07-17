@@ -36,9 +36,9 @@ package org.technikradio.node.engine.plugin;
 import java.util.Iterator;
 
 /**
- * @author doralitze
- * This interface tells node that the content of
+ * his interface tells node that the content of
  * the object can be expanded inside the tree.
+ * @author doralitze
  */
 public interface Foldable {
 	

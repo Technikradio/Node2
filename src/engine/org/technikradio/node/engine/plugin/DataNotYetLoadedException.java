@@ -34,8 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin;
 
 /**
+ * This exception gets raised when something try's to access data that has not been loaded yet.
  * @author doralitze
- * this method gets raised when something try's to access data that has not been loaded yet.
  */
 public class DataNotYetLoadedException extends RuntimeException {
 

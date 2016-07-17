@@ -34,21 +34,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.settings;
 
 /**
+ * This interface is used to notify the Settings object about the windowing
+ * events.
+ * 
  * @author doralitze
- * This interface is used to notify the Settings object about the windowing events.
  */
 public interface SettingsFocusListener {
-	
+
 	/**
-	 * This method gets called when the user clicked on the abort button.
-	 * Use this to discard all changes.
+	 * This method gets called when the user clicked on the abort button. Use
+	 * this to discard all changes.
 	 */
 	public abstract void onAbortClicked();
-	
+
 	/**
-	 * This method gets called when the user clicked on the OK button.
-	 * Use this method to apply all changes.
+	 * This method gets called when the user clicked on the OK button. Use this
+	 * method to apply all changes.
 	 */
 	public abstract void onOKClicked();
-	
+
 }

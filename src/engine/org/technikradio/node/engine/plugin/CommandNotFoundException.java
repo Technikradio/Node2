@@ -29,8 +29,66 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
- * This package contains all the class files required to manage the plugins and
- * run the basic application.
+ * 
+ */
+package org.technikradio.node.engine.plugin;
+
+/**
+ * This exception is designed to be thrown if someone tries to execute an
+ * unknown command.
+ * 
  * @author doralitze
  */
-package org.technikradio.node.engine;
+public class CommandNotFoundException extends Exception {
+
+	private static final long serialVersionUID = -5921376085298756435L;
+
+	/**
+	 * This constructor creates a basic new instance of this exception
+	 */
+	public CommandNotFoundException() {
+		super();
+	}
+
+	/**
+	 * @param message
+	 *            The message of the exception
+	 */
+	public CommandNotFoundException(String message) {
+		super(message);
+	}
+
+	/**
+	 * @param cause
+	 *            The cause of the Exception
+	 */
+	public CommandNotFoundException(Throwable cause) {
+		super(cause);
+	}
+
+	/**
+	 * @param message
+	 *            The message of the exception
+	 * @param cause
+	 *            The cause of the exception
+	 */
+	public CommandNotFoundException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	/**
+	 * @param message
+	 *            The message of the exception
+	 * @param cause
+	 *            The cause of the exception
+	 * @param enableSuppression
+	 *            Should the exception be suppressable?
+	 * @param writableStackTrace
+	 *            Should the stack trace be writable?
+	 */
+	public CommandNotFoundException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+}

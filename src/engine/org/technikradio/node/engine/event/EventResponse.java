@@ -34,9 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.event;
 
 /**
- * @author doralitze
  * This class represents an response to an event from a processor.
  * Multiple responses are possible.
+ * @author doralitze
  */
 public class EventResponse<E> {
 

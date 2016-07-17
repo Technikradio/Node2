@@ -32,8 +32,10 @@ package org.technikradio.node.engine.plugin;
 import java.util.ArrayList;
 
 /**
+ * This class represents a plugin manifest. It contains all required metadata of
+ * the plugin.
+ * 
  * @author doralitze
- * This class represents a plugin manifest. It contains all required metadata of the plugin.
  */
 public final class Manifest {
 
@@ -49,85 +51,94 @@ public final class Manifest {
 	private ArrayList<String> dependancys;
 	private String identifier;
 	private String mainClass;
-	
+
 	/**
-	 * @param version the version to set
+	 * @param version
+	 *            the version to set
 	 */
 	protected void setVersion(int version) {
 		this.version = version;
 	}
 
 	/**
-	 * @param compatibleVersion the compatibleVersion to set
+	 * @param compatibleVersion
+	 *            the compatibleVersion to set
 	 */
 	protected void setCompatibleVersion(int compatibleVersion) {
 		this.compatibleVersion = compatibleVersion;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	protected void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @param maintainer the maintainer to set
+	 * @param maintainer
+	 *            the maintainer to set
 	 */
 	protected void setMaintainer(String maintainer) {
 		this.maintainer = maintainer;
 	}
 
 	/**
-	 * @param updateSite the updateSite to set
+	 * @param updateSite
+	 *            the updateSite to set
 	 */
 	protected void setUpdateSite(String updateSite) {
 		this.updateSite = updateSite;
 	}
 
 	/**
-	 * @param license the license to set
+	 * @param license
+	 *            the license to set
 	 */
 	protected void setLicense(String license) {
 		this.license = license;
 	}
 
 	/**
-	 * @param website the website to set
+	 * @param website
+	 *            the website to set
 	 */
 	protected void setWebsite(String website) {
 		this.website = website;
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	protected void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * @param longInfoText the longInfoText to set
+	 * @param longInfoText
+	 *            the longInfoText to set
 	 */
 	protected void setLongInfoText(String longInfoText) {
 		this.longInfoText = longInfoText;
 	}
 
 	/**
-	 * @param dependancys the dependancys to set
+	 * @param dependancys
+	 *            the dependancys to set
 	 */
 	protected void setDependancys(ArrayList<String> dependancys) {
 		this.dependancys = dependancys;
 	}
 
 	/**
-	 * @param identifier the identifier to set
+	 * @param identifier
+	 *            the identifier to set
 	 */
 	protected void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
-	
-	
 
 	/**
 	 * @return the mainClass
@@ -137,7 +148,8 @@ public final class Manifest {
 	}
 
 	/**
-	 * @param mainClass the mainClass to set
+	 * @param mainClass
+	 *            the mainClass to set
 	 */
 	protected void setMainClass(String mainClass) {
 		this.mainClass = mainClass;

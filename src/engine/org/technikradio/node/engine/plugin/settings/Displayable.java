@@ -36,14 +36,17 @@ package org.technikradio.node.engine.plugin.settings;
 import javax.swing.JPanel;
 
 /**
+ * This interface indicates that the settings object contains a panel which will
+ * be displayed inside the settings dialog.
+ * 
  * @author doralitze
- * This interface indicates that the settings object contains a panel which
- * will be displayed inside the settings dialog.
+ * 
  */
 public interface Displayable {
-	
+
 	/**
 	 * This method gets called when the panel should be displayed.
+	 * 
 	 * @return the correct panel to display
 	 */
 	public abstract JPanel getPanel();

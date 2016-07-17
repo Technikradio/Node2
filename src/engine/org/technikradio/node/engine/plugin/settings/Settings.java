@@ -39,9 +39,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Hashtable;
 
 import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.plugin.Command;
+import org.technikradio.node.engine.plugin.CommandRegistry;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -93,6 +96,34 @@ public class Settings {
 						e.printStackTrace();
 				}
 		}
+		CommandRegistry.addCommand("list-all-settings", new Command() {
+
+			@Override
+			public boolean execute(String[] args, PrintStream outputStream) {
+				for (String key : pairs.keySet()) {
+					outputStream.print(key);
+					outputStream.print("=");
+					outputStream.println(pairs.get(key));
+				}
+				return true;
+			}
+		});
+		CommandRegistry.addCommandHelp("list-all-settings", "Use this command to display all settings",
+				"list-all-settings\n\tUse this command to review all aviable settings.\n");
+		CommandRegistry.addCommand("set-property", new Command() {
+
+			@Override
+			public boolean execute(String[] args, PrintStream outputStream) {
+				if (args.length < 2) {
+					outputStream.println("Please consider the help by typing 'help set-property'");
+					return false;
+				}
+				pairs.put(args[0], args[1]);
+				return true;
+			}
+		});
+		CommandRegistry.addCommandHelp("set-property", "Use this command to modify the settings properties",
+				"set-property <property> <value>\n\tSets the setting 'property' to 'value'.");
 	}
 
 	/**

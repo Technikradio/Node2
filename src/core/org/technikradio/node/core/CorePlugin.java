@@ -37,8 +37,9 @@ import org.technikradio.node.engine.plugin.Manifest;
 import org.technikradio.node.engine.plugin.Plugin;
 
 /**
- * @author doralitze
  * This plugin will provide the basic functionality of node.
+ * @author doralitze
+ * 
  */
 public class CorePlugin extends Plugin {
 

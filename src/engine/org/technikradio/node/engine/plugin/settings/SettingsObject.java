@@ -34,11 +34,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.settings;
 
 /**
+ * This class represents an object to control an entry inside the settings
+ * dialog.
+ * 
  * @author doralitze
- * This class represents an object to control an entry inside the settings dialog.
+ * 
  */
 public class SettingsObject {
-	
+
 	private String identifier;
 	private String title;
 
@@ -51,7 +54,9 @@ public class SettingsObject {
 
 	/**
 	 * The title should be localized using the lang package
-	 * @param title the title to set
+	 * 
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -66,7 +71,9 @@ public class SettingsObject {
 
 	/**
 	 * This constructor generates an empty settings object doing nothing
-	 * @param identifier used to identify the object. This should be somehow unique.
+	 * 
+	 * @param identifier
+	 *            used to identify the object. This should be somehow unique.
 	 */
 	public SettingsObject(String identifier) {
 		super();

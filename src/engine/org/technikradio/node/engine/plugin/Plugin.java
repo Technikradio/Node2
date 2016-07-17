@@ -30,37 +30,40 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin;
 
 /**
- * @author doralitze
  * This class represents an abstract plugin
+ * 
+ * @author doralitze
  */
 public abstract class Plugin {
-	
+
 	private Manifest mainfest;
 	protected boolean loaded = false;
 
 	/**
 	 * This constructor initializes a new plugin instance.
-	 * @param m the manifest of the plugin to use
+	 * 
+	 * @param m
+	 *            the manifest of the plugin to use
 	 */
 	protected Plugin(Manifest m) {
 		super();
 		this.setMainfest(m);
 	}
-	
+
 	/**
-	 * This method sets the loaded flag.
-	 * This method gets called after the load() function
-	 * returned.
+	 * This method sets the loaded flag. This method gets called after the
+	 * load() function returned.
 	 */
-	protected void setLoadedFlag(){
+	protected void setLoadedFlag() {
 		loaded = true;
 	}
-	
+
 	/**
 	 * This method indicates if the plugin did successfully loaded or not.
+	 * 
 	 * @return the loaded flag
 	 */
-	protected boolean isPluginLoaded(){
+	protected boolean isPluginLoaded() {
 		return loaded;
 	}
 
@@ -72,19 +75,21 @@ public abstract class Plugin {
 	}
 
 	/**
-	 * @param mainfest the mainfest of the plugin to set
+	 * @param mainfest
+	 *            the mainfest of the plugin to set
 	 */
 	protected void setMainfest(Manifest mainfest) {
 		this.mainfest = mainfest;
 	}
-	
+
 	/**
 	 * This method gets called when the plugin should initialize itself
 	 */
 	public abstract void load();
-	
+
 	/**
-	 * This method gets called before the application exits. Use this method to save all required things.
+	 * This method gets called before the application exits. Use this method to
+	 * save all required things.
 	 */
 	public abstract void unload();
 

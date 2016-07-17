@@ -34,9 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine;
 
 /**
- * @author doralitze
  * This annotation marks classes that contain identifiers.
  * This is optional but suggested.
+ * @author doralitze
  */
 public @interface IdentifierClass {
 	

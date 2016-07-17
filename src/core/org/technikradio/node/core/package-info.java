@@ -29,7 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
- * @author doralitze
  * This package contains all the class files related to the core plugin.
+ * 
+ * @author doralitze
+ * 
  */
 package org.technikradio.node.core;

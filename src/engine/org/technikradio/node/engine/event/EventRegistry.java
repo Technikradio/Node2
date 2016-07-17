@@ -41,8 +41,8 @@ import java.util.List;
 import org.technikradio.node.engine.action.Application;
 
 /**
- * @author doralitze
  * This class is used to handle events and raise them.
+ * @author doralitze
  */
 public class EventRegistry {
 

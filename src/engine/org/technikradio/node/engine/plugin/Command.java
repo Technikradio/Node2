@@ -29,8 +29,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
- * This package contains all the class files required to manage the plugins and
- * run the basic application.
+ * 
+ */
+package org.technikradio.node.engine.plugin;
+
+import java.io.PrintStream;
+
+/**
+ * This interface is designed to provide avaibillity to execute commands.
  * @author doralitze
  */
-package org.technikradio.node.engine;
+public interface Command {
+	
+	/**
+	 * This method gets called when the registered command should be executed.
+	 * @param args The arguments given with the prompt.
+	 * @param outputStream The stream to print text output.
+	 * @return true if the command executed successfully or otherwise false
+	 */
+	public abstract boolean execute(String[] args, PrintStream outputStream);
+}

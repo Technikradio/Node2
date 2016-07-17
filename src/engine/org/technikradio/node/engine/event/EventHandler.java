@@ -34,8 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.event;
 
 /**
- * @author doralitze
  * This interface is used to process events.
+ * @author doralitze
  */
 public interface EventHandler {
 	/**

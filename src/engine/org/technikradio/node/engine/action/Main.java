@@ -37,8 +37,8 @@ import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * @author doralitze
  * This class starts all the loading of plugins.
+ * @author doralitze
  */
 public class Main {
 

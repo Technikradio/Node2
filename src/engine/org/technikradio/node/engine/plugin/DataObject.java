@@ -38,8 +38,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 /**
- * @author doralitze
  * This class represents an abstract data object
+ * @author doralitze
  */
 public abstract class DataObject {
 

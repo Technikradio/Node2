@@ -36,22 +36,27 @@ package org.technikradio.node.engine.plugin.settings;
 import javax.swing.JPanel;
 
 /**
- * @author doralitze
  * This class represents a settings page.
+ * 
+ * @author doralitze
+ * 
  */
 public class SettingsPage extends SettingsObject implements Displayable {
 
 	private JPanel panel;
-	
+
 	/**
-	 * @param identifier used to identify this page
+	 * @param identifier
+	 *            used to identify this page
 	 */
 	public SettingsPage(String identifier) {
 		super(identifier);
 		panel = null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.technikradio.node.engine.plugin.settings.Displayable#getPanel()
 	 */
 	@Override
@@ -60,7 +65,8 @@ public class SettingsPage extends SettingsObject implements Displayable {
 	}
 
 	/**
-	 * @param panel the panel to set
+	 * @param panel
+	 *            the panel to set
 	 */
 	public void setPanel(JPanel panel) {
 		this.panel = panel;

@@ -36,9 +36,9 @@ package org.technikradio.node.engine.event;
 import java.util.ArrayList;
 
 /**
- * @author doralitze
  * This class is designed to provide objects where event
  * processors can submit their results.
+ * @author doralitze
  */
 public class EventResponder<E> {
 

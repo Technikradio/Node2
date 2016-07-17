@@ -34,14 +34,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.settings;
 
 /**
+ * This interface is used to tell a SettingsObject where to call an update
+ * function if the contents changes.
+ * 
  * @author doralitze
- * This interface is used to tell a SettingsObject where to call an update function if the contents changes.
  */
 public interface Updater {
-	
+
 	/**
-	 * This method gets called by the settings dialog telling the object where to find the updater if necessary.
-	 * @param listener to call if required
+	 * This method gets called by the settings dialog telling the object where
+	 * to find the updater if necessary.
+	 * 
+	 * @param listener
+	 *            to call if required
 	 */
 	public abstract void registerUpdater(UpdateListener listener);
 }

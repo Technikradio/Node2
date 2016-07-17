@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
+ * This package contains the plugin ecosystem.
  * @author doralitze
- * This package contains the plugin ecosystem
  */
 package org.technikradio.node.engine.plugin;

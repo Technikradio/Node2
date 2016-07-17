@@ -36,8 +36,8 @@ package org.technikradio.node.engine.event;
 import org.technikradio.node.engine.plugin.Plugin;
 
 /**
- * @author doralitze
  * This class represents an event that can be raised using the EventRegisty class.
+ * @author doralitze
  */
 @SuppressWarnings("rawtypes")
 public class Event {

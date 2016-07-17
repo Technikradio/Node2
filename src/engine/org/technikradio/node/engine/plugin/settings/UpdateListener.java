@@ -34,15 +34,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.settings;
 
 /**
- * @author doralitze
  * This interface defines a listener dedicated to changes in the UI behavior.
+ * 
+ * @author doralitze
+ * 
  */
 public interface UpdateListener {
 	/**
-	 * This method should get called when an UI update is necessary.
-	 * If tree gets a true value it will update the settings tree
-	 * otherwise the current active pane.
-	 * @param tree to indicate the desired update
+	 * This method should get called when an UI update is necessary. If tree
+	 * gets a true value it will update the settings tree otherwise the current
+	 * active pane.
+	 * 
+	 * @param tree
+	 *            to indicate the desired update
 	 */
 	public abstract void updateUI(boolean tree);
 }

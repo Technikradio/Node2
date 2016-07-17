@@ -34,8 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin;
 
 /**
- * @author doralitze
  * This interface tells node that the content of an DataObject can be summed up.
+ * @author doralitze
  */
 public interface Calculatable {
 	/**
