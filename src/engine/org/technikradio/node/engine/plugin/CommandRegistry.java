@@ -79,7 +79,7 @@ public class CommandRegistry {
 					}
 				}
 				ps.println("End of help page " + Integer.toString(number) + " out of "
-						+ Integer.toString(Math.floorDiv(names.length, 20)) + " pages.");
+						+ Integer.toString((int) (names.length / 20)) + " pages.");
 			}
 
 			@Override

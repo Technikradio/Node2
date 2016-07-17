@@ -36,6 +36,7 @@ package org.technikradio.node.tests.engine;
 import static org.junit.Assert.*;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -116,10 +117,12 @@ public class CommandRegistryTest {
 	@Test
 	public final void testGetAllRegisteredCommands() {
 		String[] c = CommandRegistry.getAllRegisteredCommands();
-		String[] expected = {"help", "list-all-settings", "set-property", "testcommandB", "testcommandC"};
+		System.out.println(Arrays.toString(c));
+		String[] expected = {"help", "testcommandB", "testcommandC"};
 		for(int i = 0; i < expected.length; i++)
-			assertTrue(contains(c, expected[i]));
-		assertFalse(contains(c, "testcommandA"));
+			assertTrue("should contain " + expected[i], contains(c, expected[i]));
+		assertFalse("Shouldn't contain testcommandA", contains(c, "testcommandA"));
+		
 	}
 
 	/**
