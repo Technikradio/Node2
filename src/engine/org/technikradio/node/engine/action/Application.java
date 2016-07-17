@@ -33,6 +33,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.action;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -41,6 +47,50 @@ import org.technikradio.universal_tools.Console.LogType;
  * This class handles the application interaction.
  */
 public class Application {
+	
+	/**
+	 * This path points to the directory where node stores local user dependent stuff like settings.
+	 */
+	public static final String LOCAL_APPDATA_FOLDER;
+	public static final String CURRENT_OPERATING_SYSTEM;
+	/**
+	 * This variable indicates the availability of the APPDATA folder.
+	 */
+	public static final boolean LOCAL_APPDATA_FOLDER_AVAIABLE;
+	
+	static {
+		CURRENT_OPERATING_SYSTEM  = (System.getProperty("os.name")).toUpperCase();
+		{
+			String currentBaseDir = "";
+			String dirPrefix = "";
+			if (CURRENT_OPERATING_SYSTEM.contains("WIN")){
+				currentBaseDir = System.getenv("APPDATA");
+			} else {
+				currentBaseDir = System.getProperty("user.home");
+				if(CURRENT_OPERATING_SYSTEM.contains("MAC")){
+					currentBaseDir += "/Library/Application Support";
+				} else {
+					dirPrefix = ".";
+				}
+			}
+			LOCAL_APPDATA_FOLDER = currentBaseDir + File.separator + dirPrefix + "Node";
+		}
+		{
+			boolean pathexists = false;
+			if(!(new File(LOCAL_APPDATA_FOLDER).exists())){
+				try {
+					Files.createDirectory(Paths.get(LOCAL_APPDATA_FOLDER));
+					pathexists = true;
+				} catch (IOException e) {
+					Console.log(LogType.Error, "Application", "Can't create APPDATA folder:");
+					e.printStackTrace();
+				}
+			} else {
+				pathexists = true;
+			}
+			LOCAL_APPDATA_FOLDER_AVAIABLE = pathexists;
+		}
+	}
 
 	/**
 	 * This method gets called to initialize stuff like the look and feel
@@ -51,7 +101,7 @@ public class Application {
 	
 	/**
 	 * Use this method to invoke the crash routines. This method
-	 * uses 1 as the error code.
+	 * uses 1 as the default error code.
 	 * @param reason The reason why the application crashed
 	 */
 	public static void crash(Object reason){

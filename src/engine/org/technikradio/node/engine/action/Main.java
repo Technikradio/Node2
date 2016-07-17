@@ -47,6 +47,7 @@ public class Main {
 	 * @param args The args provided by the VM.
 	 */
 	public static void main(String[] args) {
+		//TODO handle splash screen stuff
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
 		Application.setupUIBehaviour();
 	}

@@ -97,7 +97,8 @@ public class EventResponder<E> {
 	}
 
 	/**
-	 * @return the isFinal
+	 * This method checks if the final answer was already given.
+	 * @return true if the final answer already exists or otherwise false.
 	 */
 	public boolean isFinal() {
 		return isFinal;

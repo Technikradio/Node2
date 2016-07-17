@@ -29,6 +29,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
  * @author doralitze
- * This package contains the localization eco system 
+ * This package contains the localization eco system and the resource loader.
  */
-package org.technikradio.node.engine.lang;
+package org.technikradio.node.engine.resources;

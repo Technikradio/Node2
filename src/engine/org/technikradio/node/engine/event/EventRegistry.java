@@ -68,7 +68,8 @@ public class EventRegistry {
 				boolean handled = false;
 				for(EventHandler handler : handlers.get(type)){
 					handler.handleEvent(e);
-					//TODO implement exit clause when final answer was given
+					if(e.getResponder().isFinal())
+						break;
 					handled = true;
 				}
 				if(!handled && e.getType().shouldAutomaticallyThrowCrash())

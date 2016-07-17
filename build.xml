@@ -3,7 +3,6 @@
 
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
-<!-- <property name="settings.target" value="1.7" /> -->
 
 <target name="all" depends="core" description="This compiles a working program."/>
 
@@ -17,7 +16,6 @@
 				 destdir="${dir.buildfolder}/compile/tests"
 				 optimize="on"
 				 includeAntRuntime="no">
-         <!-- target="${settings.target}" -->
     <classpath refid="test.classpath"/>
   </javac>
   <jar destfile="${dir.buildfolder}/test/tests.jar">
@@ -89,8 +87,6 @@
 				 optimize="on"
          excludes="manifest.json"
 				 includeAntRuntime="no">
-         <!--
-				 target="${settings.target}" -->
     <src path="${dir.projectfolder}/src/core" />
     <classpath refid="build.classpath"/>
   </javac>
@@ -109,8 +105,6 @@
          classpath="${dir.projectfolder}/lib/Utils.jar"
          excludes="README"
 				 includeAntRuntime="no"/>
-         <!--
-				 target="${settings.target}" -->
   <jar destfile="${dir.buildfolder}/tmp/lib/json.jar">
     <fileset dir="${dir.buildfolder}/compile/json-java" />
   </jar>
@@ -124,8 +118,6 @@
 				 optimize="on"
          classpath="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
 				 includeAntRuntime="no">
-         <!--
-				 target="${settings.target}" -->
     <src path="${dir.projectfolder}/src/engine" />
     <classpath refid="build.classpath"/>
   </javac>
