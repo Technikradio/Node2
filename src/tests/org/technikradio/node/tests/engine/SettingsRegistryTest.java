@@ -43,6 +43,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.plugin.CommandRegistry;
 import org.technikradio.node.engine.plugin.settings.Settings;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -156,6 +157,15 @@ public class SettingsRegistryTest {
 	@Test(expected = NullPointerException.class)
 	public final void testGetStringEmpty() {
 		Settings.get("");
+	}
+	
+	/**
+	 * Test method for the initializer
+	 */
+	@Test
+	public final void testCommandAdder() {
+		assertTrue(CommandRegistry.isCommandRegistered("list-all-settings"));
+		assertTrue(CommandRegistry.isCommandRegistered("set-property"));
 	}
 
 }
