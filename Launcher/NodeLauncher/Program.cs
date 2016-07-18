@@ -7,8 +7,9 @@ namespace NodeLauncher
 	{
 		public static void Main (string [] args)
 		{
+			String pathtoSource = System.Reflection.Assembly.GetEntryAssembly ().Location;
 			Application.Init ();
-			MainWindow win = new MainWindow ();
+			UpdatesWindow win = new UpdatesWindow ();
 			win.Show ();
 			Application.Run ();
 		}
