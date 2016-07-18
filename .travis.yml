@@ -1,6 +1,18 @@
 language: java
+
 install:
   - ant doc
+
+addons:
+  apt:
+    packages:
+    - mono-xbuild
+
+before install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ant ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install mono; fi
+
 matrix:
   include:
     - os: linux
@@ -10,32 +22,14 @@ matrix:
     - os: linux
       jdk: openjdk7
     - os: osx
-      before_install:
-        - brew update
-        - brew install ant
       osx_image: xcode8
     - os: osx
-      before_install:
-        - brew update
-        - brew install ant
       osx_image: xcode7
     - os: osx
-      before_install:
-        - brew update
-        - brew install ant
       osx_image: xcode7.1
     - os: osx
-      before_install:
-        - brew update
-        - brew install ant
       osx_image: xcode7.2
     - os: osx
-      before_install:
-        - brew update
-        - brew install ant
       osx_image: xcode7.3
     - os: osx
-      before_install:
-        - brew update
-        - brew install ant
       osx_image: xcode6.4

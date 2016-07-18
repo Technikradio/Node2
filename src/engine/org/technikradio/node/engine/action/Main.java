@@ -47,6 +47,9 @@ public class Main {
 	 * @param args The args provided by the VM.
 	 */
 	public static void main(String[] args) {
+		if(args.length < 1){
+			Application.crash("Launched without launch variables", 1);
+		}
 		//TODO handle splash screen stuff
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
 		Application.setupUIBehaviour();

@@ -140,7 +140,6 @@
   <mkdir dir="${dir.buildfolder}/tmp/lib" />
   <mkdir dir="${dir.buildfolder}/tmp/lang" />
   <mkdir dir="${dir.buildfolder}/tmp/bin" />
-  <mkdir dir="${dir.buildfolder}/tmp/cfg" />
   <mkdir dir="${dir.buildfolder}/tmp/rsc" />
   <mkdir dir="${dir.buildfolder}/tmp/plugins" />
 </target>
