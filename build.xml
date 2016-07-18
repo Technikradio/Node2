@@ -4,7 +4,7 @@
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
 
-<target name="all" depends="core" description="This compiles a working program."/>
+<target name="all" depends="core,launcher" description="This compiles a working program."/>
 
 <target name="clean" description="This target cleans the build environment.">
   <delete dir="${dir.buildfolder}" />
@@ -54,10 +54,10 @@
   <property name="test.report.dir" location="${dir.buildfolder}/testresults" />
 
   <path id="build.classpath">
-    <fileset dir="${dir.buildfolder}/tmp/lib">
+    <fileset dir="${dir.buildfolder}/tmp/construct/lib">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${dir.buildfolder}/tmp/bin">
+    <fileset dir="${dir.buildfolder}/tmp/construct/bin">
       <include name="**/*.jar"/>
     </fileset>
   </path>
@@ -66,10 +66,10 @@
     <fileset dir="${dir.buildfolder}/test">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${dir.buildfolder}/tmp/lib">
+    <fileset dir="${dir.buildfolder}/tmp/construct/lib">
       <include name="**/*.jar"/>
     </fileset>
-    <fileset dir="${dir.buildfolder}/tmp/bin">
+    <fileset dir="${dir.buildfolder}/tmp/construct/bin">
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="${dir.projectfolder}/lib">
@@ -78,11 +78,43 @@
     </fileset>
   </path>
 
+  <condition property="isWindows" value="true">
+    <os family="windows" />
+  </condition>
+
+  <condition property="isLinuxOrBSD" value="true">
+    <and>
+      <os family="unix" />
+      <not>
+        <os family="mac" />
+      </not>
+    </and>
+  </condition>
+
+  <condition property="isMac" value="true">
+    <os family="mac" />
+  </condition>
+
+  <target name="determinate-swt">
+    <condition property="rightswtlib" value="swt-linux.jar">
+      <equals arg1="${isLinuxOrBSD}" arg2="true" />
+    </condition>
+    <condition property="rightswtlib" value="swt-mac.jar">
+      <equals arg1="${isMac}" arg2="true" />
+    </condition>
+    <condition property="rightswtlib" value="$swt-win.jar">
+      <equals arg1="${isWindows}" arg2="true" />
+    </condition>
+    <echo message="Set SWT library to: ${rightswtlib}" />
+  </target>
+
+<!-- ======================== End of environment analysis ================== -->
+
 <target name="cycle" depends="all,test,doc" />
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
-  <mkdir dir="${dir.buildfolder}/tmp/plugins/core" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct/plugins/core" />
   <javac destdir="${dir.buildfolder}/compile/core"
 				 optimize="on"
          excludes="manifest.json"
@@ -90,11 +122,11 @@
     <src path="${dir.projectfolder}/src/core" />
     <classpath refid="build.classpath"/>
   </javac>
-  <jar destfile="${dir.buildfolder}/tmp/plugins/core/core.jar">
+  <jar destfile="${dir.buildfolder}/tmp/construct/plugins/core/core.jar">
     <fileset dir="${dir.buildfolder}/compile/core" />
   </jar>
   <copy file="${dir.projectfolder}/src/core/org/technikradio/node/core/manifest.json"
-        todir="${dir.buildfolder}/tmp/plugins/core/" />
+        todir="${dir.buildfolder}/tmp/construct/plugins/core/" />
 </target>
 
 <target name="compile-json-lib" depends="create-build-folders">
@@ -105,43 +137,54 @@
          classpath="${dir.projectfolder}/lib/Utils.jar"
          excludes="README"
 				 includeAntRuntime="no"/>
-  <jar destfile="${dir.buildfolder}/tmp/lib/json.jar">
+  <jar destfile="${dir.buildfolder}/tmp/construct/lib/json.jar">
     <fileset dir="${dir.buildfolder}/compile/json-java" />
   </jar>
 </target>
 
-<target name="engine" depends="create-build-folders,compile-json-lib">
+<target name="engine" depends="create-build-folders,compile-json-lib,determinate-swt">
   <mkdir dir="${dir.buildfolder}/compile/engine" />
-  <copy file="${dir.projectfolder}/lib/Utils.jar" todir="${dir.buildfolder}/tmp/lib/" />
-  <!-- classpathref="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar" -->
+  <copy file="${dir.projectfolder}/lib/Utils.jar" todir="${dir.buildfolder}/tmp/construct/lib/" />
+  <copy file="${dir.projectfolder}/lib/${rightswtlib}" todir="${dir.buildfolder}/tmp/construct/lib/" />
+  <!-- classpathref="${dir.buildfolder}/tmp/construct/lib/json.jar,${dir.buildfolder}/tmp/construct/lib/Utils.jar" -->
   <javac destdir="${dir.buildfolder}/compile/engine"
 				 optimize="on"
-         classpath="${dir.buildfolder}/tmp/lib/json.jar,${dir.buildfolder}/tmp/lib/Utils.jar"
+         classpath="${dir.buildfolder}/tmp/construct/lib/json.jar,${dir.buildfolder}/tmp/construct/lib/Utils.jar"
 				 includeAntRuntime="no">
     <src path="${dir.projectfolder}/src/engine" />
     <classpath refid="build.classpath"/>
   </javac>
-  <jar destfile="${dir.buildfolder}/tmp/bin/engine.jar">
+  <jar destfile="${dir.buildfolder}/tmp/construct/bin/engine.jar">
     <fileset dir="${dir.buildfolder}/compile/engine" />
     <manifest>
         <attribute name="Main-Class" value="org.technikradio.node.engine.action.Main"/>
-        <attribute name="Class-Path" value="../lib/json.jar"/>
+        <attribute name="Class-Path" value="../lib/json.jar,../lib/Utils.jar,../lib/${rightswtlib}"/>
     </manifest>
   </jar>
+</target>
+
+<target name="check-mono">
+  <available file="Launcher" property="abc.present"/>
+</target>
+
+<target name="launcher" depends="create-build-folders,check-mono" if="mono.xbuild">
+
 </target>
 
 <target name="create-build-folders">
   <mkdir dir="${dir.buildfolder}" />
 	<mkdir dir="${dir.buildfolder}/compile" />
-  <mkdir dir="${dir.buildfolder}/tmp" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct" />
+  <mkdir dir="${dir.buildfolder}/tmp/mac" />
+  <mkdir dir="${dir.buildfolder}/tmp/linux" />
   <mkdir dir="${dir.buildfolder}/export" />
   <mkdir dir="${dir.buildfolder}/test" />
   <!-- create app structure -->
-  <mkdir dir="${dir.buildfolder}/tmp/lib" />
-  <mkdir dir="${dir.buildfolder}/tmp/lang" />
-  <mkdir dir="${dir.buildfolder}/tmp/bin" />
-  <mkdir dir="${dir.buildfolder}/tmp/rsc" />
-  <mkdir dir="${dir.buildfolder}/tmp/plugins" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct/lib" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct/lang" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct/bin" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct/rsc" />
+  <mkdir dir="${dir.buildfolder}/tmp/construct/plugins" />
 </target>
 
 </project>

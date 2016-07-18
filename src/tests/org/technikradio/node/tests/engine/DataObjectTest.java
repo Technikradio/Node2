@@ -33,12 +33,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.tests.engine;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
-
+import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class DataObjectTest {
 		}
 
 		@Override
-		public JPanel onOpen() {
+		public Composite onOpen() {
 			return null;
 		}
 

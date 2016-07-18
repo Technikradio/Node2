@@ -35,7 +35,7 @@ package org.technikradio.node.engine.plugin;
 
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * This class represents an abstract data object
@@ -112,9 +112,9 @@ public abstract class DataObject {
 	
 	/**
 	 * This method gets called when the user opens the data object.
-	 * @return an JPanel to display the content of the data object
+	 * @return an swt composite object to display the content of the data object
 	 */
-	public abstract JPanel onOpen();
+	public abstract Composite onOpen();
 	
 	/**
 	 * This method gets called when the user closes the content of the

@@ -59,8 +59,17 @@ public class Application {
 	 * This variable indicates the availability of the APPDATA folder.
 	 */
 	public static final boolean LOCAL_APPDATA_FOLDER_AVAIABLE;
+	/**
+	 * This field contains the path to the plugin folder.
+	 */
 	public static final String PLUGIN_FOLDER;
+	/**
+	 * This field contains the path to the translation folder.
+	 */
 	public static final String LANG_FOLDER;
+	/**
+	 * This field contains the path to the resources folder.
+	 */
 	public static final String RESOURCES_FOLDER;
 	
 	

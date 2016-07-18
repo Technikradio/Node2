@@ -61,7 +61,7 @@ import org.technikradio.universal_tools.Console.LogType;
  */
 public class Settings {
 
-	private static Hashtable<String, String> pairs;
+	private static final Hashtable<String, String> pairs;
 
 	static {
 		pairs = new Hashtable<String, String>();
