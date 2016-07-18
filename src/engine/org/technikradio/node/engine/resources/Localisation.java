@@ -49,30 +49,33 @@ import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is used to translate everything.
+ * 
  * @author doralitze
  */
 public class Localisation {
-	
+
 	private static final Hashtable<String, String> main;
 	private static final Hashtable<String, String> fallback;
 
-	static{
+	static {
 		main = new Hashtable<String, String>();
 		fallback = new Hashtable<String, String>();
-		if(Settings.get("org.technikradio.node.engine.resources.defaultLanguageFile").equals("")){
-			Settings.put("org.technikradio.node.engine.resources.defaultLanguageFile", System.getProperty("user.language") + "_" + System.getProperty("user.country") + ".mml");
+		if (Settings.get("org.technikradio.node.engine.resources.defaultLanguageFile").equals("")) {
+			Settings.put("org.technikradio.node.engine.resources.defaultLanguageFile",
+					System.getProperty("user.language") + "_" + System.getProperty("user.country") + ".mml");
 		}
-		if(Settings.get("org.technikradio.node.engine.resources.fallbackLanguageFile").equals("")){
+		if (Settings.get("org.technikradio.node.engine.resources.fallbackLanguageFile").equals("")) {
 			Settings.put("org.technikradio.node.engine.resources.fallbackLanguageFile", "en_US.mml");
 		}
-		String mainFile = Application.LANG_FOLDER + File.separator + Settings.get("org.technikradio.node.engine.resources.defaultLanguageFile", "en_US.mml");
-		String fallbackFile = Application.LANG_FOLDER + File.separator + Settings.get("org.technikradio.node.engine.resources.fallbackLanguageFile", "en_US.mml");
+		String mainFile = Application.LANG_FOLDER + File.separator
+				+ Settings.get("org.technikradio.node.engine.resources.defaultLanguageFile", "en_US.mml");
+		String fallbackFile = Application.LANG_FOLDER + File.separator
+				+ Settings.get("org.technikradio.node.engine.resources.fallbackLanguageFile", "en_US.mml");
 		BufferedReader br = null;
-		//load main file
+		// load main file
 		try {
 			if (Files.exists(Paths.get(mainFile))) {
-				br = new BufferedReader(
-						new FileReader(new File(mainFile)));
+				br = new BufferedReader(new FileReader(new File(mainFile)));
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] v = line.split(":");
@@ -99,11 +102,10 @@ public class Localisation {
 						e.printStackTrace();
 				}
 		}
-		//load fallback file
+		// load fallback file
 		try {
 			if (Files.exists(Paths.get(fallbackFile))) {
-				br = new BufferedReader(
-						new FileReader(new File(fallbackFile)));
+				br = new BufferedReader(new FileReader(new File(fallbackFile)));
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] v = line.split(":");
@@ -130,6 +132,44 @@ public class Localisation {
 						e.printStackTrace();
 				}
 		}
+	}
+
+	/**
+	 * This method will search the primary translation file for the desired key
+	 * and will return the value if it found one. If it doesn't find the desired
+	 * value in the first place it will search the fall back file. If it can't
+	 * find the value there either it will return the key wrapped in percentage
+	 * symbols.
+	 * 
+	 * @param key
+	 *            The key / identifier to search for.
+	 * @return Either the optimal translation or the fall back translation or
+	 *         %key%.
+	 */
+	public static String getString(String key) {
+		return getString(key, "%" + key + "%");
+	}
+
+	/**
+	 * This method will search the primary translation file for the desired key
+	 * and will return the value if it found one. If it doesn't find the desired
+	 * value in the first place it will search the fall back file. If it can't
+	 * find the value there either it will return the escape string.
+	 * 
+	 * @param key
+	 *            The key / identifier to search for.
+	 * @param escape
+	 *            The escape string to return if it can't find the desired
+	 *            string.
+	 * @return Either the optimal translation or the fall back translation or
+	 *         the escape string.
+	 */
+	public static String getString(String key, String escape) {
+		if (main.containsKey(key))
+			return main.get(key);
+		if (fallback.containsKey(key))
+			return fallback.get(key);
+		return escape;
 	}
 
 }
