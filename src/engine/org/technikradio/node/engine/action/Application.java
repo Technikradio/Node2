@@ -51,11 +51,18 @@ public class Application {
 	 * This path points to the directory where node stores local user dependent stuff like settings.
 	 */
 	public static final String LOCAL_APPDATA_FOLDER;
+	/**
+	 * This field contains the current operation system node is running on.
+	 */
 	public static final String CURRENT_OPERATING_SYSTEM;
 	/**
 	 * This variable indicates the availability of the APPDATA folder.
 	 */
 	public static final boolean LOCAL_APPDATA_FOLDER_AVAIABLE;
+	public static final String PLUGIN_FOLDER;
+	public static final String LANG_FOLDER;
+	public static final String RESOURCES_FOLDER;
+	
 	
 	static {
 		CURRENT_OPERATING_SYSTEM  = (System.getProperty("os.name")).toUpperCase();
@@ -89,6 +96,9 @@ public class Application {
 			}
 			LOCAL_APPDATA_FOLDER_AVAIABLE = pathexists;
 		}
+		PLUGIN_FOLDER = Main.getAppHome() + File.separator + "plugins";
+		LANG_FOLDER = Main.getAppHome() + File.separator + "lang";
+		RESOURCES_FOLDER = Main.getAppHome() + File.separator + "rsc";
 	}
 
 	/**

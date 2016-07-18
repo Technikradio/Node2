@@ -41,7 +41,15 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  */
 public class Main {
-
+	
+	private static String APP_HOME;
+	/**
+	 * This method returns the location of the installation
+	 * @return The path
+	 */
+	protected static String getAppHome(){
+		return APP_HOME;
+	}
 	/**
 	 * This method is the main entry point for node.
 	 * @param args The args provided by the VM.
@@ -50,6 +58,7 @@ public class Main {
 		if(args.length < 1){
 			Application.crash("Launched without launch variables", 1);
 		}
+		APP_HOME = args[0];
 		//TODO handle splash screen stuff
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
 		Application.setupUIBehaviour();

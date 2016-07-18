@@ -1,5 +1,10 @@
 language: java
 
+before install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ant ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install mono; fi
+
 install:
   - ant doc
 
@@ -7,11 +12,6 @@ addons:
   apt:
     packages:
     - mono-xbuild
-
-before install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update      ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ant ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install mono; fi
 
 matrix:
   include:
