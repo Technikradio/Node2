@@ -49,6 +49,7 @@ public class Window {
 
 	/**
 	 * This constructor initializes a new instance.
+	 * @param title The title to use for the new window created.
 	 */
 	public Window(String title) {
 		super();
