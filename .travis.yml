@@ -1,8 +1,8 @@
 language: java
 
 install:
-  - whereis mcs
   - whereis xbuild
+  - xbuild --version
   - ant doc
 
 addons:
