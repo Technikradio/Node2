@@ -38,6 +38,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.technikradio.node.engine.plugin.settings.SettingsObject;
+import org.technikradio.node.engine.plugin.ui.Window;
 
 /**
  * This class is used to register all required components that enable the
@@ -50,6 +51,7 @@ public final class PluginRegistry {
 	private static Hashtable<String, Plugin> plugins;
 	private static ArrayList<SettingsObject> settingsTabs;
 	private static DataSource currentActiveDataSource;
+	private static Window currentOpenWindow;
 
 	static {
 		plugins = new Hashtable<String, Plugin>();
@@ -134,6 +136,22 @@ public final class PluginRegistry {
 			return false;
 		Plugin p = plugins.get(identifier);
 		return p.isPluginLoaded();
+	}
+
+	/**
+	 * This method is used to get the current open window.
+	 * @return the current open window
+	 */
+	public static Window getCurrentOpenWindow() {
+		return currentOpenWindow;
+	}
+
+	/**
+	 * This is the setter for the current open window. Be very careful using this setter!
+	 * @param currentOpenWindow the window to set
+	 */
+	public static void setCurrentOpenWindow(Window currentOpenWindow) {
+		PluginRegistry.currentOpenWindow = currentOpenWindow;
 	}
 
 }

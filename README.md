@@ -20,3 +20,6 @@ There are also the following useful targets:
    (not yet implemented correctly)
  * test: run the unit tests
  * doc: create the documentation of Node
+
+This software is tested under multiple versions of linux and under Mac OSX 10.11.
+It may work under windows yet but we haven't tested it yet.
