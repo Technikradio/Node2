@@ -30,6 +30,7 @@ package org.technikradio.node.tests.engine;
 import static org.junit.Assert.*;
 
 import org.technikradio.node.engine.plugin.ui.DisplayFactory;
+import org.junit.Test;
 
 /**
  * This class should be used to test the loading of SWT
