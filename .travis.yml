@@ -8,6 +8,7 @@ addons:
   apt:
     packages:
     - mono-xbuild
+    - libgtk-3-0
 
 matrix:
   include:
