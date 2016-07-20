@@ -34,26 +34,56 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.event;
 
 /**
- * This class represents a way to separate different events
- * from each other so that the behavior doesn't get ridiculous.
- * For example an instance of this class may define a save event
- * an another one an load event.
+ * This class represents a way to separate different events from each other so
+ * that the behavior doesn't get ridiculous. For example an instance of this
+ * class may define a save event an another one an load event.
+ * 
  * @author doralitze
  */
 public class EventType {
-	
+
 	public static final int MINIMUM_PRIORITY = 1;
 	public static final int MAXIMUM_PRIORITY = 100;
 
 	private final String identifier;
 	private final int priority;
 	private final boolean autothrow;
-	
+
 	/**
-	 * This constructor creates a new event type object
-	 * @param identifier the identifier used to separate two different events
-	 * @param priority the priority to process the event (smaller being less important)
-	 * @param autothrow should the event automatically throw an exception if raised?
+	 * This constructor creates a new event type object. It initializes the auto
+	 * throw flag with false and the priority with the minimum priority.
+	 * 
+	 * @param identifier
+	 *            The identifier used to separate two different events.
+	 */
+	public EventType(String identifier) {
+		this(identifier, MINIMUM_PRIORITY);
+	}
+
+	/**
+	 * This constructor creates a new event type object. It initializes the auto
+	 * throw flag with false.
+	 * 
+	 * @param identifier
+	 *            The identifier used to separate two different events.
+	 * @param priority
+	 *            The priority to process the event (smaller being less
+	 *            important).
+	 */
+	public EventType(String identifier, int priority) {
+		this(identifier, priority, false);
+	}
+
+	/**
+	 * This constructor creates a new event type object.
+	 * 
+	 * @param identifier
+	 *            the identifier used to separate two different events.
+	 * @param priority
+	 *            the priority to process the event (smaller being less
+	 *            important).
+	 * @param autothrow
+	 *            should the event automatically throw an exception if raised?
 	 */
 	public EventType(String identifier, int priority, boolean autothrow) {
 		this.identifier = identifier;
@@ -63,6 +93,7 @@ public class EventType {
 
 	/**
 	 * This method is used to get the identifier.
+	 * 
 	 * @return the identifier
 	 */
 	public String getIdentifier() {
@@ -71,6 +102,7 @@ public class EventType {
 
 	/**
 	 * This method is used to determinate the processing priority and order.
+	 * 
 	 * @return the priority
 	 */
 	public int getPriority() {
@@ -78,14 +110,13 @@ public class EventType {
 	}
 
 	/**
-	 * This method is used to determinate if the raising of this event
-	 * should automatically throw an exception.
+	 * This method is used to determinate if the raising of this event should
+	 * automatically throw an exception.
+	 * 
 	 * @return the autothrow flag
 	 */
 	public boolean shouldAutomaticallyThrowCrash() {
 		return autothrow;
 	}
-	
-	
 
 }

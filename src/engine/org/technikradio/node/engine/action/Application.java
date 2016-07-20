@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -114,7 +115,7 @@ public class Application {
 	 * This method gets called to initialize stuff like the look and feel
 	 */
 	protected static void setupUIBehaviour(){
-		
+		DisplayFactory.init();
 	}
 	
 	/**

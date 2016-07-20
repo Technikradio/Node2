@@ -34,17 +34,99 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.ui;
 
 import org.eclipse.swt.widgets.Display;
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventHandler;
+import org.technikradio.node.engine.event.EventRegistry;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * This class is used to create an SWT display.
+ * This class is used to create an SWT display. It also handles the SWT event
+ * loop.
  * 
  * @author doralitze
  *
  */
 public class DisplayFactory {
-	private static final Display d;
-	static {
+	private static boolean initialized = false;
+	private static Display d;
+	private static Thread eventLoopThread;
+
+	/**
+	 * This class is designed to handle the SWT event loop.
+	 * 
+	 * @author doralitze
+	 *
+	 */
+	private static class EventLoopHandler implements Runnable {
+
+		private boolean apprunning = true;
+
+		/**
+		 * This constructor creates a new instance.
+		 */
+		public EventLoopHandler() {
+			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler() {
+
+				/**
+				 * This implements the abstract method of an event handler.
+				 */
+				@Override
+				public void handleEvent(Event e) {
+					apprunning = false;
+				}
+			});
+		}
+
+		/**
+		 * This method is used to implement the runnable interface. Its point is
+		 * to handle the events.
+		 */
+		@Override
+		public void run() {
+			Console.log(LogType.StdOut, this, "Starting SWT event loop.");
+			while (apprunning) {
+				if (!d.readAndDispatch()) {
+					d.sleep();
+				}
+			}
+			Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
+			d.dispose();
+		}
+
+		/**
+		 * We're overwriting the toString method in order to support proper
+		 * logging.
+		 */
+		@Override
+		public String toString() {
+			return "DisplayFactory.EventLoopHandler";
+		}
+
+	}
+
+	/**
+	 * Simply to all the behind the scenes stuff...
+	 * Do not invoke this method outside the main thread. The engine handles this stuff.
+	 */
+	public static final void init() {
+		if(initialized)
+			throw new RuntimeException("DisplayFactory already initialized by main thread.");
 		d = new Display();
+		eventLoopThread = new Thread(new EventLoopHandler());
+		eventLoopThread.setPriority(8);
+		eventLoopThread.setName("SWT-EVENT-LOOP-THREAD");
+		eventLoopThread.start();
+		initialized = true;
+	}
+
+	/**
+	 * This method can be used to check if the UI system has already been initialized.
+	 * @return The initialized flag. 
+	 */
+	public static final boolean isInitialized() {
+		return initialized;
 	}
 
 	/**

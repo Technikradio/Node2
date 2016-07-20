@@ -23,26 +23,39 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package org.technikradio.node.tests.engine;
-
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.technikradio.node.engine.plugin.ui.DisplayFactory;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 import org.junit.Test;
 
 /**
  * This class should be used to test the loading of SWT
+ * 
  * @author doralitze
  */
-public class DisplayFactorySWTTest{
-  
-  /**
-   * Test method for SWT
-   */
-  @Test
-  public final void testGetDisplay(){
-    assertNotNull(DisplayFactory.getDisplay());
-  }
+public class DisplayFactorySWTTest {
+
+	@Before
+	public final void setUp() {
+		try {
+			if (!DisplayFactory.isInitialized())
+				DisplayFactory.init();
+		} catch (Exception e) {
+			Console.log(LogType.Warning, this, "Failed to init SWT.");
+		}
+	}
+
+	/**
+	 * Test method for SWT
+	 */
+	@Test
+	public final void testGetDisplay() {
+		if (DisplayFactory.isInitialized())
+			assertNotNull(DisplayFactory.getDisplay());
+	}
 }

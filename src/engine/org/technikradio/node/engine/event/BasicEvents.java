@@ -27,8 +27,17 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /**
- * This package contains some fundamental events.
- * @author doralitze
+ * 
  */
-package org.technikradio.node.engine.basicevents;
+package org.technikradio.node.engine.event;
+
+/**
+ * This class contains some fundamental events.
+ * @author doralitze
+ *
+ */
+public class BasicEvents {
+	public static final EventType APPLICATION_CLOSING_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_closing");
+}
