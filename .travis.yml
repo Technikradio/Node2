@@ -2,7 +2,6 @@ language: java
 
 install:
   - whereis xbuild
-  - xbuild --version
   - ant doc
 
 addons:
