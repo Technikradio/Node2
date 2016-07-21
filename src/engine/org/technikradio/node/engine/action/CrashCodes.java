@@ -33,42 +33,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.action;
 
-import org.technikradio.universal_tools.Console;
-import org.technikradio.universal_tools.Console.LogType;
-
 /**
- * This class starts all the loading of plugins.
+ * This class contains constants for common crash codes.
  * @author doralitze
+ *
  */
-public class Main {
-	
-	private static String APP_HOME;
+public class CrashCodes {
 	/**
-	 * This method returns the location of the installation
-	 * @return The path
+	 * Use this constant to mark an general crash reason.
 	 */
-	protected static String getAppHome(){
-		return APP_HOME;
-	}
+	public static final int UNSPECIFIED_REASON = 1;
 	/**
-	 * This method is the main entry point for node.
-	 * @param args The args provided by the VM.
+	 * Use this constant if an unknown error occurred.
 	 */
-	public static void main(String[] args) {
-		if(args.length < 1){
-			Application.crash("Launched without launch variables", 1);
-		}
-		APP_HOME = args[0];
-		//TODO handle splash screen stuff
-		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
-		
-		try {
-			Application.setupUIBehaviour();
-		} catch (Exception e) {
-			Console.log(LogType.Error, "UpstartAgent", "Error during initialzation.");
-			e.printStackTrace();
-			Application.crash(e, CrashCodes.ERROR_DURING_INITIALIZATION);
-		}
-	}
-
+	public static final int UNKNOWN_REASON = 2;
+	/**
+	 * Use this constant if an error occurred doing plugin or engine initialization.
+	 */
+	public static final int ERROR_DURING_INITIALIZATION = 3;
 }

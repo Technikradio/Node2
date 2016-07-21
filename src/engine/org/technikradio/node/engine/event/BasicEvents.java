@@ -40,4 +40,5 @@ package org.technikradio.node.engine.event;
  */
 public class BasicEvents {
 	public static final EventType APPLICATION_CLOSING_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_closing");
+	public static final EventType APPLICATION_CRASHED_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_crashed");
 }

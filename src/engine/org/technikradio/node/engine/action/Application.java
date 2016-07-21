@@ -38,6 +38,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventRegistry;
+import org.technikradio.node.engine.event.EventResponder;
 import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -124,7 +128,7 @@ public class Application {
 	 * @param reason The reason why the application crashed
 	 */
 	public static void crash(Object reason){
-		crash(reason, 1);
+		crash(reason, CrashCodes.UNKNOWN_REASON);
 	}
 	
 	/**
@@ -134,8 +138,17 @@ public class Application {
 	 */
 	public static void crash(Object reason, int code){
 		Console.log(LogType.Error, "Application", "The application is about to crash");
-		//TODO implement the rest of the method
+		Event e = new Event(BasicEvents.APPLICATION_CRASHED_EVENT, null, new EventResponder<String>());
+		EventRegistry.raiseEvent(e, true);
 		System.err.println(reason.toString());
 		System.exit(code);
+	}
+	
+	/**
+	 * Use this method to safely close the application.
+	 */
+	public static void close(){
+		Event e = new Event(BasicEvents.APPLICATION_CLOSING_EVENT, null, new EventResponder<String>());
+		EventRegistry.raiseEvent(e, false);
 	}
 }
