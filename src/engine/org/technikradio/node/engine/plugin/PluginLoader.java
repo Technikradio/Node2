@@ -1,0 +1,99 @@
+/*
+Copyright (c) 2016, Technikradio
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of Node2 nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.technikradio.node.engine.plugin;
+
+import java.io.IOException;
+
+/**
+ * This class is used to load a plugin based on the given manifest file.
+ * 
+ * @author doralitze
+ *
+ */
+public class PluginLoader {
+
+	/**
+	 * This method is used to load a plugin. Note that it doesn't automatically
+	 * handles the dependency loading. Use
+	 * {@link org.technikradio.node.engine.plugin.PluginLoader#calculateDependencys(String)}
+	 * first.
+	 * 
+	 * @param manifest
+	 *            The manifest required to load the plugin.
+	 * @return true if the plugin is compatible and loaded or false if the
+	 *         plugin is incompatible.
+	 * @throws IOException
+	 *             This exception gets thrown when the method is unable of
+	 *             managing the IO required to load the plugin.
+	 */
+	public static boolean loadPlugin(Manifest manifest) throws IOException {
+		//TODO implement
+		return false;
+	}
+
+	/**
+	 * This method is used to load a manifest file of a plugin.
+	 * 
+	 * @param path
+	 *            The path pointing to the top level folder of the plugin. This
+	 *            folder has to contain the manifest file.
+	 * @throws IOException
+	 *             It throws an IOException if it fails to handle the IO.
+	 * @return The loaded manifest file.
+	 */
+	public static Manifest loadManifest(String path) throws IOException {
+		//TODO implement
+		return null;
+	}
+
+	/**
+	 * This method calculates the order in which the plug-ins need to be loaded.
+	 * The only thing required is to load all the returned plugins in the order
+	 * given by the array.
+	 * 
+	 * @param topLevelFolder
+	 *            The top level folder where all plug-ins used to calculate the
+	 *            tree are located.
+	 * @throws IOException
+	 *             This method throws an IOException if it isn't able of
+	 *             handling the required IO.
+	 * @throws UnsolvedPependencyException
+	 *             This method throws an UnsolvedPependencyException if it can't
+	 *             calculate the order in which the plug-ins need to be loaded.
+	 * @see {@link org.technikradio.node.engine.plugin.UnsolvedPependencyException}
+	 *      for further information
+	 * @return An array of the plugins to load in the correct order.
+	 */
+	public static Manifest[] calculateDependencys(String topLevelFolder)
+			throws IOException, UnsolvedPependencyException {
+		//TODO implement
+		return null;
+	}
+}
