@@ -90,5 +90,17 @@ public class PluginLoaderTest {
 		}
 		PluginLoader.solve(toSolve, solved);
 	}
+	
+	@Test(expected=UnsolvedDependencyException.class)
+	public final void testUnsatisfiedException() throws UnsolvedDependencyException{
+		ArrayList<Manifest> toSolve = new ArrayList<Manifest>();
+		ArrayList<Manifest> solved = new ArrayList<Manifest>();
+		{
+			Manifest m = new Manifest("a");
+			m.getDependencies().add("b");
+			toSolve.add(m);
+		}
+		PluginLoader.solve(toSolve, solved);
+	}
 
 }

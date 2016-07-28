@@ -129,12 +129,15 @@ public class PluginLoader {
 			throws UnsolvedDependencyException {
 		while (toSolve.size() > 0) {
 			int moved = 0;
+			ArrayList<Manifest> toRemove = new ArrayList<Manifest>();
 			for (Manifest m : toSolve)
 				if (depsSolved(m, solved)) {
 					solved.add(m);
-					toSolve.remove(m);
+					toRemove.add(m);
 					moved++;
 				}
+			for(Manifest m : toRemove)
+				toSolve.remove(m);
 			if (moved == 0 && toSolve.size() > 0)
 				throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP + ": \n" + getListString(toSolve));
 		}
