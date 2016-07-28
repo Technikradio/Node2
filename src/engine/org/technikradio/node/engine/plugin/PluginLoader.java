@@ -114,6 +114,17 @@ public class PluginLoader {
 		return a.toArray(new Manifest[a.size()]);
 	}
 
+	/**
+	 * This method is used to sort the order in which the plug-ins have to be
+	 * loaded.
+	 * 
+	 * @param toSolve
+	 *            An ArrayList containing the manifests that need to be sorted.
+	 * @param solved
+	 *            An empty ArrayList in which the plug-ins will be sorted.
+	 * @throws UnsolvedDependencyException
+	 *             This exception gets thrown when the plug-ins are unsortable.
+	 */
 	public static final void solve(ArrayList<Manifest> toSolve, ArrayList<Manifest> solved)
 			throws UnsolvedDependencyException {
 		while (toSolve.size() > 0) {
@@ -124,11 +135,32 @@ public class PluginLoader {
 					toSolve.remove(m);
 					moved++;
 				}
-			if (moved == 0)
-				throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP);
+			if (moved == 0 && toSolve.size() > 0)
+				throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP + ": \n" + getListString(toSolve));
 		}
 	}
 
+	/**
+	 * This method constructs a string from an ArrayList containing manifests.
+	 * @param list The list containing the manifests.
+	 * @return The generated string.
+	 */
+	private static final String getListString(ArrayList<Manifest> list) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("The following plug-ins have unresolved dependencies:");
+		for(Manifest m : list){
+			sb.append("\n");
+			sb.append(m.getIdentifier());
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * This method checks the dependencies of a given manifest.
+	 * @param m The manifest to check.
+	 * @param solved The ArrayList containing the solved dependencies.
+	 * @return True if all dependencies are solved or otherwise false.
+	 */
 	private static final boolean depsSolved(Manifest m, ArrayList<Manifest> solved) {
 		if (m.getDependencies().size() == 0)
 			return true;
