@@ -287,6 +287,9 @@ public final class Manifest {
 		return this.incompatiblePlugins;
 	}
 
+	/**
+	 * This constructor is used to generate a new instance on an manifest.
+	 */
 	public Manifest() {
 		super();
 		version = -1;
@@ -300,6 +303,18 @@ public final class Manifest {
 		longInfoText = "";
 		dependancys = new ArrayList<String>();
 		identifier = "";
+	}
+
+	/**
+	 * This constructor is used to generate a virtual manifest. This is mainly
+	 * used for the unit tests.
+	 * 
+	 * @param identifier
+	 *            The identifier to use for an virtual manifest.
+	 */
+	public Manifest(String identifier) {
+		this();
+		this.setIdentifier(identifier);
 	}
 
 }

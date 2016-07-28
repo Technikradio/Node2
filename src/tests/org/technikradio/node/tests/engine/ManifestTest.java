@@ -1,21 +1,16 @@
 /*
 Copyright (c) 2016, Technikradio
 All rights reserved.
-
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-
 * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
-
 * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
-
 * Neither the name of Node2 nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
-
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -41,11 +36,11 @@ import org.junit.Test;
 import org.technikradio.node.engine.plugin.Manifest;
 
 /**
- * @author doralitze
- * This is the test class for {@link org.technikradio.node.engine.plugin.Manifest}
+ * @author doralitze This is the test class for
+ *         {@link org.technikradio.node.engine.plugin.Manifest}
  */
 public class ManifestTest {
-	
+
 	private Manifest m;
 
 	/**
@@ -64,7 +59,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getVersion()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getVersion()}.
 	 */
 	@Test
 	public final void testGetVersion() {
@@ -72,7 +68,9 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getCompatibleVersion()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getCompatibleVersion()}
+	 * .
 	 */
 	@Test
 	public final void testGetCompatibleVersion() {
@@ -80,7 +78,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getName()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getName()}.
 	 */
 	@Test
 	public final void testGetName() {
@@ -88,7 +87,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getMaintainer()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getMaintainer()}.
 	 */
 	@Test
 	public final void testGetMaintainer() {
@@ -96,7 +96,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getUpdateSite()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getUpdateSite()}.
 	 */
 	@Test
 	public final void testGetUpdateSite() {
@@ -104,7 +105,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getLicense()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getLicense()}.
 	 */
 	@Test
 	public final void testGetLicense() {
@@ -112,7 +114,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getWebsite()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getWebsite()}.
 	 */
 	@Test
 	public final void testGetWebsite() {
@@ -120,7 +123,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getDescription()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getDescription()}.
 	 */
 	@Test
 	public final void testGetDescription() {
@@ -128,7 +132,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getLongInfoText()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getLongInfoText()}.
 	 */
 	@Test
 	public final void testGetLongInfoText() {
@@ -136,7 +141,8 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getDependancys()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getDependancys()}.
 	 */
 	@Test
 	public final void testGetDependancys() {
@@ -144,11 +150,22 @@ public class ManifestTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.Manifest#getIdentifier()}.
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getIdentifier()}.
 	 */
 	@Test
 	public final void testGetIdentifier() {
 		assertEquals("", m.getIdentifier());
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.Manifest#Manifest(String)}.
+	 */
+	@Test
+	public final void testManifestString() {
+		Manifest m = new Manifest("abc");
+		assertEquals("abc", m.getIdentifier());
 	}
 
 }

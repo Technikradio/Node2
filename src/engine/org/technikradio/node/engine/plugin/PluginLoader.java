@@ -95,126 +95,53 @@ public class PluginLoader {
 	 */
 	public static final Manifest[] calculateDependencys(String topLevelFolder)
 			throws IOException, UnsolvedDependencyException {
-		// TODO implement
-		MFContainer[] m = null;
+		ArrayList<Manifest> mfFiles = new ArrayList<Manifest>();
 		// load all manifests inside the folder
 		{
-			ArrayList<MFContainer> mfFiles = new ArrayList<MFContainer>();
+
 			File dir = new File(topLevelFolder);
 			String[] content = dir.list();
 			for (String child : content) {
 				File f = new File(topLevelFolder + File.separator + child);
 				if (f.isDirectory()) {
-					mfFiles.add(new MFContainer(loadManifest(f)));
+					mfFiles.add(loadManifest(f));
 				}
 			}
-			m = mfFiles.toArray(new MFContainer[mfFiles.size()]);
 		}
 		// Sort the order
-		for (MFContainer c : m) {
-			if (!c.isSolved())
-				solveDependancys(c, m, new ArrayList<String>());
-		}
-		return null;
+		ArrayList<Manifest> a = new ArrayList<Manifest>();
+		solve(mfFiles, a);
+		return a.toArray(new Manifest[a.size()]);
 	}
 
-	/**
-	 * This class is designed as a container for a Manifest class and the
-	 * information whether its dependencies are solved or not.
-	 * 
-	 * @author doralitze
-	 *
-	 */
-	private static final class MFContainer {
-		private Manifest manifest;
-		private boolean solved;
-
-		/**
-		 * This constructor initializes a new unsolved container.
-		 * 
-		 * @param m
-		 *            The Manifest that hasn't been solved yet.
-		 */
-		public MFContainer(Manifest m) {
-			setManifest(m);
-			setSolvedFlag(false);
-		}
-
-		/**
-		 * This returns the stored manifest.
-		 * 
-		 * @return the stored manifest.
-		 */
-		public Manifest getManifest() {
-			return manifest;
-		}
-
-		/**
-		 * This sets the manifest.
-		 * 
-		 * @param manifest
-		 *            The manifest to store.
-		 */
-		public void setManifest(Manifest manifest) {
-			this.manifest = manifest;
-		}
-
-		/**
-		 * This returns the solved flag.
-		 * 
-		 * @return True if the dependencies of the stored manifest are already
-		 *         solved or otherwise false.
-		 */
-		public boolean isSolved() {
-			return solved;
-		}
-
-		/**
-		 * This method is used to set the solved flag.
-		 * @param solved The value to set.
-		 */
-		public void setSolvedFlag(boolean solved) {
-			this.solved = solved;
-		}
-	}
-
-	/**
-	 * This method is used to recursively create a dependency tree.
-	 * 
-	 * @param m
-	 *            The manifest to build the tree for.
-	 * @param a
-	 *            The full array of available manifest files
-	 * @param previousDeps An ArrayList containing all upper dependencies
-	 * @throws UnsolvedDependencyException
-	 *             This exception gets thrown if it can't build the tree.
-	 */
-	private static final void solveDependancys(MFContainer m, MFContainer[] a, ArrayList<String> previousDeps) throws UnsolvedDependencyException {
-		if(m.isSolved())
-			return;
-		if(previousDeps.contains(m.getManifest().getIdentifier())){
-			throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP);
-		}
-		Manifest mf = m.getManifest();
-		ArrayList<String> deps = (ArrayList<String>) mf.getDependencies().subList(0, mf.getDependencies().size() - 1);
-		for(String s : deps){
-			boolean found = false;
-			for(MFContainer c : a){
-				if(c.getManifest().getIdentifier().equals(s)){
-					found = true;
-					if(!c.isSolved()){
-						ArrayList<String> d = (ArrayList<String>) previousDeps.subList(0, previousDeps.size() - 1);
-						d.add(m.getManifest().getIdentifier());
-						solveDependancys(c, a, d);
-					}
-						
+	public static final void solve(ArrayList<Manifest> toSolve, ArrayList<Manifest> solved)
+			throws UnsolvedDependencyException {
+		while (toSolve.size() > 0) {
+			int moved = 0;
+			for (Manifest m : toSolve)
+				if (depsSolved(m, solved)) {
+					solved.add(m);
+					toSolve.remove(m);
+					moved++;
 				}
-			}
-			if(!found){
-				UnsolvedDependencyException e = new UnsolvedDependencyException();
-				throw e;
-			}
+			if (moved == 0)
+				throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP);
 		}
-		
+	}
+
+	private static final boolean depsSolved(Manifest m, ArrayList<Manifest> solved) {
+		if (m.getDependencies().size() == 0)
+			return true;
+		for (String d : m.getDependencies()) {
+			boolean found = false;
+			for (Manifest dependency : solved)
+				if (dependency.getIdentifier().equals(d)) {
+					found = true;
+					break;
+				}
+			if (!found)
+				return false;
+		}
+		return true;
 	}
 }
