@@ -113,7 +113,7 @@ public class PluginLoader {
 		// Sort the order
 		for (MFContainer c : m) {
 			if (!c.isSolved())
-				solveDependancy(c, m);
+				solveDependancys(c, m, new ArrayList<String>());
 		}
 		return null;
 	}
@@ -185,13 +185,36 @@ public class PluginLoader {
 	 *            The manifest to build the tree for.
 	 * @param a
 	 *            The full array of available manifest files
+	 * @param previousDeps An ArrayList containing all upper dependencies
 	 * @throws UnsolvedDependencyException
 	 *             This exception gets thrown if it can't build the tree.
 	 */
-	private static final void solveDependancy(MFContainer m, MFContainer[] a) throws UnsolvedDependencyException {
+	private static final void solveDependancys(MFContainer m, MFContainer[] a, ArrayList<String> previousDeps) throws UnsolvedDependencyException {
 		if(m.isSolved())
 			return;
+		if(previousDeps.contains(m.getManifest().getIdentifier())){
+			throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP);
+		}
 		Manifest mf = m.getManifest();
+		ArrayList<String> deps = (ArrayList<String>) mf.getDependencies().subList(0, mf.getDependencies().size() - 1);
+		for(String s : deps){
+			boolean found = false;
+			for(MFContainer c : a){
+				if(c.getManifest().getIdentifier().equals(s)){
+					found = true;
+					if(!c.isSolved()){
+						ArrayList<String> d = (ArrayList<String>) previousDeps.subList(0, previousDeps.size() - 1);
+						d.add(m.getManifest().getIdentifier());
+						solveDependancys(c, a, d);
+					}
+						
+				}
+			}
+			if(!found){
+				UnsolvedDependencyException e = new UnsolvedDependencyException();
+				throw e;
+			}
+		}
 		
 	}
 }
