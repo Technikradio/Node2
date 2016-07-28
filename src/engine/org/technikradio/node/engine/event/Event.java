@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.event;
 
-import org.technikradio.node.engine.plugin.plugin;
+import org.technikradio.node.engine.plugin.Plugin;
 
 /**
  * This class represents an event that can be raised using the EventRegisty class.
@@ -43,7 +43,7 @@ import org.technikradio.node.engine.plugin.plugin;
 public class Event {
 
 	private final EventType type;
-	private final plugin source;
+	private final Plugin source;
 	private final String messageDetails;
 	private final EventResponder responder;
 	
@@ -54,7 +54,7 @@ public class Event {
 	 * @param source The source of the event
 	 * @param responder A responder to keep for the source in order to process the responses later
 	 */
-	public Event(EventType type, plugin source, EventResponder responder){
+	public Event(EventType type, Plugin source, EventResponder responder){
 		this(type, source, "", responder);
 	}
 
@@ -65,7 +65,7 @@ public class Event {
 	 * @param messageDetails Some details of the event
 	 * @param responder A responder to keep for the source in order to process the responses later
 	 */
-	public Event(EventType type, plugin source, String messageDetails, EventResponder responder){
+	public Event(EventType type, Plugin source, String messageDetails, EventResponder responder){
 		super();
 		this.type = type;
 		this.source = source;
@@ -83,7 +83,7 @@ public class Event {
 	/**
 	 * @return the source
 	 */
-	public plugin getSource() {
+	public Plugin getSource() {
 		return source;
 	}
 

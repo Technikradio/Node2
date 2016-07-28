@@ -29,7 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This class is used to load a plugin based on the given manifest file.
@@ -51,31 +53,31 @@ public class PluginLoader {
 	 *         plugin is incompatible.
 	 * @throws IOException
 	 *             This exception gets thrown when the method is unable of
-	 *             managing the IO required to load the plugin.
+	 *             managing the IO required to load the plug-in.
 	 */
-	public static boolean loadPlugin(Manifest manifest) throws IOException {
-		//TODO implement
+	public static final boolean loadPlugin(Manifest manifest) throws IOException {
+		// TODO implement
 		return false;
 	}
 
 	/**
-	 * This method is used to load a manifest file of a plugin.
+	 * This method is used to load a manifest file of a plug-in.
 	 * 
 	 * @param path
-	 *            The path pointing to the top level folder of the plugin. This
+	 *            The path pointing to the top level folder of the plug-in. This
 	 *            folder has to contain the manifest file.
 	 * @throws IOException
 	 *             It throws an IOException if it fails to handle the IO.
 	 * @return The loaded manifest file.
 	 */
-	public static Manifest loadManifest(String path) throws IOException {
-		//TODO implement
+	public static final Manifest loadManifest(File path) throws IOException {
+		// TODO implement
 		return null;
 	}
 
 	/**
 	 * This method calculates the order in which the plug-ins need to be loaded.
-	 * The only thing required is to load all the returned plugins in the order
+	 * The only thing required is to load all the returned plug-ins in the order
 	 * given by the array.
 	 * 
 	 * @param topLevelFolder
@@ -84,16 +86,112 @@ public class PluginLoader {
 	 * @throws IOException
 	 *             This method throws an IOException if it isn't able of
 	 *             handling the required IO.
-	 * @throws UnsolvedPependencyException
-	 *             This method throws an UnsolvedPependencyException if it can't
+	 * @throws UnsolvedDependencyException
+	 *             This method throws an UnsolvedDependencyException if it can't
 	 *             calculate the order in which the plug-ins need to be loaded.
-	 * @see {@link org.technikradio.node.engine.plugin.UnsolvedPependencyException}
+	 * @see {@link org.technikradio.node.engine.plugin.UnsolvedDependencyException}
 	 *      for further information
-	 * @return An array of the plugins to load in the correct order.
+	 * @return An array of the plug-ins to load in the correct order.
 	 */
-	public static Manifest[] calculateDependencys(String topLevelFolder)
-			throws IOException, UnsolvedPependencyException {
-		//TODO implement
+	public static final Manifest[] calculateDependencys(String topLevelFolder)
+			throws IOException, UnsolvedDependencyException {
+		// TODO implement
+		MFContainer[] m = null;
+		// load all manifests inside the folder
+		{
+			ArrayList<MFContainer> mfFiles = new ArrayList<MFContainer>();
+			File dir = new File(topLevelFolder);
+			String[] content = dir.list();
+			for (String child : content) {
+				File f = new File(topLevelFolder + File.separator + child);
+				if (f.isDirectory()) {
+					mfFiles.add(new MFContainer(loadManifest(f)));
+				}
+			}
+			m = mfFiles.toArray(new MFContainer[mfFiles.size()]);
+		}
+		// Sort the order
+		for (MFContainer c : m) {
+			if (!c.isSolved())
+				solveDependancy(c, m);
+		}
 		return null;
+	}
+
+	/**
+	 * This class is designed as a container for a Manifest class and the
+	 * information whether its dependencies are solved or not.
+	 * 
+	 * @author doralitze
+	 *
+	 */
+	private static final class MFContainer {
+		private Manifest manifest;
+		private boolean solved;
+
+		/**
+		 * This constructor initializes a new unsolved container.
+		 * 
+		 * @param m
+		 *            The Manifest that hasn't been solved yet.
+		 */
+		public MFContainer(Manifest m) {
+			setManifest(m);
+			setSolvedFlag(false);
+		}
+
+		/**
+		 * This returns the stored manifest.
+		 * 
+		 * @return the stored manifest.
+		 */
+		public Manifest getManifest() {
+			return manifest;
+		}
+
+		/**
+		 * This sets the manifest.
+		 * 
+		 * @param manifest
+		 *            The manifest to store.
+		 */
+		public void setManifest(Manifest manifest) {
+			this.manifest = manifest;
+		}
+
+		/**
+		 * This returns the solved flag.
+		 * 
+		 * @return True if the dependencies of the stored manifest are already
+		 *         solved or otherwise false.
+		 */
+		public boolean isSolved() {
+			return solved;
+		}
+
+		/**
+		 * This method is used to set the solved flag.
+		 * @param solved The value to set.
+		 */
+		public void setSolvedFlag(boolean solved) {
+			this.solved = solved;
+		}
+	}
+
+	/**
+	 * This method is used to recursively create a dependency tree.
+	 * 
+	 * @param m
+	 *            The manifest to build the tree for.
+	 * @param a
+	 *            The full array of available manifest files
+	 * @throws UnsolvedDependencyException
+	 *             This exception gets thrown if it can't build the tree.
+	 */
+	private static final void solveDependancy(MFContainer m, MFContainer[] a) throws UnsolvedDependencyException {
+		if(m.isSolved())
+			return;
+		Manifest mf = m.getManifest();
+		
 	}
 }

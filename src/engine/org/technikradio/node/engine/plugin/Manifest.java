@@ -49,6 +49,7 @@ public final class Manifest {
 	private String description;
 	private String longInfoText;
 	private ArrayList<String> dependancys;
+	private ArrayList<String> incompatiblePlugins;
 	private String identifier;
 	private String mainClass;
 
@@ -141,6 +142,16 @@ public final class Manifest {
 	}
 
 	/**
+	 * This method is used to set the list of incompatible plug-ins.
+	 * 
+	 * @param incompatiblePlugins
+	 *            The list of incompatible plug-ins.
+	 */
+	protected void setIncompatiblePlugins(ArrayList<String> incompatiblePlugins) {
+		this.incompatiblePlugins = incompatiblePlugins;
+	}
+
+	/**
 	 * @return the mainClass
 	 */
 	protected String getMainClass() {
@@ -156,6 +167,8 @@ public final class Manifest {
 	}
 
 	/**
+	 * Use this method to get the version of the plug-in.
+	 * 
 	 * @return the version
 	 */
 	public int getVersion() {
@@ -163,6 +176,8 @@ public final class Manifest {
 	}
 
 	/**
+	 * Use this method to get the version of node this plug-in is build for.
+	 * 
 	 * @return the compatibleVersion
 	 */
 	public int getCompatibleVersion() {
@@ -170,6 +185,8 @@ public final class Manifest {
 	}
 
 	/**
+	 * Use this method to get the name of the plug-in to display.
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -177,6 +194,8 @@ public final class Manifest {
 	}
 
 	/**
+	 * Use this method to get the maintainer of the plug-in.
+	 * 
 	 * @return the maintainer
 	 */
 	public String getMaintainer() {
@@ -184,6 +203,11 @@ public final class Manifest {
 	}
 
 	/**
+	 * Use this method to get the update site. This should be a link pointing to
+	 * an MML file with pairs of the compatible node version and the latest
+	 * version of the plug-in followed by a link to the plug-in file. The
+	 * version and the link should be separated by a ':'.
+	 * 
 	 * @return the updateSite
 	 */
 	public String getUpdateSite() {
@@ -191,6 +215,10 @@ public final class Manifest {
 	}
 
 	/**
+	 * Use this method to get the license of the plug-in. Meant is the
+	 * identifier (like LGPLv3 for example). Use the info text to display the
+	 * full text of the license for example.
+	 * 
 	 * @return the license
 	 */
 	public String getLicense() {
@@ -198,13 +226,21 @@ public final class Manifest {
 	}
 
 	/**
-	 * @return the website
+	 * Use this method to get the web site of the plug-in. The web site meant is
+	 * the one providing information about the plug-in and support.
+	 * 
+	 * @return the web site
 	 */
 	public String getWebsite() {
 		return website;
 	}
 
 	/**
+	 * This method is used to get the description of the plug-in. You shouldn't
+	 * use HTML for this due to the fact that it will be displayed inside a text
+	 * field later on. You also should make sure that the text isn't longer than
+	 * 300 characters.
+	 * 
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -212,6 +248,10 @@ public final class Manifest {
 	}
 
 	/**
+	 * This method is used to get the long informational text of this plug-in.
+	 * The text should be correct plain HTML due to the fact that is very likely
+	 * that it will be displayed inside a web browser widget.
+	 * 
 	 * @return the longInfoText
 	 */
 	public String getLongInfoText() {
@@ -219,17 +259,32 @@ public final class Manifest {
 	}
 
 	/**
-	 * @return the dependancys
+	 * This method is used to return the dependencies of the plug-in. It's a
+	 * list of the identifiers of the dependent plug-ins.
+	 * 
+	 * @return the dependencies
 	 */
-	public ArrayList<String> getDependancys() {
+	public ArrayList<String> getDependencies() {
 		return dependancys;
 	}
 
 	/**
+	 * This method is used to get the main identifier of the corresponding
+	 * plug-in.
+	 * 
 	 * @return the identifier
 	 */
 	public String getIdentifier() {
 		return identifier;
+	}
+
+	/**
+	 * This method is used to get the list of incompatible plug-ins.
+	 * 
+	 * @return The list of incompatible plug-ins.
+	 */
+	public ArrayList<String> getIncompatiblePlugins() {
+		return this.incompatiblePlugins;
 	}
 
 	public Manifest() {

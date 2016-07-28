@@ -31,29 +31,56 @@ package org.technikradio.node.engine.plugin;
 
 /**
  * This exception is designed to get thrown in case of an unsolved dependency
- * tree. Typically this means that a plugin requires another plugin to operate
- * but the other plugin is not installed. It may also be the case that two
- * installed plugins are conflicting with each other. See the message detail of
+ * tree. Typically this means that a plug-in requires another plug-in to operate
+ * but the other plug-in is not installed. It may also be the case that two
+ * installed plug-ins are conflicting with each other. See the message detail of
  * this exception in order to separate both cases.
  * 
  * @author doralitze
  *
  */
-public class UnsolvedPependencyException extends Exception {
+public class UnsolvedDependencyException extends Exception {
 
 	private static final long serialVersionUID = -4598389328851172940L;
 
 	/**
 	 * Put this constant at the beginning of the the message detail of this
 	 * exception in order to mark the case that this exception is thrown due to
-	 * a couple conflicting plugin installations.
+	 * a couple conflicting plug-in installations.
 	 */
 	public static final String CONFLICTING_PLUGINS = "[CONFLICT]";
 	/**
 	 * Put this constant at the beginning of the the message detail of this
 	 * exception in order to mark the case that this exception is thrown due to
-	 * a couple of missing dependency of other plugins.
+	 * a couple of missing dependency of other plug-ins.
 	 */
 	public static final String UNSOLVED_DEPENDENCY = "[DEPPROBL]";
+	/**
+	 * Put this constant at the beginning of the the message detail of this
+	 * exception in order to mark the case that this exception is thrown due to
+	 * a dependency loop. A dependency loop is defined by the case that a
+	 * plug-in A depends on a plug-in B but the plug-in B depends on plug-in A.
+	 * In this case plug-in B must be loaded before plug-in A can be loaded but
+	 * plug-in B requires plug-in A to be loaded first. Such a situation is
+	 * impossible to solve.
+	 */
+	public static final String DEPENDENCY_LOOP = "[DEPLOOP]";
 
+	/**
+	 * This constructor creates a new UnsolvedDependancyException containing the
+	 * UNSOLVED_DEPENDENCY flag.
+	 */
+	public UnsolvedDependencyException() {
+		super(UNSOLVED_DEPENDENCY);
+	}
+
+	/**
+	 * This constructor creates a new instance of this class.
+	 * Use the message argument to define what type of exception this is.
+	 * You may also want to include some further detail after the type flag.
+	 * @param message The message to place.
+	 */
+	public UnsolvedDependencyException(String message) {
+		super(message);
+	}
 }

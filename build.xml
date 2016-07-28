@@ -40,16 +40,21 @@
 
 <target name="doc" depends="create-build-folders" description="This target creates the javadoc.">
   <mkdir dir="${dir.buildfolder}/doc" />
-  <mkdir dir="${dir.buildfolder}/doc/engine" />
-  <mkdir dir="${dir.buildfolder}/doc/core" />
-  <javadoc sourcepath="${dir.projectfolder}/src/engine"
-           destdir="${dir.buildfolder}/doc/engine"
+  <mkdir dir="${dir.buildfolder}/doc/src-doc" />
+  <mkdir dir="${dir.buildfolder}/doc/javadoc" />
+  <copy todir="${dir.buildfolder}/doc/src-doc">
+    <fileset dir="${dir.projectfolder}/src/engine" includes="**" />
+  </copy>
+  <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/core">
+    <fileset dir="${dir.projectfolder}/src/core/org/technikradio/node/core" includes="**" />
+  </copy>
+  <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/tests">
+    <fileset dir="${dir.projectfolder}/src/tests/org/technikradio/node/tests" includes="**" />
+  </copy>
+  <javadoc sourcepath="${dir.buildfolder}/doc/src-doc"
+           destdir="${dir.buildfolder}/doc/javadoc"
            includenosourcepackages="true"
            classpathref="test.classpath"/>
-  <javadoc sourcepath="${dir.projectfolder}/src/core"
-           destdir="${dir.buildfolder}/doc/core"
-           includenosourcepackages="true"
-           classpathref="test.classpath" />
 </target>
 
 <target name="install" />
