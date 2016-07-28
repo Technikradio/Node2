@@ -140,7 +140,7 @@ public class ManifestTest {
 	 */
 	@Test
 	public final void testGetDependancys() {
-		assertEquals(0, m.getDependancys().size());
+		assertEquals(0, m.getDependencies().size());
 	}
 
 	/**
