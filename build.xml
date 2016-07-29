@@ -145,7 +145,7 @@
   <jar destfile="${dir.buildfolder}/tmp/construct/plugins/core/core.jar">
     <fileset dir="${dir.buildfolder}/compile/core" />
   </jar>
-  <copy file="${dir.projectfolder}/src/core/org/technikradio/node/core/manifest.json"
+  <copy file="${dir.projectfolder}/src/core/manifest.json"
         todir="${dir.buildfolder}/tmp/construct/plugins/core/" />
 </target>
 
