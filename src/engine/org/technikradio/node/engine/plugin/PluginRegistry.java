@@ -39,6 +39,8 @@ import java.util.Hashtable;
 
 import org.technikradio.node.engine.plugin.settings.SettingsObject;
 import org.technikradio.node.engine.plugin.ui.Window;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is used to register all required components that enable the
@@ -69,14 +71,22 @@ public final class PluginRegistry {
 	}
 
 	/**
-	 * This method loads a plugin from a desired location
+	 * This method registers a plug-in loaded by the PluginLoader class.
 	 * 
-	 * @param manifestFile
-	 *            The manifest file of the plugin
-	 * @return true if the plugin successfully loaded or false otherwise
+	 * @param plugin
+	 *            The plug-in to register.
+	 * @return true if the plug-in successfully loaded or false otherwise
 	 */
-	protected static boolean loadPlugin(String manifestFile) {
-		// TODO implement
+	protected synchronized static boolean registerPlugin(Plugin plugin) {
+		try{
+			plugins.put(plugin.getMainfest().getIdentifier(), plugin);
+			plugin.load();
+			plugin.setLoadedFlag();
+			return true;
+		} catch (Exception e){
+			Console.log(LogType.Warning, "PluginRegistry", "Error on invoking plugins init methods.");
+			e.printStackTrace();
+		}
 		return false;
 	}
 

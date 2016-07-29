@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -52,6 +53,7 @@ public final class Manifest {
 	private ArrayList<String> incompatiblePlugins;
 	private String identifier;
 	private String mainClass;
+	private File pathToPlugin;
 
 	/**
 	 * @param version
@@ -285,6 +287,22 @@ public final class Manifest {
 	 */
 	public ArrayList<String> getIncompatiblePlugins() {
 		return this.incompatiblePlugins;
+	}
+
+	/**
+	 * This method is used to retrieve the path where the plug-in is stored.
+	 * @return The path to the plug-in.
+	 */
+	protected final File getPathToPlugin() {
+		return this.pathToPlugin;
+	}
+
+	/**
+	 * This method is used to store the path to the plug-in.
+	 * @param pathToPlugin The path to the plug-in.
+	 */
+	protected final void setPathToPlugin(File pathToPlugin) {
+		this.pathToPlugin = pathToPlugin;
 	}
 
 	/**

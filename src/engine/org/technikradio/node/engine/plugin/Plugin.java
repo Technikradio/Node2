@@ -75,15 +75,15 @@ public abstract class Plugin {
 	}
 
 	/**
-	 * @param mainfest
-	 *            the mainfest of the plugin to set
+	 * @param manifest
+	 *            the manifest of the plug-in to set
 	 */
-	protected void setMainfest(Manifest mainfest) {
-		this.mainfest = mainfest;
+	protected void setMainfest(Manifest manifest) {
+		this.mainfest = manifest;
 	}
 
 	/**
-	 * This method gets called when the plugin should initialize itself
+	 * This method gets called when the plug-in should initialize itself
 	 */
 	public abstract void load();
 

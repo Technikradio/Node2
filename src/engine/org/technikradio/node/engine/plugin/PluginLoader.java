@@ -31,10 +31,19 @@ package org.technikradio.node.engine.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
+
 /**
- * This class is used to load a plugin based on the given manifest file.
+ * This class is used to load a plug-in based on the given manifest file.
  * 
  * @author doralitze
  *
@@ -42,21 +51,52 @@ import java.util.ArrayList;
 public class PluginLoader {
 
 	/**
-	 * This method is used to load a plugin. Note that it doesn't automatically
+	 * This method is used to load a plug-in. Note that it doesn't automatically
 	 * handles the dependency loading. Use
 	 * {@link org.technikradio.node.engine.plugin.PluginLoader#calculateDependencys(String)}
 	 * first.
 	 * 
 	 * @param manifest
-	 *            The manifest required to load the plugin.
-	 * @return true if the plugin is compatible and loaded or false if the
-	 *         plugin is incompatible.
+	 *            The manifest required to load the plug-in.
+	 * @return true if the plug-in is compatible and loaded or false if the
+	 *         plug-in is incompatible.
 	 * @throws IOException
 	 *             This exception gets thrown when the method is unable of
 	 *             managing the IO required to load the plug-in.
 	 */
 	public static final boolean loadPlugin(Manifest manifest) throws IOException {
-		// TODO implement
+		PluginLoader.class.getClassLoader();
+		try {
+			URLClassLoader loader = URLClassLoader.newInstance(doBatchTest(manifest.getPathToPlugin()),
+					ClassLoader.getSystemClassLoader());
+			;
+			@SuppressWarnings("rawtypes")
+			Class pclass = loader.loadClass(manifest.getMainClass());
+			Object pseudoPlugin = pclass.newInstance();
+			if (!(pseudoPlugin instanceof Plugin)) {
+				Console.log(LogType.Error, "PluginLoader.loadPlugin", manifest.getPathToPlugin().toString()
+						+ ": referenced main class is not an instance of Plugin.class.");
+				return false;
+			} else {
+				Plugin p = (Plugin) pseudoPlugin;
+				p.setMainfest(manifest);
+				PluginRegistry.registerPlugin(p);
+			}
+
+		} catch (ClassNotFoundException e) {
+			Console.log(LogType.Error, "PluginLoader.loadPlugin",
+					manifest.getPathToPlugin().toString() + ": Unable to load plug-in.");
+			e.printStackTrace();
+			return false;
+		} catch (InstantiationException e) {
+			Console.log(LogType.Error, "PluginLoader.loadPlugin",
+					manifest.getPathToPlugin().toString() + ": Unable to instanciate plug-in.");
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			Console.log(LogType.Error, "PluginLoader.loadPlugin",
+					manifest.getPathToPlugin().toString() + ": Forbidden to load plug-in.");
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -71,8 +111,112 @@ public class PluginLoader {
 	 * @return The loaded manifest file.
 	 */
 	public static final Manifest loadManifest(File path) throws IOException {
-		// TODO implement
-		return null;
+		Manifest m = null;
+		File f = null;
+		try {
+			f = new File(path.getAbsolutePath() + File.separator + "manifest.json");
+			JSONObject j = new JSONObject(new String(Files.readAllBytes(f.toPath())));
+			m = new Manifest();
+			m.setPathToPlugin(path);
+			try {
+				m.setMainClass(j.getString("mainClass"));
+			} catch (JSONException e) {
+				Console.log(LogType.Error, "PluginLoader.loadManifest",
+						f.toString() + " doesn't specify a main class.");
+				e.printStackTrace();
+				return null;
+			}
+			try {
+				m.setVersion(j.getInt("version"));
+			} catch (JSONException e) {
+			}
+			try {
+				m.setCompatibleVersion(j.getInt("compatibleVersion"));
+			} catch (JSONException e1) {
+				m.setCompatibleVersion(0);
+			}
+			try {
+				m.setDescription(j.getString("description"));
+			} catch (JSONException e1) {
+				m.setDescription("This plug-in has no description.");
+			}
+			try {
+				m.setIdentifier(j.getString("identifier"));
+			} catch (JSONException e) {
+				Console.log(LogType.Error, "PluginLoader.loadManifest",
+						f.toString() + " doesn't specify an identifier.");
+				e.printStackTrace();
+				return null;
+			}
+			try {
+				m.setLicense(j.getString("license"));
+			} catch (JSONException e) {
+				m.setLicense("");
+			}
+			try {
+				m.setLongInfoText(j.getString("longInfoText"));
+			} catch (JSONException e) {
+				m.setLongInfoText("<h1>This plug-in has no description.</h1>");
+			}
+			try {
+				m.setMaintainer(j.getString("maintainer"));
+			} catch (JSONException e) {
+				m.setMaintainer("");
+			}
+			try {
+				m.setName(j.getString("name"));
+			} catch (JSONException e) {
+				m.setName("no name");
+			}
+			try {
+				m.setUpdateSite(j.getString("updateSide"));
+			} catch (JSONException e) {
+			}
+			try {
+				m.setWebsite(j.getString("website"));
+			} catch (JSONException e) {
+			}
+			try {
+				{
+					JSONArray a = j.getJSONArray("dependancys");
+					ArrayList<String> l = new ArrayList<String>();
+					for (int i = 0; i < a.length(); i++) {
+						try {
+							l.add(a.getString(i));
+						} catch (Exception e) {
+							Console.log(LogType.Warning, "PluginLoader.loadManifest",
+									f.toString() + " [" + i + "]: unable to load dependency.");
+						}
+					}
+					m.setDependancys(l);
+				}
+			} catch (Exception e) {
+				m.setDependancys(new ArrayList<String>());
+			}
+			try {
+				{
+					JSONArray a = j.getJSONArray("incompatiblePlugins");
+					ArrayList<String> l = new ArrayList<String>();
+					for (int i = 0; i < a.length(); i++) {
+						try {
+							l.add(a.getString(i));
+						} catch (Exception e) {
+							Console.log(LogType.Warning, "PluginLoader.loadManifest",
+									f.toString() + " [" + i + "]: unable to load incompatible plug-in.");
+						}
+					}
+					m.setIncompatiblePlugins(l);
+				}
+			} catch (Exception e) {
+				m.setIncompatiblePlugins(new ArrayList<String>());
+			}
+		} catch (IOException e) {
+			throw e;
+		} catch (Exception e) {
+			Console.log(LogType.Error, "PluginLoader.loadManifest", "An error occured: ");
+			e.printStackTrace();
+		}
+		return m;
 	}
 
 	/**
@@ -104,7 +248,12 @@ public class PluginLoader {
 			for (String child : content) {
 				File f = new File(topLevelFolder + File.separator + child);
 				if (f.isDirectory()) {
-					mfFiles.add(loadManifest(f));
+					try {
+						mfFiles.add(loadManifest(f));
+					} catch (Exception e) {
+						Console.log(LogType.Warning, "PluginLoader.calculateDependencies", "Couldn't load plug-in: ");
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -136,22 +285,25 @@ public class PluginLoader {
 					toRemove.add(m);
 					moved++;
 				}
-			for(Manifest m : toRemove)
+			for (Manifest m : toRemove)
 				toSolve.remove(m);
 			if (moved == 0 && toSolve.size() > 0)
-				throw new UnsolvedDependencyException(UnsolvedDependencyException.DEPENDENCY_LOOP + ": \n" + getListString(toSolve));
+				throw new UnsolvedDependencyException(
+						UnsolvedDependencyException.DEPENDENCY_LOOP + ": \n" + getListString(toSolve));
 		}
 	}
 
 	/**
 	 * This method constructs a string from an ArrayList containing manifests.
-	 * @param list The list containing the manifests.
+	 * 
+	 * @param list
+	 *            The list containing the manifests.
 	 * @return The generated string.
 	 */
 	private static final String getListString(ArrayList<Manifest> list) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("The following plug-ins have unresolved dependencies:");
-		for(Manifest m : list){
+		for (Manifest m : list) {
 			sb.append("\n");
 			sb.append(m.getIdentifier());
 		}
@@ -160,8 +312,11 @@ public class PluginLoader {
 
 	/**
 	 * This method checks the dependencies of a given manifest.
-	 * @param m The manifest to check.
-	 * @param solved The ArrayList containing the solved dependencies.
+	 * 
+	 * @param m
+	 *            The manifest to check.
+	 * @param solved
+	 *            The ArrayList containing the solved dependencies.
 	 * @return True if all dependencies are solved or otherwise false.
 	 */
 	private static final boolean depsSolved(Manifest m, ArrayList<Manifest> solved) {
@@ -178,5 +333,15 @@ public class PluginLoader {
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * This method is used to get all jar files recursively inside a folder.
+	 * @param pathToInspect The path that should be searched.
+	 * @return The URL's pointing to the jar files inside that folder and its sub folders.
+	 */
+	private static URL[] doBatchTest(File pathToInspect) {
+		// TODO implement
+		return null;
 	}
 }

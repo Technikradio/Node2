@@ -8,7 +8,8 @@
 	"website" : "http://technikradio.org",
 	"description" : "This plugin adds some fundamental user interaction.",
 	"longInfoText" : "Most other plugins will rely on this plugin and user interaction will not be possible without this package.",
-	"dependancys" : {},
+	"dependancys" : [],
+	"incompatiblePlugins" : [],
 	"identifier" : "org.technikradio.node.plugins.core",
 	"mainClass" : "org.technikradio.node.core.CorePlugin"
 }
