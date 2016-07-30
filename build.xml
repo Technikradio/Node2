@@ -2,7 +2,7 @@
 <project default="all" name="Node2">
 
 <!-- Note: this currently only affects the linux target. -->
-<property name="build.targetarch" value="32" />
+<property name="build.targetarch" value="64" />
 
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
@@ -23,6 +23,8 @@
 				 optimize="on"
 				 includeAntRuntime="no">
     <classpath refid="test.classpath"/>
+    <include name="**/*.scala"/>
+    <include name="**/*.java"/>
   </javac>
   <jar destfile="${dir.buildfolder}/test/tests.jar">
     <fileset dir="${dir.buildfolder}/compile/tests" />
@@ -126,6 +128,9 @@
       <equals arg1="${isWindows}" arg2="true" />
     </condition>
     <echo message="Set SWT library to: ${rightswtlib}" />
+
+    <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar" />
+    <echo message="Located scala at: ${scala-library.jar}"/>
   </target>
 
 <!-- ======================== End of environment analysis ================== -->

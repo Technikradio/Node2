@@ -33,10 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.tests.engine;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
-import java.util.Iterator;
 
 import org.junit.After;
 import org.junit.Before;
@@ -99,7 +98,7 @@ public class DataSourceTest {
 	@Test
 	public final void test() {
 		assertEquals("blah", cl.getIdentifier());
-		assertEquals(null, cl.save(null, null));
+		assertEquals(true, cl.save(null, null));
 		assertEquals(false, cl.load(null));
 		assertEquals(null, cl.showResourceOpenDialog());
 		assertEquals(false, cl.saveDataObject(null));
