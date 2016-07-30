@@ -99,7 +99,7 @@ public class DataSourceTest {
 	public final void test() {
 		assertEquals("blah", cl.getIdentifier());
 		assertEquals(true, cl.save(null, null));
-		assertEquals(false, cl.load(null));
+		assertEquals(null, cl.load(null));
 		assertEquals(null, cl.showResourceOpenDialog());
 		assertEquals(false, cl.saveDataObject(null));
 	}

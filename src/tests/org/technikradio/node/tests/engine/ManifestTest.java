@@ -142,7 +142,7 @@ public class ManifestTest {
 
 	/**
 	 * Test method for
-	 * {@link org.technikradio.node.engine.plugin.Manifest#getDependancys()}.
+	 * {@link org.technikradio.node.engine.plugin.Manifest#getDependencies()}.
 	 */
 	@Test
 	public final void testGetDependancys() {

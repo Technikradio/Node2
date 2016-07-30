@@ -87,6 +87,7 @@ public final class WorkFileTest {
 		tc3 = new DataObjectTestClass("c", "3");
 		w.addChild(tc1);
 		w.addChild(tc2);
+		w.addChild(tc3);
 	}
 
 	/**
@@ -115,16 +116,12 @@ public final class WorkFileTest {
 		Iterator<DataObject> i = w.getChildObjects();
 		DataObject o1 = i.next();
 		DataObject o2 = i.next();
-		@SuppressWarnings("unused")
-		DataObject o3 = i.next();
-		DataObject o4 = i.next();
 		if(o1 != tc1 || o1 != tc2 || o1 != tc3){
 			fail("Fist test object didn't match.");
 		}
 		if(o2 != tc1 || o2 != tc2 || o2 != tc3){
 			fail("Second test object didn't match.");
 		}
-		assertNull(o4);
 	}
 
 	/**
