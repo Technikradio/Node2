@@ -65,7 +65,7 @@ public class Application {
 	 */
 	public static final boolean LOCAL_APPDATA_FOLDER_AVAIABLE;
 	/**
-	 * This field contains the path to the plugin folder.
+	 * This field contains the path to the plug-in folder.
 	 */
 	public static final String PLUGIN_FOLDER;
 	/**

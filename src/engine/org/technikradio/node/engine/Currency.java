@@ -35,8 +35,11 @@ package org.technikradio.node.engine;
  * find mistakes.
  * 
  * @author doralitze
+ * @deprecated since I noticed that it's possible to get an instance of a
+ *             currency from the ISO 4217 code.
  *
  */
+@Deprecated
 public enum Currency {
 	/**
 	 * The Afghan afghani (currency of Afghanistan)

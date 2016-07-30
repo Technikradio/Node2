@@ -44,6 +44,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.plugin.DataNotYetLoadedException;
 import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.WorkFile;
 
 /**
  * @author doralitze
@@ -66,6 +67,11 @@ public class DataObjectTest {
 
 		@Override
 		public void onClose() {
+		}
+
+		@Override
+		public void onAddToWorkSheet(WorkFile wf) {
+			//Do nothing here
 		}
 		
 	}

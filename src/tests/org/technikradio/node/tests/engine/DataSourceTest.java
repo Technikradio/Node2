@@ -43,6 +43,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
+import org.technikradio.node.engine.plugin.WorkFile;
 
 /**
  * @author doralitze
@@ -59,18 +60,13 @@ public class DataSourceTest {
 		}
 
 		@Override
-		public Iterator<DataObject> getChildObjects() {
-			return null;
-		}
-
-		@Override
-		public boolean save(URI uri) {
+		public boolean save(URI uri, WorkFile f) {
 			return true;
 		}
 
 		@Override
-		public boolean load(URI uri) {
-			return false;
+		public WorkFile load(URI uri) {
+			return null;
 		}
 
 		@Override
@@ -103,8 +99,7 @@ public class DataSourceTest {
 	@Test
 	public final void test() {
 		assertEquals("blah", cl.getIdentifier());
-		assertEquals(null, cl.getChildObjects());
-		assertEquals(true, cl.save(null));
+		assertEquals(null, cl.save(null, null));
 		assertEquals(false, cl.load(null));
 		assertEquals(null, cl.showResourceOpenDialog());
 		assertEquals(false, cl.saveDataObject(null));

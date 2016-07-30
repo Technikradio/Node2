@@ -34,7 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin;
 
 import java.net.URI;
-import java.util.Iterator;
 
 /**
  * This class represents a data source where the plugins load and save all of
@@ -68,22 +67,17 @@ public abstract class DataSource {
 	}
 
 	/**
-	 * This method should return all underlying DataObjects.
-	 * 
-	 * @return the objects
-	 */
-	public abstract Iterator<DataObject> getChildObjects();
-
-	/**
 	 * This method will get called if the user clicks on save or any other thing
 	 * invokes a save event. Note that the engine makes no difference between
 	 * 'save' and 'save as'. It is up to the plugin to determinate what to do.
 	 * 
 	 * @param uri
 	 *            to save to.
+	 * @param file
+	 *            The work file to save.
 	 * @return true if the save was successful or false otherwise
 	 */
-	public abstract boolean save(URI uri);
+	public abstract boolean save(URI uri, WorkFile file);
 
 	/**
 	 * This method gets called when the plugin should load the data. The URI can
@@ -91,9 +85,9 @@ public abstract class DataSource {
 	 * 
 	 * @param uri
 	 *            to load from
-	 * @return true if it successfully opened the resource or otherwise false.
+	 * @return The loaded file or if it failed null
 	 */
-	public abstract boolean load(URI uri);
+	public abstract WorkFile load(URI uri);
 
 	/**
 	 * This method gets called when the user clicks on the 'open database'

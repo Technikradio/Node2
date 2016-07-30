@@ -121,5 +121,11 @@ public abstract class DataObject {
 	 * DataObject.
 	 */
 	public abstract void onClose();
+	
+	/**
+	 * This method gets called when the DataObject gets added to a work file.
+	 * @param wf The WorkFile that added the DataObject.
+	 */
+	public abstract void onAddToWorkSheet(WorkFile wf);
 
 }
