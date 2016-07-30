@@ -1,4 +1,12 @@
-language: java
+language:
+  - java
+  - scala
+
+scala:
+   - 2.9.3
+   - 2.10.4
+   - 2.11.2
+   - 2.11.8
 
 install:
   - whereis xbuild

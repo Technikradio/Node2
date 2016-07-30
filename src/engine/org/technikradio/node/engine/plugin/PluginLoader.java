@@ -69,7 +69,6 @@ public class PluginLoader {
 		try {
 			URLClassLoader loader = URLClassLoader.newInstance(doBatchTest(manifest.getPathToPlugin()),
 					ClassLoader.getSystemClassLoader());
-			;
 			@SuppressWarnings("rawtypes")
 			Class pclass = loader.loadClass(manifest.getMainClass());
 			Object pseudoPlugin = pclass.newInstance();

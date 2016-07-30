@@ -1,13 +1,16 @@
-# Node2
+# Node2 [![Build Status](https://travis-ci.org/Technikradio/Node2.svg?branch=master)](https://travis-ci.org/Technikradio/Node2)
 The Version 2 of Node - Now open source!
 
+Node is a modular financial management software designed to support bookkeeping.
+It's developed to support local associations but should be scalable to large size
+companies. 
+
+##Reason why new approach
 After further development of node v1.x became entirely impossible, I've decided
 to start from scratch.
 
 Please note that this software distribution contains third party libraries.
 Please read the licenses files inside the lib folder for further information.
-
-[![Build Status](https://travis-ci.org/Technikradio/Node2.svg?branch=master)](https://travis-ci.org/Technikradio/Node2)
 
 ##Build dependancies:
  * JDK7 or JDK8, regardless whether oracle JDK or open JDK

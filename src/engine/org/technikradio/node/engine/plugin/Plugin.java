@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin;
 
 /**
- * This class represents an abstract plugin
+ * This class represents an abstract plug-in.
  * 
  * @author doralitze
  */
@@ -40,10 +40,10 @@ public abstract class Plugin {
 	protected boolean loaded = false;
 
 	/**
-	 * This constructor initializes a new plugin instance.
+	 * This constructor initializes a new plug-in instance.
 	 * 
 	 * @param m
-	 *            the manifest of the plugin to use
+	 *            the manifest of the plug-in to use
 	 */
 	protected Plugin(Manifest m) {
 		super();
