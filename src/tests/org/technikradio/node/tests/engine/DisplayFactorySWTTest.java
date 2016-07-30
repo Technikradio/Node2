@@ -45,7 +45,7 @@ public class DisplayFactorySWTTest {
 		try {
 			if (!DisplayFactory.isInitialized())
 				DisplayFactory.init();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Console.log(LogType.Warning, this, "Failed to init SWT.");
 		}
 	}

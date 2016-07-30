@@ -142,16 +142,16 @@ public final class WorkFileTest {
 	 */
 	@Test
 	public final void testRemoveAndFindChild() {
-		assertEquals(tc3, w.getChild("c"));
-		assertNull(w.getChild("3"));
-		assertNull(w.getChild("d"));
-		assertEquals(tc3, w.getChild("c"));
+		assertEquals("The workfile should contain the tc3 object at the beginning.", tc3, w.getChild("c"));
+		assertNull("It shouldn't be possible to retrive objects by their title.", w.getChild("3"));
+		assertNull("The tc4 object shouldn't be avaiable yet.", w.getChild("d"));
+		assertEquals("It should be possible to retrieve the tc3 object by its identifier.", tc3, w.getChild("c"));
 		DataObjectTestClass tc4 = new DataObjectTestClass("d", "4");
-		assertFalse(w.removeChild(tc4));
+		assertFalse("It shouldn't be possible to delete the tc3 object because it's not added yet.", w.removeChild(tc4));
 		w.addChild(tc4);
-		assertNotNull(w.getChild("d"));
-		assertTrue(w.removeChild(tc4));
-		assertNull(w.getChild("d"));
+		assertNotNull("The tc4 object should be accessable now.", w.getChild("d"));
+		assertTrue("It should be possible to delete the object by now.", w.removeChild(tc4));
+		assertNull("The tc4 object shouldn't be avaiable anymore.", w.getChild("d"));
 	}
 
 }
