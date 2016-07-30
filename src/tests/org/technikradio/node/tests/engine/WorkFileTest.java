@@ -27,32 +27,32 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/**
- * 
- */
 package org.technikradio.node.tests.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
-import java.awt.image.BufferedImage;
+import java.util.Currency;
+import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.technikradio.node.engine.plugin.DataNotYetLoadedException;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.WorkFile;
 
 /**
+ * This is the test case for the WorkFile class.
  * @author doralitze
- * Test case for the data object class
+ *
  */
-public class DataObjectTest {
+public final class WorkFileTest {
 	
-	private DataObjectTestClass cl;
+	private WorkFile w;
+	DataObjectTestClass tc1;
+	DataObjectTestClass tc2;
+	DataObjectTestClass tc3;
 	
 	private class DataObjectTestClass extends DataObject{
 
@@ -81,7 +81,12 @@ public class DataObjectTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		cl = new DataObjectTestClass("bla", null);
+		w = new WorkFile(Currency.getInstance(Locale.getDefault()));
+		tc1 = new DataObjectTestClass("a", "1");
+		tc2 = new DataObjectTestClass("b", "2");
+		tc3 = new DataObjectTestClass("c", "3");
+		w.addChild(tc1);
+		w.addChild(tc2);
 	}
 
 	/**
@@ -92,50 +97,61 @@ public class DataObjectTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.DataObject#getIdentifier()}.
+	 * Test method for {@link org.technikradio.node.engine.plugin.WorkFile#WorkFile(java.util.Currency)}.
 	 */
 	@Test
-	public final void testGetIdentifier() {
-		assertEquals("bla", cl.getIdentifier());
+	public final void testWorkFile() {
+		Currency c = Currency.getInstance(Locale.getDefault());
+		WorkFile ww = new WorkFile(c);
+		assertEquals(c, ww.getCurrency());
+		assertNotNull(ww.getCurrency());
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.DataObject#getTitle()}
-	 * and {@link org.technikradio.node.engine.plugin.DataObject#setTitle(java.lang.String)}.
+	 * Test method for {@link org.technikradio.node.engine.plugin.WorkFile#getChildObjects()}.
 	 */
 	@Test
-	public final void testGetAndSetTitle() {
-		assertEquals(null, cl.getTitle());
-		cl.setTitle("more blah");
-		assertEquals("more blah", cl.getTitle());
+	public final void testGetChildObjects() {
+		Iterator<DataObject> i = w.getChildObjects();
+		DataObject o1 = i.next();
+		DataObject o2 = i.next();
+		@SuppressWarnings("unused")
+		DataObject o3 = i.next();
+		DataObject o4 = i.next();
+		if(o1 != tc1 || o1 != tc2 || o1 != tc3){
+			fail("Fist test object didn't match.");
+		}
+		if(o2 != tc1 || o2 != tc2 || o2 != tc3){
+			fail("Second test object didn't match.");
+		}
+		assertNull(o4);
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.DataObject#getIcon()}
-	 * and {@link org.technikradio.node.engine.plugin.DataObject#setIcon(java.awt.image.BufferedImage)}.
+	 * Test method for {@link org.technikradio.node.engine.plugin.WorkFile#getCurrency()}.
 	 */
 	@Test
-	public final void testGetAndSetIcon() {
-		assertEquals(null, cl.getIcon());
-		BufferedImage b = new BufferedImage(20, 20, BufferedImage.TYPE_3BYTE_BGR);
-		cl.setIcon(b);
-		assertEquals(b, cl.getIcon());
+	public final void testCurrency() {
+		Currency c = Currency.getInstance("EUR");
+		w.setCurrency(c);
+		assertEquals(c, w.getCurrency());
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.DataObject#save()}.
-	 */
-	@Test(expected=DataNotYetLoadedException.class)
-	public final void testSave() {
-		cl.save();
-	}
-
-	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.DataObject#onOpen()}.
+	 * Test method for {@link org.technikradio.node.engine.plugin.WorkFile#removeChild(org.technikradio.node.engine.plugin.DataObject)}.
 	 */
 	@Test
-	public final void testOnOpen() {
-		assertNull(cl.onOpen());
+	public final void testRemoveAndFindChild() {
+		assertEquals(tc3, w.getChild("c"));
+		assertNull(w.getChild("3"));
+		assertNull(w.getChild("d"));
+		assertEquals(tc3, w.getChild("c"));
+		DataObjectTestClass tc4 = new DataObjectTestClass("d", "4");
+		assertFalse(w.removeChild(tc4));
+		w.addChild(tc4);
+		assertNotNull(w.getChild("d"));
+		assertTrue(w.removeChild(tc4));
+		assertNull(w.getChild("d"));
 	}
 
 }
