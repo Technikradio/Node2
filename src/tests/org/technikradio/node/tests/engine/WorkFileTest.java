@@ -118,9 +118,11 @@ public final class WorkFileTest {
 		DataObject o2 = i.next();
 		if(o1 != tc1 || o1 != tc2 || o1 != tc3){
 			fail("Fist test object didn't match.");
+			System.out.println(o1.toString());
 		}
 		if(o2 != tc1 || o2 != tc2 || o2 != tc3){
 			fail("Second test object didn't match.");
+			System.out.println(o2.toString());
 		}
 	}
 
