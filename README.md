@@ -3,7 +3,7 @@ The Version 2 of Node - Now open source!
 
 Node is a modular financial management software designed to support bookkeeping.
 It's developed to support local associations but should be scalable to large size
-companies. 
+companies.
 
 ##Reason why new approach
 After further development of node v1.x became entirely impossible, I've decided
@@ -16,6 +16,7 @@ Please read the licenses files inside the lib folder for further information.
  * JDK7 or JDK8, regardless whether oracle JDK or open JDK
  * Apache ant
  * mono-xbuild (from the mono toolkit)
+ * scala2
 
 In order to start the build process simply type ant inside the terminal.
 There are also the following useful targets:
