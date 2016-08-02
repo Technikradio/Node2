@@ -163,5 +163,13 @@ public final class PluginRegistry {
 	public static void setCurrentOpenWindow(Window currentOpenWindow) {
 		PluginRegistry.currentOpenWindow = currentOpenWindow;
 	}
+	
+	/**
+	 * Use this method to get the number of loaded plug-ins.
+	 * @return The number of registered plug-ins.
+	 */
+	public static int getNumberOfLoadedPlugins(){
+		return plugins.size();
+	}
 
 }

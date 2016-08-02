@@ -41,7 +41,7 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  */
 public class Main {
-	
+	public static final boolean DEBUG_MODE = true;
 	private static String APP_HOME;
 	/**
 	 * This method returns the location of the installation

@@ -39,6 +39,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.technikradio.node.engine.action.Application;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is used to handle events and raise them.
@@ -47,6 +49,7 @@ import org.technikradio.node.engine.action.Application;
 public class EventRegistry {
 
 	private static Hashtable<EventType, List<EventHandler>> handlers;
+	private static List<Event> waitlist;
 	private static ArrayList<Event> processListSync;
 	private static List<Event> processListAssync;
 	private static EventProcessor[] processors;
@@ -72,6 +75,8 @@ public class EventRegistry {
 						break;
 					handled = true;
 				}
+				if(waitlist.contains(e))
+					waitlist.remove(e);
 				if(!handled && e.getType().shouldAutomaticallyThrowCrash())
 					Application.crash(e);
 				e = getNextEvent();
@@ -146,6 +151,7 @@ public class EventRegistry {
 	 */
 	static{
 		handlers = new Hashtable<EventType, List<EventHandler>>();
+		waitlist = Collections.synchronizedList(new ArrayList<Event>());
 		processListSync = new ArrayList<Event>();
 		processListAssync = Collections.synchronizedList(new ArrayList<Event>());
 		ArrayList<EventProcessor> ps = new ArrayList<EventProcessor>();
@@ -245,5 +251,30 @@ public class EventRegistry {
 			if(processors[i].isRunning())
 				running++;
 		return running;
+	}
+
+	/**
+	 * Call this method in order to prepare an event synchronization.
+	 * You should call this method before you call the raiseEvent method.
+	 * @param e The Event to wait for.
+	 */
+	public static void registerWaitSync(Event e) {
+		waitlist.add(e);
+	}
+
+	/**
+	 * Call this method in order to wait for an event being handled.
+	 * Make sure to call registerWaitSync(Event e) before.
+	 * @param e The event to wait for.
+	 */
+	public static void waitForProcessedEvent(Event e) {
+		while(waitlist.contains(e)){
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e1) {
+				Console.log(LogType.Warning, "EventRegistry", "Synchronizing event got interrupted.");
+				return;
+			}
+		}
 	}
 }

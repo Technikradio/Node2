@@ -42,6 +42,10 @@ import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.event.EventResponder;
+import org.technikradio.node.engine.plugin.Manifest;
+import org.technikradio.node.engine.plugin.PluginLoader;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.node.engine.plugin.UnsolvedDependencyException;
 import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -120,8 +124,38 @@ public class Application {
 	 */
 	protected static void setupApp(){
 		DisplayFactory.init();
-		//TODO Load all the plug-ins
-		
+		Manifest[] ms = null;
+		try {
+			ms = PluginLoader.calculateDependencys(PLUGIN_FOLDER);
+		} catch (IOException | UnsolvedDependencyException e) {
+			Console.log(LogType.Error, "Application", "Failed to retrieve information about plugins.");
+			e.printStackTrace();
+			crash("Failed to retrieve information about plugins.", CrashCodes.ERROR_DURING_INITIALIZATION);
+			return;
+		}
+		for(int i = 0; i < ms.length; i++){
+			try {
+				Console.log(LogType.StdOut, "Application", "Loading plugin '" + ms[i].getName() + "'.");
+				PluginLoader.loadPlugin(ms[i]);
+			} catch (Exception e) {
+				Console.log(LogType.Warning, "Application", "Failed to load plugin '" + ms[i].getName() + "'.");
+				e.printStackTrace();
+			}
+		}
+		if(PluginRegistry.getNumberOfLoadedPlugins() == 0){
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {}
+					Console.log(LogType.StdOut, "Application",
+							"No plugins loaded. Exiting Node. Please install some plugins.");
+					close();
+				}
+			});
+			t.setName("ExitThread");
+			t.start();
+		}
 	}
 	
 	/**
@@ -151,6 +185,10 @@ public class Application {
 	 */
 	public static void close(){
 		Event e = new Event(BasicEvents.APPLICATION_CLOSING_EVENT, null, new EventResponder<String>());
+		EventRegistry.registerWaitSync(e);
 		EventRegistry.raiseEvent(e, false);
+		EventRegistry.waitForProcessedEvent(e);
+		Console.log(LogType.StdOut, "Application", "The Application will now exit.");
+		System.exit(0);
 	}
 }

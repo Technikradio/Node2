@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.technikradio.node.engine.action.Main;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -364,6 +365,13 @@ public class PluginLoader {
 					if(getFileExtension(f.getAbsolutePath()).equals(".jar")){
 						try {
 							a.add(f.toURI().toURL());
+							if(Main.DEBUG_MODE)
+								try {
+									Console.log(LogType.Information, "PluginLoader.doBatchTest", "Adding " + f.getCanonicalPath() + " to list of jar files.");
+								} catch (IOException e) {
+									Console.log(LogType.Warning, "PluginLoader.doBatchTest", "Failed to print debug message:");
+									e.printStackTrace();
+								}
 						} catch (MalformedURLException e) {
 							Console.log(LogType.Warning, "PluginLoader.doBatchTest", "Couldn't load jar: ");
 							e.printStackTrace();
