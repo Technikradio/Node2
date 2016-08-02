@@ -31,6 +31,7 @@ package org.technikradio.node.engine.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -333,14 +334,54 @@ public class PluginLoader {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * This method is used to get all jar files recursively inside a folder.
-	 * @param pathToInspect The path that should be searched.
-	 * @return The URL's pointing to the jar files inside that folder and its sub folders.
+	 * 
+	 * @param pathToInspect
+	 *            The path that should be searched.
+	 * @return The URL's pointing to the jar files inside that folder and its
+	 *         sub folders.
 	 */
 	private static URL[] doBatchTest(File pathToInspect) {
-		// TODO implement
-		return null;
+		ArrayList<URL> a = new ArrayList<URL>();
+		{
+			String[] content = pathToInspect.list();
+			for (String child : content) {
+				File f = new File(pathToInspect.getAbsolutePath() + File.separator + child);
+				if (f.isDirectory()) {
+					try {
+						URL[] m = doBatchTest(f);
+						for (URL u : m) {
+							if(u != null)
+								a.add(u);
+						}
+					} catch (Exception e) {
+						Console.log(LogType.Warning, "PluginLoader.doBatchTest", "Couldn't load jar: ");
+						e.printStackTrace();
+					}
+				} else if(f.isFile()){
+					if(getFileExtension(f.getAbsolutePath()).equals(".jar")){
+						try {
+							a.add(f.toURI().toURL());
+						} catch (MalformedURLException e) {
+							Console.log(LogType.Warning, "PluginLoader.doBatchTest", "Couldn't load jar: ");
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		return a.toArray(new URL[a.size()]);
+	}
+
+	private static Object getFileExtension(String f) {
+		String e = "";
+
+		int i = f.lastIndexOf('.');
+		if (i > 0) {
+		    e = f.substring(i+1);
+		}
+		return e;
 	}
 }

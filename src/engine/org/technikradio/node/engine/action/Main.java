@@ -52,18 +52,17 @@ public class Main {
 	}
 	/**
 	 * This method is the main entry point for node.
-	 * @param args The args provided by the VM.
+	 * @param args The arguments provided by the VM.
 	 */
 	public static void main(String[] args) {
 		if(args.length < 1){
 			Application.crash("Launched without launch variables", 1);
 		}
 		APP_HOME = args[0];
-		//TODO handle splash screen stuff
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
-		
 		try {
-			Application.setupUIBehaviour();
+			Application.setupApp();
+			Console.log(LogType.StdOut, "UpstartAgent", "Successfully started node...");
 		} catch (Exception e) {
 			Console.log(LogType.Error, "UpstartAgent", "Error during initialzation.");
 			e.printStackTrace();

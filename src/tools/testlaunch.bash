@@ -4,5 +4,5 @@ CURRDIR=$( pwd )
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "Node installation is located at " $DIR
 cd $DIR
-java -jar ./bin/engine.jar $DIR
+java -jar -XstartOnFirstThread ./bin/engine.jar $DIR
 cd $CURRDIR

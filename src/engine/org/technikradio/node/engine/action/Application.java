@@ -118,8 +118,10 @@ public class Application {
 	/**
 	 * This method gets called to initialize stuff like the look and feel
 	 */
-	protected static void setupUIBehaviour(){
+	protected static void setupApp(){
 		DisplayFactory.init();
+		//TODO Load all the plug-ins
+		
 	}
 	
 	/**

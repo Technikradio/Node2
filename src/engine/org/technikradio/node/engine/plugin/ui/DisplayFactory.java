@@ -86,13 +86,29 @@ public class DisplayFactory {
 		@Override
 		public void run() {
 			Console.log(LogType.StdOut, this, "Starting SWT event loop.");
+			final Pool p = new Pool();
 			while (apprunning) {
-				if (!d.readAndDispatch()) {
-					d.sleep();
+				d.syncExec(new Runnable(){
+					@Override
+					public void run() {
+						p.worked = d.readAndDispatch();
+					}});
+				if (!p.worked) {
+					d.syncExec(new Runnable(){
+
+						@Override
+						public void run() {
+							d.sleep();
+						}});
 				}
 			}
 			Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
-			d.dispose();
+			d.syncExec(new Runnable(){
+
+				@Override
+				public void run() {
+					d.dispose();
+				}});
 		}
 
 		/**
@@ -102,6 +118,10 @@ public class DisplayFactory {
 		@Override
 		public String toString() {
 			return "DisplayFactory.EventLoopHandler";
+		}
+		
+		private static class Pool{
+			boolean worked = false;
 		}
 
 	}
@@ -114,10 +134,14 @@ public class DisplayFactory {
 		if(initialized)
 			throw new RuntimeException("DisplayFactory already initialized by main thread.");
 		d = new Display();
+		d.readAndDispatch();
+		d.wake();
 		eventLoopThread = new Thread(new EventLoopHandler());
 		eventLoopThread.setPriority(8);
 		eventLoopThread.setName("SWT-EVENT-LOOP-THREAD");
 		eventLoopThread.start();
+		//EventLoopHandler d = new EventLoopHandler();
+		//d.run();
 		initialized = true;
 	}
 
