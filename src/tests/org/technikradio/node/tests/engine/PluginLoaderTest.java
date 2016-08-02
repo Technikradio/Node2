@@ -17,20 +17,21 @@ import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * @author leon
+ * This is the test case for the plugin loader class.
+ * @author doralitze
  *
  */
 public class PluginLoaderTest {
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -38,7 +39,7 @@ public class PluginLoaderTest {
 
 	/**
 	 * Test method for {@link org.technikradio.node.engine.plugin.PluginLoader#solve(java.util.ArrayList, java.util.ArrayList)}.
-	 * @throws UnsolvedDependencyException 
+	 * @throws UnsolvedDependencyException If the test fails
 	 */
 	@Test
 	public final void testSolve() throws UnsolvedDependencyException {

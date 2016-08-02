@@ -53,7 +53,7 @@ public class EventTest {
 	private Event e;
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {

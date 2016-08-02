@@ -44,7 +44,7 @@ public class ManifestTest {
 	private Manifest m;
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -52,7 +52,7 @@ public class ManifestTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@After
 	public void tearDown() throws Exception {

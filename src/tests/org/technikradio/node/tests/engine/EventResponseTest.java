@@ -48,7 +48,7 @@ public class EventResponseTest {
 	private EventResponse<String> er;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {

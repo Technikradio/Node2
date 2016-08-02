@@ -77,7 +77,7 @@ public final class WorkFileTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -91,7 +91,7 @@ public final class WorkFileTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -113,16 +113,15 @@ public final class WorkFileTest {
 	 */
 	@Test
 	public final void testGetChildObjects() {
+		//TODO fix this
 		Iterator<DataObject> i = w.getChildObjects();
 		DataObject o1 = i.next();
 		DataObject o2 = i.next();
 		if(o1 != tc1 || o1 != tc2 || o1 != tc3){
-			fail("Fist test object didn't match.");
-			System.out.println(o1.toString());
+			fail("Fist test object didn't match. (" + o1.toString() + ")");
 		}
 		if(o2 != tc1 || o2 != tc2 || o2 != tc3){
-			fail("Second test object didn't match.");
-			System.out.println(o2.toString());
+			fail("Second test object didn't match. (" + o2.toString() + ")");
 		}
 	}
 

@@ -49,12 +49,13 @@ import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * @author doralitze test case for the settings registry.
+ * test case for the settings registry.
+ * @author doralitze 
  */
 public class SettingsRegistryTest {
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {

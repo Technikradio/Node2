@@ -42,8 +42,9 @@ import org.junit.Test;
 import org.technikradio.node.engine.plugin.settings.SettingsPage;
 
 /**
- * @author doralitze
  * This is the test case for the settings page class
+ * @author doralitze
+ * 
  */
 public class SettingsPageTest {
 
@@ -51,7 +52,7 @@ public class SettingsPageTest {
 	private JPanel jp;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {

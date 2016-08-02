@@ -36,7 +36,7 @@ import java.util.Currency;
  * warranty for completeness or correctness. Please do a pull request if you
  * find mistakes.
  * 
- * @note The recommended way of processing the currencies internally is to use
+ * NOTE: The recommended way of processing the currencies internally is to use
  *       java.util.Currency but it's also recommended to use the CurrencyCode
  *       enumeration in order to store the currency on the local hard drive.
  * 

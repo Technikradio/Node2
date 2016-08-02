@@ -40,15 +40,16 @@ import org.junit.Test;
 import org.technikradio.node.engine.event.EventType;
 
 /**
- * @author doralitze
  * The test case for EventType
+ * @author doralitze
+ * 
  */
 public class EventTypeTest {
 
 	private EventType et;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {

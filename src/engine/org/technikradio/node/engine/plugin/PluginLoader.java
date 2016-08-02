@@ -232,8 +232,8 @@ public class PluginLoader {
 	 * @throws UnsolvedDependencyException
 	 *             This method throws an UnsolvedDependencyException if it can't
 	 *             calculate the order in which the plug-ins need to be loaded.
-	 * @see {@link org.technikradio.node.engine.plugin.UnsolvedDependencyException}
-	 *      for further information
+	 * @see org.technikradio.node.engine.plugin.UnsolvedDependencyException
+	 *      UnsolvedDependencyException (for further information)
 	 * @return An array of the plug-ins to load in the correct order.
 	 */
 	public static final Manifest[] calculateDependencys(String topLevelFolder)

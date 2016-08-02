@@ -51,7 +51,7 @@ import org.technikradio.node.engine.plugin.CommandRegistry;
 public class CommandRegistryTest {
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -135,7 +135,7 @@ public class CommandRegistryTest {
 
 	/**
 	 * Test method for {@link org.technikradio.node.engine.plugin.CommandRegistry#call(java.lang.String, java.lang.String[], java.io.PrintStream)}.
-	 * @throws CommandNotFoundException 
+	 * @throws CommandNotFoundException If the test failed
 	 */
 	@Test
 	public final void testCall1() throws CommandNotFoundException {
@@ -145,7 +145,7 @@ public class CommandRegistryTest {
 	
 	/**
 	 * Test method for {@link org.technikradio.node.engine.plugin.CommandRegistry#call(java.lang.String, java.lang.String[], java.io.PrintStream)}.
-	 * @throws CommandNotFoundException 
+	 * @throws CommandNotFoundException If the test failed.
 	 */
 	@Test(expected=CommandNotFoundException.class)
 	public final void testCall2() throws CommandNotFoundException {
