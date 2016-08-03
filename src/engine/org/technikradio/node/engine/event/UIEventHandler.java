@@ -77,7 +77,7 @@ public abstract class UIEventHandler implements EventHandler {
 	}
 
 	@Override
-	public void handleEvent(Event e) {
+	public void handleEvent(final Event e) {
 		if(Main.DEBUG_MODE)
 			Console.log(LogType.Information, this, "Executing on UI thread. (sync=" + isSync() + ")");
 		if (isSync())
