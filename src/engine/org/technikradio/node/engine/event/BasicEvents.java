@@ -39,6 +39,16 @@ package org.technikradio.node.engine.event;
  *
  */
 public class BasicEvents {
+	/**
+	 * This event will be raised if the application is about to close.
+	 */
 	public static final EventType APPLICATION_CLOSING_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_closing");
+	/**
+	 * This event will be raised if the application crashed.
+	 */
 	public static final EventType APPLICATION_CRASHED_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_crashed");
+	/**
+	 * This event will be raised if the application finished loading.
+	 */
+	public static final EventType APPLICATION_LOADED_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_loaded");
 }

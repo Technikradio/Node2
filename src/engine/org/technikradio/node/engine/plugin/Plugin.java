@@ -40,6 +40,14 @@ public abstract class Plugin {
 	protected boolean loaded = false;
 
 	/**
+	 * This constructor initializes a new instance of a plug-in handling the
+	 * manifest later though other code.
+	 */
+	public Plugin() {
+
+	}
+
+	/**
 	 * This constructor initializes a new plug-in instance.
 	 * 
 	 * @param m

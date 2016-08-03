@@ -346,6 +346,8 @@ public class PluginLoader {
 	 */
 	private static URL[] doBatchTest(File pathToInspect) {
 		ArrayList<URL> a = new ArrayList<URL>();
+		if(Main.DEBUG_MODE)
+			Console.log(LogType.Information, "PluginLoader.doBatchTest", "Scanning directory: " + pathToInspect.toURI().toString());
 		{
 			String[] content = pathToInspect.list();
 			for (String child : content) {
@@ -362,7 +364,9 @@ public class PluginLoader {
 						e.printStackTrace();
 					}
 				} else if(f.isFile()){
-					if(getFileExtension(f.getAbsolutePath()).equals(".jar")){
+					if(Main.DEBUG_MODE)
+						Console.log(LogType.Information, "PluginLoader.doBatchTest", "Scanning entry: " + f.toURI().toString());
+					if(f.getAbsolutePath().endsWith(".jar")){
 						try {
 							a.add(f.toURI().toURL());
 							if(Main.DEBUG_MODE)
@@ -381,15 +385,5 @@ public class PluginLoader {
 			}
 		}
 		return a.toArray(new URL[a.size()]);
-	}
-
-	private static Object getFileExtension(String f) {
-		String e = "";
-
-		int i = f.lastIndexOf('.');
-		if (i > 0) {
-		    e = f.substring(i+1);
-		}
-		return e;
 	}
 }

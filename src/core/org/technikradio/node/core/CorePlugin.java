@@ -33,7 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
-import org.technikradio.node.engine.plugin.Manifest;
 import org.technikradio.node.engine.plugin.Plugin;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -44,10 +43,6 @@ import org.technikradio.universal_tools.Console.LogType;
  * 
  */
 public class CorePlugin extends Plugin {
-
-	
-
-	protected CorePlugin(Manifest m) { super(m); }
 
 	/* (non-Javadoc)
 	 * @see org.technikradio.node.engine.plugin.Plugin#load()
