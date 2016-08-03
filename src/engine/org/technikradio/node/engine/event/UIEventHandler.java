@@ -31,56 +31,73 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * 
  */
-package org.technikradio.node.core;
+package org.technikradio.node.engine.event;
 
-import org.technikradio.node.engine.event.BasicEvents;
-import org.technikradio.node.engine.event.Event;
-import org.technikradio.node.engine.event.EventRegistry;
-import org.technikradio.node.engine.event.UIEventHandler;
-import org.technikradio.node.engine.plugin.Plugin;
-import org.technikradio.node.engine.plugin.ui.Window;
+import org.technikradio.node.engine.action.Main;
+import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * This plug-in will provide the basic functionality of node.
- * @author doralitze
+ * This EventHandler is used to process the events on the UI thread.
  * 
+ * @author doralitze
+ *
  */
-public class CorePlugin extends Plugin {
+public abstract class UIEventHandler implements EventHandler {
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.Plugin#load()
+	/**
+	 * Implement this method in order to process something inside the UI thread.
+	 * 
+	 * @param e
+	 *            The event that is given by the EventHandler.
 	 */
-	@Override
-	public void load() {
-		{
-			UIEventHandler eh = new UIEventHandler(){
+	public abstract void execute(Event e);
 
-				@Override
-				public void execute(Event e) {
-					Window w = new Window("Worksheetbrowser");
-					w.setSize(500, 300);
-					
-					w.open();
-					Console.log(LogType.Information, this, "Opened worksheetbrowser.");
-				}
-				
-			};
-			if(!EventRegistry.addEventHandler(BasicEvents.APPLICATION_LOADED_EVENT, eh)){
-				Console.log(LogType.Information, this, "There are other plugin listening on the app start, registered before the core plugin.");
-			}
-		}
-		Console.log(LogType.StdOut, this, "Successfully loaded core plug-in.");
+	private boolean sync = false;
+
+	/**
+	 * Use this method to check if the Event should be processed asynchronous
+	 * inside the UI thread.
+	 * 
+	 * @return the sync flag
+	 */
+	public boolean isSync() {
+		return sync;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.Plugin#unload()
+	/**
+	 * Use this method to enable or disable synchronous UI execution.
+	 * 
+	 * @param sync
+	 *            the sync flag to set
 	 */
-	@Override
-	public void unload() {
-		// TODO Auto-generated method stub
+	public void setSync(boolean sync) {
+		this.sync = sync;
+	}
 
+	@Override
+	public void handleEvent(Event e) {
+		if(Main.DEBUG_MODE)
+			Console.log(LogType.Information, this, "Executing on UI thread. (sync=" + isSync() + ")");
+		if (isSync())
+			DisplayFactory.getDisplay().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					execute(e);
+				}
+
+			});
+		else
+			DisplayFactory.getDisplay().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					execute(e);
+				}
+
+			});
 	}
 
 }

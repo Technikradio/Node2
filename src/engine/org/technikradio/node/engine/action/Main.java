@@ -33,11 +33,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.action;
 
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventRegistry;
+import org.technikradio.node.engine.event.EventResponder;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * This class starts all the loading of plugins.
+ * This class starts all the loading of plug-ins.
  * @author doralitze
  */
 public class Main {
@@ -63,6 +67,7 @@ public class Main {
 		try {
 			Application.setupApp();
 			Console.log(LogType.StdOut, "UpstartAgent", "Successfully started node...");
+			EventRegistry.raiseEvent(new Event(BasicEvents.APPLICATION_LOADED_EVENT, null, new EventResponder<Object>()));
 		} catch (Exception e) {
 			Console.log(LogType.Error, "UpstartAgent", "Error during initialzation.");
 			e.printStackTrace();

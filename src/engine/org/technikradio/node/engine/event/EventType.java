@@ -118,5 +118,14 @@ public class EventType {
 	public boolean shouldAutomaticallyThrowCrash() {
 		return autothrow;
 	}
+	
+	/**
+	 * This method overrides Object.toString().
+	 * @return The identifier of this EventType.
+	 */
+	@Override
+	public String toString(){
+		return identifier;
+	}
 
 }

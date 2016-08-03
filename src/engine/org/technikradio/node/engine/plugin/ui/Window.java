@@ -35,10 +35,11 @@ package org.technikradio.node.engine.plugin.ui;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This class represents a window. Plugins can add their content to it.
+ * This class represents a window. Plug-ins can add their content to it.
  * 
  * @author doralitze
  *
@@ -76,6 +77,22 @@ public class Window {
 	 */
 	public void setSize(int width, int height) {
 		shell.setSize(width, height);
+	}
+	
+	/**
+	 * Use this method in order to manipulate the underlying shell.
+	 * Use the methods of the window class in order to add UI elements.
+	 * @return The shell of this window.
+	 */
+	public Shell getShell(){
+		return shell;
+	}
+	
+	/**
+	 * Use this method to open the window.
+	 */
+	public void open(){
+		shell.open();
 	}
 	
 
