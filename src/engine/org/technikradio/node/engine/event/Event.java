@@ -36,43 +36,60 @@ package org.technikradio.node.engine.event;
 import org.technikradio.node.engine.plugin.Plugin;
 
 /**
- * This class represents an event that can be raised using the EventRegisty class.
+ * This class represents an event that can be raised using the EventRegisty
+ * class. The same comparison rules like the ones of the EventType class apply
+ * to this class.
+ * 
  * @author doralitze
+ * @see java.lang.Comparable The comparable interface
+ * @see EventType The EventType class.
  */
 @SuppressWarnings("rawtypes")
-public class Event {
+public class Event implements Comparable {
 
 	private final EventType type;
 	private final Plugin source;
 	private final String messageDetails;
 	private final EventResponder responder;
-	
+
 	/**
-	 * This constructor generates an instance of an event using the given parameters.
-	 * It will use an empty text as the message details.
-	 * @param type The type of the event
-	 * @param source The source of the event
-	 * @param responder A responder to keep for the source in order to process the responses later
+	 * This constructor generates an instance of an event using the given
+	 * parameters. It will use an empty text as the message details.
+	 * 
+	 * @param type
+	 *            The type of the event
+	 * @param source
+	 *            The source of the event
+	 * @param responder
+	 *            A responder to keep for the source in order to process the
+	 *            responses later
 	 */
-	public Event(EventType type, Plugin source, EventResponder responder){
+	public Event(EventType type, Plugin source, EventResponder responder) {
 		this(type, source, "", responder);
 	}
 
 	/**
-	 * This constructor generates an instance of an event using the given parameters.
-	 * @param type The type of the event
-	 * @param source The source of the event
-	 * @param messageDetails Some details of the event
-	 * @param responder A responder to keep for the source in order to process the responses later
+	 * This constructor generates an instance of an event using the given
+	 * parameters.
+	 * 
+	 * @param type
+	 *            The type of the event
+	 * @param source
+	 *            The source of the event
+	 * @param messageDetails
+	 *            Some details of the event
+	 * @param responder
+	 *            A responder to keep for the source in order to process the
+	 *            responses later
 	 */
-	public Event(EventType type, Plugin source, String messageDetails, EventResponder responder){
+	public Event(EventType type, Plugin source, String messageDetails, EventResponder responder) {
 		super();
 		this.type = type;
 		this.source = source;
 		this.messageDetails = messageDetails;
 		this.responder = responder;
 	}
-	
+
 	/**
 	 * @return the type
 	 */
@@ -99,5 +116,21 @@ public class Event {
 	 */
 	public EventResponder getResponder() {
 		return responder;
+	}
+
+	/**
+	 * This method is used to compare two Events with each other.
+	 * 
+	 * @see EventType#compareTo(Object) The underlaying rules for further
+	 *      information.
+	 * @see java.lang.Comparable Have a look at the Comparable interface for
+	 *      further information on it.
+	 */
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof Event))
+			return 0;
+		Event e = (Event) o;
+		return this.getType().compareTo(e.getType());
 	}
 }

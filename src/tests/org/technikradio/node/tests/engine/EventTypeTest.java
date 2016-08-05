@@ -90,5 +90,18 @@ public class EventTypeTest {
 		assertTrue(EventType.MINIMUM_PRIORITY > 0);
 		assertTrue(EventType.MAXIMUM_PRIORITY > 0);
 	}
+	
+	/**
+	 * Test method for {@link org.technikradio.node.engine.event.EventType#compareTo(Object)}.
+	 */
+	@Test
+	public final void testComparison(){
+		EventType a = new EventType("a", 1, false);
+		EventType b = new EventType("b", 2, false);
+		EventType c = new EventType("c", 1, false);
+		assertEquals("EventType A and C should be worth the same.", 0, a.compareTo(c));
+		assertEquals("B should be more worth than C.", 1, b.compareTo(c));
+		assertEquals("A should be less worth than B.", -1, a.compareTo(b));
+	}
 
 }

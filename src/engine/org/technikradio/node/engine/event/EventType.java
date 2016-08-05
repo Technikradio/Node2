@@ -38,9 +38,15 @@ package org.technikradio.node.engine.event;
  * that the behavior doesn't get ridiculous. For example an instance of this
  * class may define a save event an another one an load event.
  * 
+ * This an instance of this class will be compared with another instance of this
+ * class based on the priority. A higher priority means a higher rating.
+ * 
  * @author doralitze
+ * @see java.lang.Comparable For further information on the comparable
+ *      interface.
  */
-public class EventType {
+@SuppressWarnings("rawtypes")
+public class EventType implements Comparable {
 
 	public static final int MINIMUM_PRIORITY = 1;
 	public static final int MAXIMUM_PRIORITY = 100;
@@ -118,14 +124,32 @@ public class EventType {
 	public boolean shouldAutomaticallyThrowCrash() {
 		return autothrow;
 	}
-	
+
 	/**
 	 * This method overrides Object.toString().
+	 * 
 	 * @return The identifier of this EventType.
 	 */
 	@Override
-	public String toString(){
+	public String toString() {
 		return identifier;
+	}
+
+	/**
+	 * This method is used to satisfy the comparison needs for this class. A
+	 * higher priority means a higher rating.
+	 */
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof EventType))
+			return 0;
+		EventType e = (EventType) o;
+		if (this.priority == e.priority)
+			return 0;
+		else if (this.priority > e.priority)
+			return 1;
+		else
+			return -1;
 	}
 
 }
