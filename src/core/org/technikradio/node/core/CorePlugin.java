@@ -35,9 +35,10 @@ package org.technikradio.node.core;
 
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventHandler;
 import org.technikradio.node.engine.event.EventRegistry;
-import org.technikradio.node.engine.event.UIEventHandler;
 import org.technikradio.node.engine.plugin.Plugin;
+import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -48,21 +49,24 @@ import org.technikradio.universal_tools.Console.LogType;
  * 
  */
 public class CorePlugin extends Plugin {
-
 	/* (non-Javadoc)
 	 * @see org.technikradio.node.engine.plugin.Plugin#load()
 	 */
 	@Override
 	public void load() {
 		{
-			UIEventHandler eh = new UIEventHandler(){
-
-				@Override
-				public void execute(Event e) {
-					Window w = new Window("Worksheetbrowser");
-					w.setSize(500, 300);
-					
-					w.open();
+			EventHandler eh = new EventHandler(){
+				
+				public void handleEvent(Event e) {
+					DisplayFactory.getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							
+							Window w = new Window("Worksheetbrowser");
+							w.setSize(500, 300);
+							w.open();
+							w.getShell().setLocation(0, 0);
+						}
+					});
 					Console.log(LogType.Information, this, "Opened worksheetbrowser.");
 				}
 				

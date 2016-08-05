@@ -35,7 +35,6 @@ package org.technikradio.node.engine.plugin.ui;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
