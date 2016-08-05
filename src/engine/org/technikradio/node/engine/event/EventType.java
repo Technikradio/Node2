@@ -52,7 +52,7 @@ public class EventType implements Comparable {
 	 * This constant represents the minimum priority an event can have.
 	 */
 	public static final int MINIMUM_PRIORITY = 1;
-	/*
+	/**
 	 * This constant represents the maximum priority an Event can have.
 	 */
 	public static final int MAXIMUM_PRIORITY = 100;
