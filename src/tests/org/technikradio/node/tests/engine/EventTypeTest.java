@@ -103,5 +103,23 @@ public class EventTypeTest {
 		assertEquals("B should be more worth than C.", 1, b.compareTo(c));
 		assertEquals("A should be less worth than B.", -1, a.compareTo(b));
 	}
+	
+	/**
+	 * Test method for lower out of range exception of {@link org.technikradio.node.engine.event.EventType#EventType(String, int, boolean)}.
+	 */
+	@Test(expected=RuntimeException.class)
+	public final void testPriorityLowerOutOfRange(){
+		@SuppressWarnings("unused")
+		EventType ff = new EventType("FailTestLower", EventType.MINIMUM_PRIORITY - 1, false);
+	}
+	
+	/**
+	 * Test method for upper out of range exception of {@link org.technikradio.node.engine.event.EventType#EventType(String, int, boolean)}.
+	 */
+	@Test(expected=RuntimeException.class)
+	public final void testPriorityUpperOutOfRange(){
+		@SuppressWarnings("unused")
+		EventType ff = new EventType("FailTestLower", EventType.MAXIMUM_PRIORITY + 1, false);
+	}
 
 }

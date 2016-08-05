@@ -48,7 +48,13 @@ package org.technikradio.node.engine.event;
 @SuppressWarnings("rawtypes")
 public class EventType implements Comparable {
 
+	/**
+	 * This constant represents the minimum priority an event can have.
+	 */
 	public static final int MINIMUM_PRIORITY = 1;
+	/*
+	 * This constant represents the maximum priority an Event can have.
+	 */
 	public static final int MAXIMUM_PRIORITY = 100;
 
 	private final String identifier;
@@ -61,6 +67,9 @@ public class EventType implements Comparable {
 	 * 
 	 * @param identifier
 	 *            The identifier used to separate two different events.
+	 * @throws RuntimeException
+	 *             if the given priority is less than the minimum priority ore
+	 *             greater than the maximum priority.
 	 */
 	public EventType(String identifier) {
 		this(identifier, MINIMUM_PRIORITY);
@@ -75,6 +84,9 @@ public class EventType implements Comparable {
 	 * @param priority
 	 *            The priority to process the event (smaller being less
 	 *            important).
+	 * @throws RuntimeException
+	 *             if the given priority is less than the minimum priority ore
+	 *             greater than the maximum priority.
 	 */
 	public EventType(String identifier, int priority) {
 		this(identifier, priority, false);
@@ -90,8 +102,13 @@ public class EventType implements Comparable {
 	 *            important).
 	 * @param autothrow
 	 *            should the event automatically throw an exception if raised?
+	 * @throws RuntimeException
+	 *             if the given priority is less than the minimum priority ore
+	 *             greater than the maximum priority.
 	 */
 	public EventType(String identifier, int priority, boolean autothrow) {
+		if (priority < MINIMUM_PRIORITY || priority > MAXIMUM_PRIORITY)
+			throw new RuntimeException("The given priority was out of range.");
 		this.identifier = identifier;
 		this.priority = priority;
 		this.autothrow = autothrow;
