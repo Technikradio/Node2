@@ -101,12 +101,14 @@ public class DisplayFactory {
 			
 			try {
 				while (apprunning) {
-					d.syncExec(new Runnable(){
+					System.out.println("p");
+					new Runnable(){
 						@Override
 						public void run() {
-							while(!d.readAndDispatch());
+							int i = 0;
+							while(!d.readAndDispatch()){i++;System.out.println(i);}
 							d.sleep();
-						}});
+						}}.run();
 					}
 			} catch (Exception e) {
 				Console.log(LogType.Error, this, "The UI thread crashed.");
