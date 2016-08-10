@@ -34,6 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.ui;
 
 import org.eclipse.swt.widgets.Display;
+import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.action.CrashCodes;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventHandler;
@@ -77,6 +79,16 @@ public class DisplayFactory {
 					apprunning = false;
 				}
 			});
+			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CRASHED_EVENT, new EventHandler() {
+
+				/**
+				 * This implements the abstract method of an event handler.
+				 */
+				@Override
+				public void handleEvent(Event e) {
+					apprunning = false;
+				}
+			});
 		}
 
 		/**
@@ -86,29 +98,29 @@ public class DisplayFactory {
 		@Override
 		public void run() {
 			Console.log(LogType.StdOut, this, "Starting SWT event loop.");
-			final Pool p = new Pool();
-			while (apprunning) {
-				d.syncExec(new Runnable(){
-					@Override
-					public void run() {
-						p.worked = d.readAndDispatch();
-					}});
-				if (!p.worked) {
+			
+			try {
+				while (apprunning) {
 					d.syncExec(new Runnable(){
-
 						@Override
 						public void run() {
+							while(!d.readAndDispatch());
 							d.sleep();
 						}});
-				}
-			}
-			Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
-			d.syncExec(new Runnable(){
+					}
+			} catch (Exception e) {
+				Console.log(LogType.Error, this, "The UI thread crashed.");
+				e.printStackTrace();
+				Application.crash(e, CrashCodes.UI_CRASH);
+			} finally {
+				Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
+				d.syncExec(new Runnable(){
 
-				@Override
-				public void run() {
-					d.dispose();
-				}});
+					@Override
+					public void run() {
+						d.dispose();
+					}});
+			}
 		}
 
 		/**
@@ -118,10 +130,6 @@ public class DisplayFactory {
 		@Override
 		public String toString() {
 			return "DisplayFactory.EventLoopHandler";
-		}
-		
-		private static class Pool{
-			boolean worked = false;
 		}
 
 	}

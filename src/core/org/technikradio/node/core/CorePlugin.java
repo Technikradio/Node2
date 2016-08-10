@@ -58,16 +58,16 @@ public class CorePlugin extends Plugin {
 			EventHandler eh = new EventHandler(){
 				
 				public void handleEvent(Event e) {
-					DisplayFactory.getDisplay().asyncExec(new Runnable() {
+					DisplayFactory.getDisplay().syncExec(new Runnable() {
 						public void run() {
-							
+							Console.log(LogType.Information, this, "Opened worksheetbrowser.");
 							Window w = new Window("Worksheetbrowser");
 							w.setSize(500, 300);
 							w.open();
-							w.getShell().setLocation(0, 0);
+							w.center();
+							
 						}
 					});
-					Console.log(LogType.Information, this, "Opened worksheetbrowser.");
 				}
 				
 			};

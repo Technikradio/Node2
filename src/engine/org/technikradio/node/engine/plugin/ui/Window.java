@@ -35,6 +35,7 @@ package org.technikradio.node.engine.plugin.ui;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -92,6 +93,18 @@ public class Window {
 	 */
 	public void open(){
 		shell.open();
+	}
+	
+	/**
+	 * Position the window inside the middle of the monitor.
+	 */
+	public void center(){
+		Monitor primary = DisplayFactory.getDisplay().getPrimaryMonitor();
+	    Rectangle monitorBounds = primary.getBounds();
+	    Rectangle windowBounds = shell.getBounds();
+	    int posX = monitorBounds.x + (monitorBounds.width - windowBounds.width) / 2;
+	    int posY = monitorBounds.y + (monitorBounds.height - windowBounds.height) / 2;
+	    shell.setLocation(posX, posY);
 	}
 	
 

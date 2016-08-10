@@ -40,6 +40,10 @@ package org.technikradio.node.engine.action;
  */
 public class CrashCodes {
 	/**
+	 * Use this constant if the application crashed on schedule.
+	 */
+	public static final int CLEAN_EXIT = 0;
+	/**
 	 * Use this constant to mark an general crash reason.
 	 */
 	public static final int UNSPECIFIED_REASON = 1;
@@ -48,7 +52,11 @@ public class CrashCodes {
 	 */
 	public static final int UNKNOWN_REASON = 2;
 	/**
-	 * Use this constant if an error occurred doing plugin or engine initialization.
+	 * Use this constant if an error occurred doing plug-in or engine initialization.
 	 */
 	public static final int ERROR_DURING_INITIALIZATION = 3;
+	/**
+	 * Use this method if the application crashed due to an error inside the UI thread.
+	 */
+	public static final int UI_CRASH = 4;
 }
