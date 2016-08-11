@@ -149,11 +149,19 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * This method does all the UI sanity.
+	 * @throws SWTException if the UI has a problem.
+	 */
 	private static void care() throws SWTException{
 		while(!d.readAndDispatch()){}
 		d.sleep();
 	}
 	
+	/**
+	 * Use this method to detect if the main/UI thread is still running.
+	 * @return True if the UI thread still runns or otherwise false.
+	 */
 	public static boolean isAppRunning(){
 		return appRunning;
 	}
