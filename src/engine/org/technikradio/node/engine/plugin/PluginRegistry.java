@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.technikradio.node.engine.action.Hints;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventHandler;
@@ -94,6 +95,8 @@ public final class PluginRegistry {
 	protected synchronized static boolean registerPlugin(Plugin plugin) {
 		try{
 			plugins.put(plugin.getMainfest().getIdentifier(), plugin);
+			if(Hints.wasUpdated(plugin.getMainfest().getIdentifier()))
+				plugin.update();
 			plugin.load();
 			plugin.setLoadedFlag();
 			return true;
@@ -123,7 +126,7 @@ public final class PluginRegistry {
 	 * @param tab
 	 *            to use
 	 */
-	public static void registerSettingsTab(SettingsObject tab) {
+	public synchronized static void registerSettingsTab(SettingsObject tab) {
 		if (!settingsTabs.contains(tab))
 			settingsTabs.add(tab);
 	}
@@ -174,7 +177,7 @@ public final class PluginRegistry {
 	 * This is the setter for the current open window. Be very careful using this setter!
 	 * @param currentOpenWindow the window to set
 	 */
-	public static void setCurrentOpenWindow(Window currentOpenWindow) {
+	public synchronized static void setCurrentOpenWindow(Window currentOpenWindow) {
 		PluginRegistry.currentOpenWindow = currentOpenWindow;
 	}
 	

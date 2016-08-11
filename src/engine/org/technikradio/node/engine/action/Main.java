@@ -79,6 +79,7 @@ public class Main {
 		}
 		APP_HOME = args[0];
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
+		processFurtherCommands(args);
 		try {
 			Application.setupApp();
 			Console.log(LogType.StdOut, "UpstartAgent", "Successfully started node...");
@@ -156,6 +157,17 @@ public class Main {
 	private static void care() throws SWTException{
 		while(!d.readAndDispatch()){}
 		d.sleep();
+	}
+	
+	/**
+	 * This method is used to process further commands.
+	 */
+	private static void processFurtherCommands(String[] args){
+		for(int i = 1; i < args.length; i++){
+			if(args[i].startsWith("-UP")){
+				Hints.addPluginUpdateHine(args[i].substring(3, args[i].length()));
+			}
+		}
 	}
 	
 	/**
