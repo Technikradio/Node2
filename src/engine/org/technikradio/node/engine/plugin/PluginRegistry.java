@@ -37,6 +37,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventHandler;
+import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.plugin.settings.SettingsObject;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.universal_tools.Console;
@@ -44,7 +48,7 @@ import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is used to register all required components that enable the
- * plugins to work.
+ * plug-ins to work.
  * 
  * @author doralitze
  */
@@ -59,10 +63,20 @@ public final class PluginRegistry {
 		plugins = new Hashtable<String, Plugin>();
 		settingsTabs = new ArrayList<SettingsObject>();
 		currentActiveDataSource = null;
+		EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler(){
+
+			@Override
+			public void handleEvent(Event e) {
+				Enumeration<Plugin> ee = plugins.elements();
+				while(ee.hasMoreElements()){
+					Plugin p = ee.nextElement();
+					p.unload();
+				}
+			}});
 	}
 
 	/**
-	 * This method returns an enumeration of all registered plugins
+	 * This method returns an enumeration of all registered plug-ins
 	 * 
 	 * @return the enumeration
 	 */
@@ -91,12 +105,12 @@ public final class PluginRegistry {
 	}
 
 	/**
-	 * This method searches the known plugins for the desired one. It will
+	 * This method searches the known plug-ins for the desired one. It will
 	 * return <code>null</code> if it can't find one.
 	 * 
 	 * @param identifier
 	 *            to look for
-	 * @return The requested plugin or <code>null</code> otherwise
+	 * @return The requested plug-in or <code>null</code> otherwise
 	 */
 	public static Plugin findPlugin(String identifier) {
 		return plugins.get(identifier);
@@ -123,23 +137,23 @@ public final class PluginRegistry {
 
 	/**
 	 * This method looks for the requested identifier and returns true if the
-	 * plugin is successfully registrered.
+	 * plug-in is successfully registered.
 	 * 
 	 * @param identifier
 	 *            to look for
-	 * @return true if it can find the plugin otherwise false
+	 * @return true if it can find the plug-in otherwise false
 	 */
 	public static boolean isPluginPresent(String identifier) {
 		return plugins.containsKey(identifier) && (plugins.get(identifier) != null);
 	}
 
 	/**
-	 * This method checks if the desired plugin already finished initializing
+	 * This method checks if the desired plug-in already finished initializing
 	 * itself.
 	 * 
 	 * @param identifier
 	 *            to look for
-	 * @return true if the plugin finished loading otherwise false
+	 * @return true if the plug-in finished loading otherwise false
 	 */
 	public static boolean isPluginLoaded(String identifier) {
 		if (!plugins.contains(identifier))

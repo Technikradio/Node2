@@ -101,4 +101,12 @@ public abstract class Plugin {
 	 */
 	public abstract void unload();
 
+	/**
+	 * This method does nothing on its own. Override this method if you want
+	 * your plug-in to be notified if it got updated.
+	 */
+	public void update() {
+
+	}
+
 }
