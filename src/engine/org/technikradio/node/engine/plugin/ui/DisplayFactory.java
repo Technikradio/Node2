@@ -36,6 +36,7 @@ package org.technikradio.node.engine.plugin.ui;
 import org.eclipse.swt.widgets.Display;
 import org.technikradio.node.engine.action.Application;
 import org.technikradio.node.engine.action.CrashCodes;
+import org.technikradio.node.engine.action.Main;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventHandler;
@@ -63,32 +64,10 @@ public class DisplayFactory {
 	 */
 	private static class EventLoopHandler implements Runnable {
 
-		private boolean apprunning = true;
-
 		/**
 		 * This constructor creates a new instance.
 		 */
 		public EventLoopHandler() {
-			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler() {
-
-				/**
-				 * This implements the abstract method of an event handler.
-				 */
-				@Override
-				public void handleEvent(Event e) {
-					apprunning = false;
-				}
-			});
-			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CRASHED_EVENT, new EventHandler() {
-
-				/**
-				 * This implements the abstract method of an event handler.
-				 */
-				@Override
-				public void handleEvent(Event e) {
-					apprunning = false;
-				}
-			});
 		}
 
 		/**
@@ -100,16 +79,9 @@ public class DisplayFactory {
 			Console.log(LogType.StdOut, this, "Starting SWT event loop.");
 			
 			try {
-				while (apprunning) {
-					System.out.println("p");
-					new Runnable(){
-						@Override
-						public void run() {
-							int i = 0;
-							while(!d.readAndDispatch()){i++;System.out.println(i);}
-							d.sleep();
-						}}.run();
-					}
+				while (Main.isAppRunning()) {
+					Thread.sleep(500);
+				}
 			} catch (Exception e) {
 				Console.log(LogType.Error, this, "The UI thread crashed.");
 				e.printStackTrace();

@@ -33,10 +33,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.action;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+
+import org.eclipse.swt.SWTException;
+import org.eclipse.swt.widgets.Display;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventHandler;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.event.EventResponder;
+import org.technikradio.node.engine.plugin.Command;
+import org.technikradio.node.engine.plugin.CommandNotFoundException;
+import org.technikradio.node.engine.plugin.CommandRegistry;
+import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -47,6 +59,9 @@ import org.technikradio.universal_tools.Console.LogType;
 public class Main {
 	public static final boolean DEBUG_MODE = true;
 	private static String APP_HOME;
+	private static boolean appRunning = true;
+	private static Display d;
+	private static Thread commandThread;
 	/**
 	 * This method returns the location of the installation
 	 * @return The path
@@ -73,6 +88,74 @@ public class Main {
 			e.printStackTrace();
 			Application.crash(e, CrashCodes.ERROR_DURING_INITIALIZATION);
 		}
+		{
+			EventHandler eh = new EventHandler(){
+
+				@Override
+				public void handleEvent(Event e) {
+					appRunning = false;
+				}};
+			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, eh);
+			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CRASHED_EVENT, eh);
+			commandThread = new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+					CommandRegistry.addCommand("exit", new Command(){
+
+						@Override
+						public boolean execute(String[] args, PrintStream outputStream) {
+							Event ev = new Event(BasicEvents.APPLICATION_CLOSING_EVENT, null, new EventResponder<Boolean>());
+							EventRegistry.raiseEvent(ev, true);
+							return false;
+						}});
+					CommandRegistry.addCommandHelp("exit", "Use this command to exit Node.", "This command shuts Node down.");
+					while(appRunning){
+						try {
+							String[] cmp = br.readLine().split(" ");
+							String command = cmp[0];
+							String[] args = new String[cmp.length - 1];
+							for(int i = 1; i < cmp.length; i++)
+								args[i - 1] = cmp[i];
+							CommandRegistry.call(command, args);
+						} catch (IOException e) {
+							Console.log(LogType.Warning, this, "Reached end of input stream.");
+							e.printStackTrace();
+							return;
+						} catch (CommandNotFoundException e) {
+							Console.log(LogType.Error, this, "The execution of the desired command failed:");
+							e.printStackTrace();
+						}
+					}
+				}
+				@Override
+				public String toString(){
+					return commandThread.getName();
+					}
+				});
+			commandThread.setDaemon(true);
+			commandThread.setPriority(5);
+			commandThread.setName("STDIN-COMMAND-THREAD");
+		}
+		commandThread.start();
+		d = DisplayFactory.getDisplay();
+		while(appRunning){
+			try {
+				care();
+			} catch (Exception e) {
+				Console.log(LogType.Warning, "UIThread", "There was an exception thrown inside the UI thread: " + e.getLocalizedMessage());
+			}
+		}
+	}
+	
+	private static void care() throws SWTException{
+		while(!d.readAndDispatch()){}
+		d.sleep();
+	}
+	
+	public static boolean isAppRunning(){
+		return appRunning;
 	}
 
 }
