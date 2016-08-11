@@ -36,12 +36,15 @@ package org.technikradio.node.engine.plugin;
 import java.net.URI;
 
 /**
- * This class represents a data source where the plugins load and save all of
+ * This class represents a data source where the plug-ins load and save all of
  * their data. The class determinates where and how the data is stored so the
  * application will only see this data adapter and doesn't need to care about
  * the files.
  * 
+ * NOTE: Please override the Object.toString method in order to have a displayable name.
+ * 
  * @author doralitze
+ * 
  */
 public abstract class DataSource {
 

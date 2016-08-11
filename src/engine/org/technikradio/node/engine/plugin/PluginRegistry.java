@@ -59,11 +59,13 @@ public final class PluginRegistry {
 	private static ArrayList<SettingsObject> settingsTabs;
 	private static DataSource currentActiveDataSource;
 	private static Window currentOpenWindow;
+	private static ArrayList<DataSource> dataSources;
 
 	static {
 		plugins = new Hashtable<String, Plugin>();
 		settingsTabs = new ArrayList<SettingsObject>();
 		currentActiveDataSource = null;
+		dataSources = new ArrayList<DataSource>();
 		EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler(){
 
 			@Override
@@ -187,6 +189,26 @@ public final class PluginRegistry {
 	 */
 	public static int getNumberOfLoadedPlugins(){
 		return plugins.size();
+	}
+	
+	/**
+	 * Use this method to add a possible DataSource.
+	 * @param ds The DataSource to register.
+	 * @return False if the given DataSource was already added or otherwise true.
+	 */
+	public synchronized static boolean addDataSource(DataSource ds){
+		if(dataSources.contains(ds))
+			return false;
+		dataSources.add(ds);
+		return true;
+	}
+	
+	/**
+	 * Use this method to get all registered DataSources.
+	 * @return An array containing all registered DataSource's.
+	 */
+	public synchronized static DataSource[] getAllRegisteredDataSources(){
+		return dataSources.toArray(new DataSource[dataSources.size()]);
 	}
 
 }
