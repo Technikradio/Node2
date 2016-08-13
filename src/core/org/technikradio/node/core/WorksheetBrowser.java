@@ -33,54 +33,54 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
-import org.technikradio.node.engine.event.BasicEvents;
-import org.technikradio.node.engine.event.Event;
-import org.technikradio.node.engine.event.EventHandler;
-import org.technikradio.node.engine.event.EventRegistry;
-import org.technikradio.node.engine.plugin.Plugin;
-import org.technikradio.node.engine.plugin.ui.DisplayFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * This plug-in will provide the basic functionality of node.
+ * This class is used to display a work sheet browser.
+ * It stores its recent location inside APPDATA.
  * @author doralitze
- * 
+ *
  */
-public class CorePlugin extends Plugin {
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.Plugin#load()
-	 */
-	@Override
-	public void load() {
-		{
-			EventHandler eh = new EventHandler(){
-				
-				public void handleEvent(Event e) {
-					DisplayFactory.getDisplay().syncExec(new Runnable() {
-						public void run() {
-							WorksheetBrowser wsb = new WorksheetBrowser();
-							wsb.setFirst(true);
-							Console.log(LogType.Information, this, "Opened worksheetbrowser.");
-						}
-					});
-				}
-				
-			};
-			if(!EventRegistry.addEventHandler(BasicEvents.APPLICATION_LOADED_EVENT, eh)){
-				Console.log(LogType.Information, this, "There are other plugin listening on the app start, registered before the core plugin.");
-			}
-		}
-		Console.log(LogType.StdOut, this, "Successfully loaded core plug-in.");
+public final class WorksheetBrowser {
+
+	private final Window w;
+	private boolean first = false;
+	
+	public WorksheetBrowser(){
+		w = new Window("Worksheetbrowser");
+		w.setSize(500, 300);
+		w.getShell().addListener(SWT.Close, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				if(!isFirst())
+					return;
+				Console.log(LogType.StdOut, this, "Aborted worksheet selection. Closing app.");
+				Application.close();
+			}});
+		w.center();
+		w.open();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.Plugin#unload()
+	/**
+	 * Use this method in order to check if this dialog is displayed at the launch of node.
+	 * @return the first flag
 	 */
-	@Override
-	public void unload() {
-		// TODO Auto-generated method stub
-
+	public boolean isFirst() {
+		return first;
 	}
 
+	/**
+	 * Set the first flag to true if this instance is displayed at the start of node.
+	 * @param first the first flag to set
+	 */
+	public void setFirst(boolean first) {
+		this.first = first;
+	}
 }

@@ -33,8 +33,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin.ui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
@@ -57,6 +60,14 @@ public class Window {
 		shell = new Shell(DisplayFactory.getDisplay());
 		shell.setText(title);
 		shell.setSize(250, 250);
+		
+		getShell().addListener(SWT.Close, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				internalClose();
+			}});
+		
 		Rectangle bds = shell.getDisplay().getBounds();
 
 		Point p = shell.getSize();
@@ -105,6 +116,19 @@ public class Window {
 	    int posX = monitorBounds.x + (monitorBounds.width - windowBounds.width) / 2;
 	    int posY = monitorBounds.y + (monitorBounds.height - windowBounds.height) / 2;
 	    shell.setLocation(posX, posY);
+	}
+	
+	/**
+	 * This method closes the window.
+	 */
+	public void close(){
+		internalClose();
+		shell.dispose();
+	}
+
+	private void internalClose() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 
