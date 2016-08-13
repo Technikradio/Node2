@@ -92,6 +92,7 @@ public class DisplayFactory {
 
 					@Override
 					public void run() {
+						Colors.disposeAll();
 						d.dispose();
 					}});
 			}

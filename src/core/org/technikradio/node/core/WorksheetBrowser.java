@@ -35,9 +35,12 @@ package org.technikradio.node.core;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.plugin.ui.Colors;
 import org.technikradio.node.engine.plugin.ui.Window;
+import org.technikradio.node.engine.plugin.ui.WindowOrientation;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -65,7 +68,31 @@ public final class WorksheetBrowser {
 				Application.close();
 			}});
 		w.center();
+		{
+			w.getContainer(WindowOrientation.BOTTOM).setBackground(Colors.RED);
+			w.getContainer(WindowOrientation.CENTER).setBackground(Colors.BLUE);
+			Label l1 = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.None);
+			l1.setText("Bottom");
+		}
+		{
+			Label l1 = new Label(w.getContainer(WindowOrientation.CENTER), SWT.None);
+			l1.setText("center");
+		}
+		{
+			Label l1 = new Label(w.getContainer(WindowOrientation.LEFT_TRAY), SWT.None);
+			l1.setText("left");
+		}
+		{
+			Label l1 = new Label(w.getContainer(WindowOrientation.RIGHT_TRAY), SWT.None);
+			l1.setText("right");
+		}
+		{
+			Label l1 = new Label(w.getContainer(WindowOrientation.TOP), SWT.None);
+			l1.setText("top");
+			System.out.println("p");
+		}
 		w.open();
+		
 	}
 
 	/**
