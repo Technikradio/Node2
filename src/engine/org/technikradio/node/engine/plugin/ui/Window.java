@@ -135,14 +135,18 @@ public class Window {
 				fm.right = new FormAttachment(mmc, 0);
 				fm.bottom = new FormAttachment(0, 0);
 				sashes[0].setLayoutData(fm);
-				sashes[0].addListener (SWT.Selection, e -> {
-					Rectangle sashRect = sashes[0].getBounds ();
-					Rectangle shellRect = shell.getClientArea ();
-					int right = shellRect.width - sashRect.width - limit;
-					e.x = Math.max (Math.min (e.x, right), limit);
-					if (e.x != sashRect.x)  {
-						fm.left = new FormAttachment (0, e.x);
-						shell.layout ();
+				sashes[0].addListener (SWT.Selection, new Listener() {
+					
+					@Override
+					public void handleEvent(Event e) {
+						Rectangle sashRect = sashes[0].getBounds ();
+						Rectangle shellRect = shell.getClientArea ();
+						int right = shellRect.width - sashRect.width - limit;
+						e.x = Math.max (Math.min (e.x, right), limit);
+						if (e.x != sashRect.x)  {
+							fm.left = new FormAttachment (0, e.x);
+							shell.layout ();
+						}
 					}
 				});
 			}
