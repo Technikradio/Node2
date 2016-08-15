@@ -129,7 +129,7 @@ public class Window {
 			}
 			
 			{
-				FormData fm = new FormData();
+				final FormData fm = new FormData();
 				fm.top = new FormAttachment(0, 0);
 				fm.left = new FormAttachment(leftC, 0);
 				fm.right = new FormAttachment(mmc, 0);
