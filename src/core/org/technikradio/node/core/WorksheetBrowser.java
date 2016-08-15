@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.core;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -71,6 +72,9 @@ public final class WorksheetBrowser {
 		{
 			w.getContainer(WindowOrientation.BOTTOM).setBackground(Colors.RED);
 			w.getContainer(WindowOrientation.CENTER).setBackground(Colors.BLUE);
+			w.getContainer(WindowOrientation.LEFT_TRAY).setBackground(Colors.BLACK);
+			w.getContainer(WindowOrientation.RIGHT_TRAY).setBackground(Colors.GREEN);
+			w.getContainer(WindowOrientation.TOP).setBackground(Colors.YELLOW);
 			Label l1 = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.None);
 			l1.setText("Bottom");
 		}
@@ -92,7 +96,13 @@ public final class WorksheetBrowser {
 			System.out.println("p");
 		}
 		w.open();
+		printBounds(w.getContainer(WindowOrientation.CENTER).getBounds());
+		printBounds(w.getContainer(WindowOrientation.TOOLBAR).getBounds());
 		
+	}
+
+	private void printBounds(Rectangle bounds) {
+		Console.log(LogType.Information, this, "Bounds { X=" + bounds.x + " Y=" + bounds.y + " width=" + bounds.width + " height=" + bounds.height + " }" );
 	}
 
 	/**

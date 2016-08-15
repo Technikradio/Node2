@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Event;
@@ -55,6 +56,8 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class Window {
+	
+	private static final int limit = 20;
 
 	private Shell shell;
 	private CoolBar toolC;
@@ -64,6 +67,10 @@ public class Window {
 	private ScrolledComposite leftC;
 	private ScrolledComposite rightC;
 	private Sash[] sashes;
+	
+	private FormData fmMiddleData;
+	private FormData fmBottomData;
+	private FormData fmToolBarData;
 
 	/**
 	 * This constructor initializes a new instance.
@@ -94,70 +101,111 @@ public class Window {
 		final FormLayout form = new FormLayout ();
 		shell.setLayout (form);
 		
-		
 		toolC = new CoolBar(shell, SWT.HORIZONTAL);
-		FormData toolData = new FormData();
-		toolData.top = new FormAttachment(0,0);
-		toolData.left = new FormAttachment(0,0);
-		toolData.right = new FormAttachment(0,0);
-		toolC.setLayoutData(toolData);
-		
-		leftC = new ScrolledComposite(shell, SWT.V_SCROLL);
-		topC = new Composite(shell, SWT.None);
-		centerC = new ScrolledComposite(shell, SWT.V_SCROLL + SWT.H_SCROLL);
-		rightC = new ScrolledComposite(shell, SWT.V_SCROLL);
-		
-		bottomC = new Composite(shell, SWT.None);
-		FormData bottomData = new FormData();
-		bottomData.bottom = new FormAttachment(0,0);
-		bottomData.left = new FormAttachment(0,0);
-		bottomData.right = new FormAttachment(0,0);
-		toolC.setLayoutData(bottomData);
-		
+		{
+			fmToolBarData = new FormData();
+			fmToolBarData.top = new FormAttachment(0,0);
+			fmToolBarData.left = new FormAttachment(0,0);
+			fmToolBarData.right = new FormAttachment(0,0);
+			toolC.setLayoutData(fmToolBarData);
+		}
 		sashes = new Sash[3];
-		sashes[0] = new Sash(shell, SWT.VERTICAL);
-		sashes[1] = new Sash(shell, SWT.VERTICAL);
+		Composite middleCom = new Composite(shell, SWT.None);
+		fmToolBarData.bottom = new FormAttachment(middleCom, 0);
+		{
+			
+			middleCom.setLayout(new FormLayout());
+			leftC = new ScrolledComposite(middleCom, SWT.V_SCROLL);
+			sashes[0] = new Sash(middleCom, SWT.VERTICAL);
+			Composite mmc = new Composite(middleCom, SWT.None);
+			
+			{
+				FormData fm = new FormData();
+				fm.top = new FormAttachment(0, 0);
+				fm.left = new FormAttachment(0, 0);
+				fm.right = new FormAttachment(sashes[0], 0);
+				fm.bottom = new FormAttachment(0, 0);
+				leftC.setLayoutData(fm);
+			}
+			
+			{
+				FormData fm = new FormData();
+				fm.top = new FormAttachment(0, 0);
+				fm.left = new FormAttachment(leftC, 0);
+				fm.right = new FormAttachment(mmc, 0);
+				fm.bottom = new FormAttachment(0, 0);
+				sashes[0].setLayoutData(fm);
+				sashes[0].addListener (SWT.Selection, e -> {
+					Rectangle sashRect = sashes[0].getBounds ();
+					Rectangle shellRect = shell.getClientArea ();
+					int right = shellRect.width - sashRect.width - limit;
+					e.x = Math.max (Math.min (e.x, right), limit);
+					if (e.x != sashRect.x)  {
+						fm.left = new FormAttachment (0, e.x);
+						shell.layout ();
+					}
+				});
+			}
+			
+			{
+				RowLayout rl = new RowLayout();
+				rl.type = SWT.VERTICAL;
+				mmc.setLayout(rl);
+				topC = new Composite(mmc, SWT.None);
+				centerC = new ScrolledComposite(mmc, SWT.V_SCROLL + SWT.H_SCROLL);
+			}
+			
+			sashes[1] = new Sash(middleCom, SWT.VERTICAL);
+			rightC = new ScrolledComposite(middleCom, SWT.V_SCROLL);
+			
+			{
+				FormData fm = new FormData();
+				fm.top = new FormAttachment(0, 0);
+				fm.left = new FormAttachment(sashes[0], 0);
+				fm.right = new FormAttachment(sashes[1], 0);
+				fm.bottom = new FormAttachment(0, 0);
+				mmc.setLayoutData(fm);
+			}
+			
+			{
+				FormData fm = new FormData();
+				fm.top = new FormAttachment(0, 0);
+				fm.left = new FormAttachment(mmc, 0);
+				fm.right = new FormAttachment(rightC, 0);
+				fm.bottom = new FormAttachment(0, 0);
+				sashes[1].setLayoutData(fm);
+			}
+			
+			{
+				FormData fm = new FormData();
+				fm.top = new FormAttachment(0, 0);
+				fm.left = new FormAttachment(sashes[1], 0);
+				fm.right = new FormAttachment(0, 0);
+				fm.bottom = new FormAttachment(0, 0);
+				rightC.setLayoutData(fm);
+			}
+			
+			{
+				fmMiddleData = new FormData();
+				fmMiddleData.top = new FormAttachment(toolC);
+				fmMiddleData.right = new FormAttachment(0,0);
+				fmMiddleData.left = new FormAttachment(0,0);
+				middleCom.setLayoutData(fmMiddleData);
+			}
+			
+		}
 		sashes[2] = new Sash(shell, SWT.HORIZONTAL);
-		
-		FormData leftData = new FormData();
-		leftData.top = new FormAttachment(toolC, 1);
-		leftData.left = new FormAttachment(0,0);
-		leftData.right = new FormAttachment(sashes[0], 0);
-		leftData.bottom = new FormAttachment(sashes[2], 2);
-		leftC.setLayoutData(leftData);
-		
-		FormData sash0Data = new FormData();
-		sash0Data.top = new FormAttachment(toolC, 0);
-		sash0Data.left = new FormAttachment(leftC, 0);
-		sash0Data.bottom = new FormAttachment(sashes[2], 0);
-		sashes[0].setLayoutData(sash0Data);
-		
-		FormData topData = new FormData();
-		topData.top = new FormAttachment(toolC, 0);
-		topData.left = new FormAttachment(sashes[0], 0);
-		topData.right = new FormAttachment(sashes[1], 0);
-		topData.bottom = new FormAttachment(centerC, 0);
-		topC.setLayoutData(topData);
-		
-		FormData sash1Data = new FormData();
-		sash1Data.top = new FormAttachment(toolC, 0);
-		sash1Data.right = new FormAttachment(rightC, 0);
-		sash1Data.bottom = new FormAttachment(sashes[2], 0);
-		sashes[1].setLayoutData(sash1Data);
-		
-		FormData centerData = new FormData();
-		centerData.bottom = new FormAttachment(sashes[2], 0);
-		centerData.left = new FormAttachment(sashes[0], 0);
-		centerData.right = new FormAttachment(sashes[1], 0);
-		centerData.top = new FormAttachment(topC, 0);
-		centerC.setLayoutData(centerData);
-		
-		FormData rightData = new FormData();
-		rightData.top = new FormAttachment(toolC, 1);
-		rightData.right = new FormAttachment(0,0);
-		rightData.left = new FormAttachment(sashes[1], 0);
-		rightData.bottom = new FormAttachment(sashes[2], 2);
-		rightC.setLayoutData(rightData);
+		bottomC = new Composite(shell, SWT.None);
+		fmMiddleData.bottom = new FormAttachment(sashes[2],0);
+		{
+			fmBottomData = new FormData();
+			fmBottomData.top = new FormAttachment(sashes[2],0);
+			fmBottomData.left = new FormAttachment(0,0);
+			fmBottomData.right = new FormAttachment(0,0);
+			fmBottomData.bottom = new FormAttachment(0,0);
+			bottomC.setLayoutData(fmBottomData);
+		}
+		shell.pack();
 	}
 
 	/**
@@ -170,6 +218,12 @@ public class Window {
 	 */
 	public void setSize(int width, int height) {
 		shell.setSize(width, height);
+		fmToolBarData.width = width;
+		fmToolBarData.height = 25;
+		fmMiddleData.height = (int) ((height / 100) * 75);
+		fmMiddleData.width = width;
+		fmBottomData.width = width;
+		fmBottomData.height = (int) ((height / 100) * 25) - 25;
 	}
 	
 	/**

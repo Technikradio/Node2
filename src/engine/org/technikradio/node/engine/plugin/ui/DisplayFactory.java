@@ -37,10 +37,6 @@ import org.eclipse.swt.widgets.Display;
 import org.technikradio.node.engine.action.Application;
 import org.technikradio.node.engine.action.CrashCodes;
 import org.technikradio.node.engine.action.Main;
-import org.technikradio.node.engine.event.BasicEvents;
-import org.technikradio.node.engine.event.Event;
-import org.technikradio.node.engine.event.EventHandler;
-import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
