@@ -33,8 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine;
 
-import org.json.JSONObject;
-
 /**
  * This class is used to store permissions. This is used for a potential client
  * side in order to prevent the user from doing stuff that he isn't allowed to

@@ -52,7 +52,7 @@ import org.technikradio.node.engine.plugin.WorkFile;
 public class PluginRegistryTest {
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception If the construction fails.
 	 */
 	@Before
 	public void setUp() throws Exception {

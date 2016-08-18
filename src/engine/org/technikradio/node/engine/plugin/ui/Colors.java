@@ -64,6 +64,10 @@ public class Colors {
 	 * This field represents a pure yellow.
 	 */
 	public static final Color YELLOW = new Color(DisplayFactory.getDisplay(), 255,255,0);
+	/**
+	 * This field represents a brown color.
+	 */
+	public static final Color BROWN = new Color(DisplayFactory.getDisplay(), 165,101,42);
 	
 	/**
 	 * This method is used to dispose all colors.
@@ -75,5 +79,6 @@ public class Colors {
 		BLUE.dispose();
 		BLACK.dispose();
 		YELLOW.dispose();
+		BROWN.dispose();
 	}
 }

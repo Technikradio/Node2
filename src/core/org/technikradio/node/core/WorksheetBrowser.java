@@ -34,7 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.core;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -70,39 +72,16 @@ public final class WorksheetBrowser {
 			}});
 		w.center();
 		{
-			w.getContainer(WindowOrientation.BOTTOM).setBackground(Colors.RED);
-			w.getContainer(WindowOrientation.CENTER).setBackground(Colors.BLUE);
-			w.getContainer(WindowOrientation.LEFT_TRAY).setBackground(Colors.BLACK);
-			w.getContainer(WindowOrientation.RIGHT_TRAY).setBackground(Colors.GREEN);
-			w.getContainer(WindowOrientation.TOP).setBackground(Colors.YELLOW);
-			Label l1 = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.None);
-			l1.setText("Bottom");
-		}
-		{
+			
 			Label l1 = new Label(w.getContainer(WindowOrientation.CENTER), SWT.None);
-			l1.setText("center");
-		}
-		{
-			Label l1 = new Label(w.getContainer(WindowOrientation.LEFT_TRAY), SWT.None);
-			l1.setText("left");
-		}
-		{
-			Label l1 = new Label(w.getContainer(WindowOrientation.RIGHT_TRAY), SWT.None);
-			l1.setText("right");
-		}
-		{
-			Label l1 = new Label(w.getContainer(WindowOrientation.TOP), SWT.None);
-			l1.setText("top");
-			System.out.println("p");
+			l1.setText("Bottom");
+			l1.setForeground(Colors.BLACK);
+			FontData[] fD = l1.getFont().getFontData();
+			fD[0].setHeight(16);
+			l1.setFont( new Font(Display.getDefault(),fD[0]));
 		}
 		w.open();
-		printBounds(w.getContainer(WindowOrientation.CENTER).getBounds());
-		printBounds(w.getContainer(WindowOrientation.TOOLBAR).getBounds());
 		
-	}
-
-	private void printBounds(Rectangle bounds) {
-		Console.log(LogType.Information, this, "Bounds { X=" + bounds.x + " Y=" + bounds.y + " width=" + bounds.width + " height=" + bounds.height + " }" );
 	}
 
 	/**
