@@ -25,5 +25,10 @@ There are also the following useful targets:
  * test: run the unit tests
  * doc: create the documentation of Node
 
+Please add -Dscala.home=$SCALA_HOME to the command before you enter the desired
+targets in order to tell ant where your installation of ant is located. Note that
+if you haven't set your system variables to contain SCALA_HOME replace it with
+the path pointing to your installation.
+
 This software is tested under multiple versions of linux and under Mac OSX 10.11.
 It may work under windows yet but we haven't tested it yet.
