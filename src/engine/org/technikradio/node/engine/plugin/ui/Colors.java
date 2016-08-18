@@ -43,6 +43,8 @@ import org.technikradio.universal_tools.Console.LogType;
  *
  */
 public class Colors {
+	
+	private static boolean disposed = false;
 
 	/**
 	 * This field represents a pure red.
@@ -68,11 +70,16 @@ public class Colors {
 	 * This field represents a brown color.
 	 */
 	public static final Color BROWN = new Color(DisplayFactory.getDisplay(), 165,101,42);
-	
+	/**
+	 * This field represents the color purple.
+	 */
+	public static final Color PURPLE = new Color(DisplayFactory.getDisplay(), 128,0,128);
 	/**
 	 * This method is used to dispose all colors.
 	 */
 	protected static void disposeAll(){
+		if(isDisposed())
+			return;
 		Console.log(LogType.StdOut, "Colors", "Cleaning up all created colors.");
 		RED.dispose();
 		GREEN.dispose();
@@ -80,5 +87,15 @@ public class Colors {
 		BLACK.dispose();
 		YELLOW.dispose();
 		BROWN.dispose();
+		PURPLE.dispose();
+		disposed = true;
+	}
+	
+	/**
+	 * Use this method in order to check if the colors are already disposed.
+	 * @return true if the colors are already been disposed or otherwise false.
+	 */
+	public static boolean isDisposed(){
+		return disposed;
 	}
 }
