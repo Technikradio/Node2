@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import org.technikradio.node.engine.RuntimeRelevant;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventHandler;
@@ -47,6 +48,7 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  * 
  */
+@RuntimeRelevant
 public class CorePlugin extends Plugin {
 	/* (non-Javadoc)
 	 * @see org.technikradio.node.engine.plugin.Plugin#load()

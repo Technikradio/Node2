@@ -38,6 +38,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Event;
@@ -94,6 +95,33 @@ public class Window {
 		rightC = new ScrolledComposite(middleC, SWT.VERTICAL);
 		bottomC = new Composite(shell, SWT.NONE);
 		
+		{
+			RowLayout rl = new RowLayout();
+			bottomC.setLayout(rl);
+		}
+		{
+			RowLayout rl = new RowLayout();
+			topC.setLayout(rl);
+		}
+		{
+			RowLayout rl = new RowLayout();
+			bottomC.setLayout(rl);
+		}
+		{
+			FillLayout fl = new FillLayout();
+			fl.type = SWT.VERTICAL;
+			centerC.setLayout(fl);
+		}
+		{
+			FillLayout fl = new FillLayout();
+			fl.type = SWT.VERTICAL;
+			leftC.setLayout(fl);
+		}
+		{
+			FillLayout fl = new FillLayout();
+			fl.type = SWT.VERTICAL;
+			rightC.setLayout(fl);
+		}
 	}
 
 	/**

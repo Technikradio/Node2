@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.technikradio.node.engine.RuntimeRelevant;
 import org.technikradio.node.engine.action.Hints;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
@@ -66,16 +67,17 @@ public final class PluginRegistry {
 		settingsTabs = new ArrayList<SettingsObject>();
 		currentActiveDataSource = null;
 		dataSources = new ArrayList<DataSource>();
-		EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler(){
+		EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler() {
 
 			@Override
 			public void handleEvent(Event e) {
 				Enumeration<Plugin> ee = plugins.elements();
-				while(ee.hasMoreElements()){
+				while (ee.hasMoreElements()) {
 					Plugin p = ee.nextElement();
 					p.unload();
 				}
-			}});
+			}
+		});
 	}
 
 	/**
@@ -95,14 +97,22 @@ public final class PluginRegistry {
 	 * @return true if the plug-in successfully loaded or false otherwise
 	 */
 	protected synchronized static boolean registerPlugin(Plugin plugin) {
-		try{
-			plugins.put(plugin.getMainfest().getIdentifier(), plugin);
-			if(Hints.wasUpdated(plugin.getMainfest().getIdentifier()))
+		try {
+			boolean keep = true;
+			if (plugin.getClass().isAnnotationPresent(RuntimeRelevant.class)) {
+				RuntimeRelevant ann = plugin.getClass().getAnnotation(RuntimeRelevant.class);
+				keep = ann.required();
+			} else {
+				Console.log(LogType.Warning, "PluginRegistry", "The plugin '" + plugin.getMainfest().getName() + "' doesn't specify its runtime requirement.");
+			}
+			if (keep)
+				plugins.put(plugin.getMainfest().getIdentifier(), plugin);
+			if (Hints.wasUpdated(plugin.getMainfest().getIdentifier()))
 				plugin.update();
 			plugin.load();
 			plugin.setLoadedFlag();
 			return true;
-		} catch (Exception e){
+		} catch (Exception e) {
 			Console.log(LogType.Warning, "PluginRegistry", "Error on invoking plugins init methods.");
 			e.printStackTrace();
 		}
@@ -169,6 +179,7 @@ public final class PluginRegistry {
 
 	/**
 	 * This method is used to get the current open window.
+	 * 
 	 * @return the current open window
 	 */
 	public static Window getCurrentOpenWindow() {
@@ -176,38 +187,46 @@ public final class PluginRegistry {
 	}
 
 	/**
-	 * This is the setter for the current open window. Be very careful using this setter!
-	 * @param currentOpenWindow the window to set
+	 * This is the setter for the current open window. Be very careful using
+	 * this setter!
+	 * 
+	 * @param currentOpenWindow
+	 *            the window to set
 	 */
 	public synchronized static void setCurrentOpenWindow(Window currentOpenWindow) {
 		PluginRegistry.currentOpenWindow = currentOpenWindow;
 	}
-	
+
 	/**
 	 * Use this method to get the number of loaded plug-ins.
+	 * 
 	 * @return The number of registered plug-ins.
 	 */
-	public static int getNumberOfLoadedPlugins(){
+	public static int getNumberOfLoadedPlugins() {
 		return plugins.size();
 	}
-	
+
 	/**
 	 * Use this method to add a possible DataSource.
-	 * @param ds The DataSource to register.
-	 * @return False if the given DataSource was already added or otherwise true.
+	 * 
+	 * @param ds
+	 *            The DataSource to register.
+	 * @return False if the given DataSource was already added or otherwise
+	 *         true.
 	 */
-	public synchronized static boolean addDataSource(DataSource ds){
-		if(dataSources.contains(ds))
+	public synchronized static boolean addDataSource(DataSource ds) {
+		if (dataSources.contains(ds))
 			return false;
 		dataSources.add(ds);
 		return true;
 	}
-	
+
 	/**
 	 * Use this method to get all registered DataSources.
+	 * 
 	 * @return An array containing all registered DataSource's.
 	 */
-	public synchronized static DataSource[] getAllRegisteredDataSources(){
+	public synchronized static DataSource[] getAllRegisteredDataSources() {
 		return dataSources.toArray(new DataSource[dataSources.size()]);
 	}
 
