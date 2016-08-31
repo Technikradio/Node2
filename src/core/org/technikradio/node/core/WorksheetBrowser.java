@@ -34,14 +34,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.core;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.technikradio.node.engine.action.Application;
-import org.technikradio.node.engine.plugin.ui.Colors;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.node.engine.plugin.ui.WindowOrientation;
 import org.technikradio.universal_tools.Console;
@@ -60,7 +61,7 @@ public final class WorksheetBrowser {
 	
 	public WorksheetBrowser(){
 		w = new Window("Worksheetbrowser");
-		w.setSize(500, 300);
+		w.setSize(600, 300);
 		w.getShell().addListener(SWT.Close, new Listener() {
 
 			@Override
@@ -73,12 +74,48 @@ public final class WorksheetBrowser {
 		w.center();
 		{
 			
-			Label l1 = new Label(w.getContainer(WindowOrientation.CENTER), SWT.None);
-			l1.setText("Bottom");
-			l1.setForeground(Colors.BLACK);
-			FontData[] fD = l1.getFont().getFontData();
-			fD[0].setHeight(16);
-			l1.setFont( new Font(Display.getDefault(),fD[0]));
+			Label l1 = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.BORDER);
+			l1.setText("Bottom-Info");
+		}
+		{
+			Button newButton = new Button(w.getContainer(WindowOrientation.TOP), SWT.PUSH);
+			newButton.setText("New");
+		}
+		{
+			Button openButton = new Button(w.getContainer(WindowOrientation.TOP), SWT.PUSH);
+			openButton.setText("Open");
+		}
+		{
+			ExpandBar dataSourceBar = new ExpandBar(w.getContainer(WindowOrientation.LEFT_TRAY), SWT.V_SCROLL);
+			Composite localComposite = new Composite (dataSourceBar, SWT.NONE);
+			GridLayout layout = new GridLayout ();
+			layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
+			layout.verticalSpacing = 10;
+			localComposite.setLayout(layout);
+			{
+				Label l = new Label(localComposite, SWT.BORDER);
+				l.setText("local composite");
+			}
+			ExpandItem localExpandItem = new ExpandItem (dataSourceBar, SWT.NONE, 0);
+			localExpandItem.setText("Local data sources");
+			localExpandItem.setHeight(localComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+			localExpandItem.setControl(localComposite);
+			//localExpandItem.setImage(image);
+			
+			Composite remoteComposite = new Composite (dataSourceBar, SWT.NONE);
+			layout = new GridLayout (2, false);
+			layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
+			layout.verticalSpacing = 10;
+			remoteComposite.setLayout(layout);
+			{
+				Label l = new Label(remoteComposite, SWT.BORDER);
+				l.setText("local composite");
+			}
+			ExpandItem remoteExpandItem = new ExpandItem (dataSourceBar, SWT.NONE, 1);
+			remoteExpandItem.setText("Remote data sources");
+			remoteExpandItem.setHeight(localComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+			remoteExpandItem.setControl(localComposite);
+			//localExpandItem.setImage(image);
 		}
 		w.open();
 		

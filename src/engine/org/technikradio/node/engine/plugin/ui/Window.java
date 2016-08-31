@@ -149,6 +149,7 @@ public class Window {
 	 * Use this method to open the window.
 	 */
 	public void open(){
+		shell.pack();
 		shell.open();
 	}
 	
