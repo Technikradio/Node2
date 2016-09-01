@@ -156,11 +156,12 @@ public final class WorksheetBrowser {
 				l.setText(ds.getName());
 				Label l1 = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.BORDER);
 				l1.setText(ds.getName());
+
+				final DataSource d = ds;
 				c.addListener(SWT.MouseDown, new Listener(){
 
 					@Override
 					public void handleEvent(Event arg0) {
-						final DataSource d = ds;
 						Console.log(LogType.StdOut, this, "Clicked. " + d.getIdentifier());
 						currentSelectedDS = d;
 					}
@@ -179,11 +180,11 @@ public final class WorksheetBrowser {
 				}
 				Label l = new Label(c, SWT.BORDER);
 				l.setText(ds.getName());
+				final DataSource d = ds;
 				c.addListener(SWT.MouseDown, new Listener(){
 
 					@Override
 					public void handleEvent(Event arg0) {
-						final DataSource d = ds;
 						Console.log(LogType.StdOut, this, "Clicked. " + d.getIdentifier());
 						currentSelectedDS = d;
 					}
