@@ -208,5 +208,18 @@ public abstract class DataObject {
 		this.permissions = permissions;
 	}
 	
-
+	@Override
+	public boolean equals(Object o){
+		if(o == null)
+			return false;
+		if(!(o instanceof DataObject))
+			return false;
+		DataObject d = (DataObject) o;
+		if(!d.getIdentifier().equals(this.getIdentifier()))
+			return false;
+		if(!d.getTitle().equals(this.getTitle()))
+			return false;
+		return true;
+	}
+	
 }

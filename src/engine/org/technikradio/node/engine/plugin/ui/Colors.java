@@ -50,30 +50,94 @@ public class Colors {
 	 * This field represents a pure red.
 	 */
 	public static final Color RED = new Color(DisplayFactory.getDisplay(), 255,0,0);
+	
 	/**
 	 * This field represents a pure green.
 	 */
 	public static final Color GREEN = new Color(DisplayFactory.getDisplay(), 0,255,0);
+	
 	/**
 	 * This field represents a pure blue.
 	 */
 	public static final Color BLUE = new Color(DisplayFactory.getDisplay(), 0,0,255);
+	
 	/**
 	 * This field represents a pure black.
 	 */
 	public static final Color BLACK = new Color(DisplayFactory.getDisplay(), 0,0,0);
+	
 	/**
 	 * This field represents a pure yellow.
 	 */
 	public static final Color YELLOW = new Color(DisplayFactory.getDisplay(), 255,255,0);
+	
 	/**
 	 * This field represents a brown color.
 	 */
 	public static final Color BROWN = new Color(DisplayFactory.getDisplay(), 165,101,42);
+	
 	/**
 	 * This field represents the color purple.
 	 */
 	public static final Color PURPLE = new Color(DisplayFactory.getDisplay(), 128,0,128);
+	
+	/**
+	 * This field contains a gray color palette.
+	 */
+	public static final ColorPalette GRAY_DESIGN = new ColorPalette(){
+
+		private Color mb = new Color(DisplayFactory.getDisplay(), 51,51,51);
+		private Color sb = new Color(DisplayFactory.getDisplay(), 41,41,41);
+		private Color sepb = new Color(DisplayFactory.getDisplay(), 62,63,62);
+		private Color cs = new Color(DisplayFactory.getDisplay(), 25,25,25);
+		private Color tc = new Color(DisplayFactory.getDisplay(), 127,127,127);
+		private Color ac = new Color(DisplayFactory.getDisplay(), 96,96,96);
+		
+		@Override
+		public Color getMainBackground() {
+			return mb;
+		}
+
+		@Override
+		public Color getSeparatorBackground() {
+			return sepb;
+		}
+
+		@Override
+		public Color getComponentShadow() {
+			return cs;
+		}
+
+		@Override
+		public int getShadingDeph() {
+			return 2;
+		}
+
+		@Override
+		public Color getTextColor() {
+			return tc;
+		}
+
+		@Override
+		public Color getAccentColor() {
+			return ac;
+		}
+
+		@Override
+		public void dispose() {
+			mb.dispose();
+			sb.dispose();
+			sepb.dispose();
+			cs.dispose();
+			tc.dispose();
+			ac.dispose();
+		}
+
+		@Override
+		public Color getSecondaryBackground() {
+			return sb;
+		}};
+	
 	/**
 	 * This method is used to dispose all colors.
 	 */
@@ -88,6 +152,7 @@ public class Colors {
 		YELLOW.dispose();
 		BROWN.dispose();
 		PURPLE.dispose();
+		GRAY_DESIGN.dispose();
 		disposed = true;
 	}
 	

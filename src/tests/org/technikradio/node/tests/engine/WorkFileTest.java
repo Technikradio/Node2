@@ -41,6 +41,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.WorkFile;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This is the test case for the WorkFile class.
@@ -113,14 +115,16 @@ public final class WorkFileTest {
 	 */
 	@Test
 	public final void testGetChildObjects() {
-		//TODO fix this
 		Iterator<DataObject> i = w.getChildObjects();
 		DataObject o1 = i.next();
 		DataObject o2 = i.next();
-		if(o1 != tc1 || o1 != tc2 || o1 != tc3){
+		if(!o1.equals(tc1) && !o1.equals(tc2) && !o1.equals(tc3)){
+			Console.log(LogType.Error, this, "Got: " + o1.getIdentifier());
 			fail("Fist test object didn't match. (" + o1.toString() + ")");
 		}
-		if(o2 != tc1 || o2 != tc2 || o2 != tc3){
+		if(!o2.equals(tc1) && !o2.equals(tc2) && !o2.equals(tc3)){
+
+			Console.log(LogType.Error, this, "Got: " + o1.getIdentifier());
 			fail("Second test object didn't match. (" + o2.toString() + ")");
 		}
 	}

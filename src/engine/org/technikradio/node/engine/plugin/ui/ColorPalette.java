@@ -31,87 +31,62 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * 
  */
-package org.technikradio.node.tests.engine;
+package org.technikradio.node.engine.plugin.ui;
 
-import static org.junit.Assert.assertEquals;
-
-import java.net.URI;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.technikradio.node.engine.plugin.DataObject;
-import org.technikradio.node.engine.plugin.DataSource;
-import org.technikradio.node.engine.plugin.WorkFile;
+import org.eclipse.swt.graphics.Color;
 
 /**
+ * This class is a prototype for an color theme
  * @author doralitze
- * Unit test to test the DataSource abstract class
+ *
  */
-public class DataSourceTest {
-	
-	private TestClass cl;
-	
-	private class TestClass extends DataSource{
-
-		public TestClass(String identifier) {
-			super(identifier);
-		}
-
-		@Override
-		public boolean save(URI uri, WorkFile f) {
-			return true;
-		}
-
-		@Override
-		public WorkFile load(URI uri) {
-			return null;
-		}
-
-		@Override
-		public URI showResourceOpenDialog() {
-			return null;
-		}
-
-		@Override
-		public boolean saveDataObject(DataObject o) {
-			return false;
-		}
-
-		@Override
-		public boolean isRemoteDataSource() {
-			return false;
-		}
-
-		@Override
-		public void showNewWorkFileDialog() {
-			
-		}
-		
-	}
+public abstract class ColorPalette {
 
 	/**
-	 * @throws java.lang.Exception In case of an exception
+	 * Use this method to get the background color.
+	 * @return The provided color.
 	 */
-	@Before
-	public void setUp() throws Exception {
-		cl = new TestClass("blah");
-	}
-
+	public abstract Color getMainBackground();
+	
 	/**
-	 * @throws java.lang.Exception In case of an exception
+	 * Use this method to get the secondary background color.
+	 * @return The provided color.
 	 */
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public final void test() {
-		assertEquals("blah", cl.getIdentifier());
-		assertEquals(true, cl.save(null, null));
-		assertEquals(null, cl.load(null));
-		assertEquals(null, cl.showResourceOpenDialog());
-		assertEquals(false, cl.saveDataObject(null));
-	}
-
+	public abstract Color getSecondaryBackground();
+	
+	/**
+	 * Use this color to get the color of separators used inside the UI.
+	 * @return The provided color.
+	 */
+	public abstract Color getSeparatorBackground();
+	
+	/**
+	 * Use this method to get the color of the component shadow.
+	 * @return The provided color.
+	 */
+	public abstract Color getComponentShadow();
+	
+	/**
+	 * Use this method to get the size of the shadow in pixels.
+	 * @return The size of the desired shadow.
+	 */
+	public abstract int getShadingDeph();
+	
+	/**
+	 * Use this method to get the text color.
+	 * @return The provided color.
+	 */
+	public abstract Color getTextColor();
+	
+	/**
+	 * Use this method in order to get the accent color.
+	 * @return The provided color.
+	 */
+	public abstract Color getAccentColor();
+	
+	/**
+	 * Use this method to dispose all created colors.
+	 */
+	public abstract void dispose();
+	
 }

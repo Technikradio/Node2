@@ -33,31 +33,40 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import java.net.URI;
+
 import org.technikradio.node.engine.RuntimeRelevant;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventHandler;
 import org.technikradio.node.engine.event.EventRegistry;
+import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.Plugin;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.node.engine.plugin.WorkFile;
 import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This plug-in will provide the basic functionality of node.
+ * 
  * @author doralitze
  * 
  */
 @RuntimeRelevant
 public class CorePlugin extends Plugin {
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.technikradio.node.engine.plugin.Plugin#load()
 	 */
 	@Override
 	public void load() {
 		{
-			EventHandler eh = new EventHandler(){
-				
+			EventHandler eh = new EventHandler() {
+
 				public void handleEvent(Event e) {
 					DisplayFactory.getDisplay().syncExec(new Runnable() {
 						public void run() {
@@ -67,16 +76,84 @@ public class CorePlugin extends Plugin {
 						}
 					});
 				}
-				
+
 			};
-			if(!EventRegistry.addEventHandler(BasicEvents.APPLICATION_LOADED_EVENT, eh)){
-				Console.log(LogType.Information, this, "There are other plugin listening on the app start, registered before the core plugin.");
+			if (!EventRegistry.addEventHandler(BasicEvents.APPLICATION_LOADED_EVENT, eh)) {
+				Console.log(LogType.Information, this,
+						"There are other plugin listening on the app start, registered before the core plugin.");
 			}
 		}
+		PluginRegistry.addDataSource(new DataSource("testds 0") {
+
+			@Override
+			public boolean save(URI uri, WorkFile file) {
+				return false;
+			}
+
+			@Override
+			public WorkFile load(URI uri) {
+				return null;
+			}
+
+			@Override
+			public URI showResourceOpenDialog() {
+				return null;
+			}
+
+			@Override
+			public boolean saveDataObject(DataObject o) {
+				return false;
+			}
+
+			@Override
+			public boolean isRemoteDataSource() {
+				return false;
+			}
+
+			@Override
+			public void showNewWorkFileDialog() {
+				
+			}
+		});
+		for(int i = 1; i < 5; i++)
+		PluginRegistry.addDataSource(new DataSource("testds " + i) {
+
+			@Override
+			public boolean save(URI uri, WorkFile file) {
+				return false;
+			}
+
+			@Override
+			public WorkFile load(URI uri) {
+				return null;
+			}
+
+			@Override
+			public URI showResourceOpenDialog() {
+				return null;
+			}
+
+			@Override
+			public boolean saveDataObject(DataObject o) {
+				return false;
+			}
+
+			@Override
+			public boolean isRemoteDataSource() {
+				return true;
+			}
+
+			@Override
+			public void showNewWorkFileDialog() {
+				
+			}
+		});
 		Console.log(LogType.StdOut, this, "Successfully loaded core plug-in.");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.technikradio.node.engine.plugin.Plugin#unload()
 	 */
 	@Override

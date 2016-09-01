@@ -80,6 +80,16 @@ public class PluginRegistryTest {
 			@Override
 			public boolean saveDataObject(DataObject o) {
 				return false;
+			}
+
+			@Override
+			public boolean isRemoteDataSource() {
+				return false;
+			}
+
+			@Override
+			public void showNewWorkFileDialog() {
+				
 			}};
 		assertEquals("The array of all registered data sources should be empty at the beginning.", 0, PluginRegistry.getAllRegisteredDataSources().length);
 		assertTrue("First it should be possible to register the given DataSource.", PluginRegistry.addDataSource(ds));

@@ -41,7 +41,8 @@ import java.net.URI;
  * application will only see this data adapter and doesn't need to care about
  * the files.
  * 
- * NOTE: Please override the Object.toString method in order to have a displayable name.
+ * NOTE: Please override the Object.toString method in order to have a
+ * displayable name.
  * 
  * @author doralitze
  * 
@@ -49,6 +50,7 @@ import java.net.URI;
 public abstract class DataSource {
 
 	private String identifier = "";
+	private String name = "";
 
 	/**
 	 * This is the most basic constructor. It only sets the identifier. The
@@ -60,6 +62,7 @@ public abstract class DataSource {
 	public DataSource(String identifier) {
 		super();
 		this.identifier = identifier;
+		this.name = identifier;
 	}
 
 	/**
@@ -108,4 +111,33 @@ public abstract class DataSource {
 	 * @return true if the save was successful otherwise false
 	 */
 	public abstract boolean saveDataObject(DataObject o);
+
+	/**
+	 * Use this method to tell node if this data source is a local ore a remote
+	 * one.
+	 * 
+	 * @return true if the data source is on a remote host or otherwise false.
+	 */
+	public abstract boolean isRemoteDataSource();
+	
+	/**
+	 * Use this method in order to open a dialog capable of creating a new work file.
+	 */
+	public abstract void showNewWorkFileDialog();
+
+	/**
+	 * Use this method to get the human readable name of this data source.
+	 * @return the localized name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Use this method to set the displayed name of this data source.
+	 * @param name the localized name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 }
