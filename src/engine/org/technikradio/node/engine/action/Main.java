@@ -57,7 +57,7 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  */
 public class Main {
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = Application.isDevelopmentVersion();
 	private static String APP_HOME;
 	private static boolean appRunning = true;
 	private static Display d;

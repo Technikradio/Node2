@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.action.Main;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.PluginRegistry;
 import org.technikradio.node.engine.plugin.ui.Colors;
@@ -156,7 +157,7 @@ public final class WorksheetBrowser {
 		fillDSS();
 		w.open();
 		w.setSize(750, 400);
-		
+
 	}
 
 	private void fillDSS() {
@@ -168,7 +169,9 @@ public final class WorksheetBrowser {
 				first = false;
 				setCurrentSelectedDS(ds);
 			}
-			Console.log(LogType.Information, this, "Adding data source: " + ds.getIdentifier() + "; " + ds.getName());
+			if (Main.DEBUG_MODE)
+				Console.log(LogType.Information, this,
+						"Adding data source: " + ds.getIdentifier() + "; " + ds.getName());
 
 			Composite c = null;
 			int ci;
@@ -186,18 +189,17 @@ public final class WorksheetBrowser {
 			layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
 			layout.verticalSpacing = 10;
 			c.setLayout(new FillLayout());
-			
+
 			if (ci % 2 == 0) {
 				c.setBackground(Colors.GRAY_DESIGN.getTextColor());
 			}
 			{
-				//GridLayout l = (GridLayout) remoteComposite.getLayout();
-				//l.numColumns++;
+				// GridLayout l = (GridLayout) remoteComposite.getLayout();
+				// l.numColumns++;
 			}
 			Label l = new Label(c, SWT.BORDER);
 			l.setText(ds.getName());
-			
-			
+
 			final DataSource d = ds;
 			c.addListener(SWT.MouseDown, new Listener() {
 
@@ -211,7 +213,7 @@ public final class WorksheetBrowser {
 		}
 		remoteExpandItem.setHeight(remoteComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		localExpandItem.setHeight(localComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-		
+
 	}
 
 	/**

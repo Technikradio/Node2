@@ -113,6 +113,8 @@ public class DisplayFactory {
 		if(initialized)
 			throw new RuntimeException("DisplayFactory already initialized by main thread.");
 		d = new Display();
+		Display.setAppName("Node");
+		Display.setAppVersion(Application.VERSION);
 		d.readAndDispatch();
 		d.wake();
 		eventLoopThread = new Thread(new EventLoopHandler());

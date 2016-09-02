@@ -55,7 +55,10 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  */
 public class Application {
-	
+	/**
+	 * This field contains the current version of the engine.
+	 */
+	public static final String VERSION = "2.0.0d";
 	/**
 	 * This path points to the directory where node stores local user dependent stuff like settings.
 	 */
@@ -190,5 +193,13 @@ public class Application {
 		EventRegistry.waitForProcessedEvent(e);
 		Console.log(LogType.StdOut, "Application", "The Application will now exit.");
 		System.exit(0);
+	}
+	
+	/**
+	 * Use this method to check if this version is a development version.
+	 * @return true if this build is a development build or otherwise false.
+	 */
+	public static boolean isDevelopmentVersion(){
+		return VERSION.endsWith("d");
 	}
 }
