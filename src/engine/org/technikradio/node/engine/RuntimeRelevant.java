@@ -52,4 +52,5 @@ public @interface RuntimeRelevant {
 	 * @return The set value
 	 */
 	boolean required() default true;
+
 }

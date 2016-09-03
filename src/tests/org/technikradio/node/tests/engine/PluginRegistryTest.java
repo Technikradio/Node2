@@ -78,7 +78,7 @@ public class PluginRegistryTest {
 			}
 
 			@Override
-			public boolean saveDataObject(DataObject o) {
+			public boolean saveDataObject(DataObject o, WorkFile f) {
 				return false;
 			}
 
@@ -89,6 +89,11 @@ public class PluginRegistryTest {
 
 			@Override
 			public void showNewWorkFileDialog() {
+				
+			}
+
+			@Override
+			public void saveWorkFile(WorkFile f) {
 				
 			}};
 		assertEquals("The array of all registered data sources should be empty at the beginning.", 0, PluginRegistry.getAllRegisteredDataSources().length);

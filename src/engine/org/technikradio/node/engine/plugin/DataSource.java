@@ -112,12 +112,15 @@ public abstract class DataSource {
 
 	/**
 	 * This method gets called when a specific data object whant's to be stored.
+	 * NOTE that this method is desired to store only the requested data object
+	 * and not the entire work file.
 	 * 
 	 * @param o
 	 *            The object that want's to be stored.
+	 * @param f The corresponding work file of the object.
 	 * @return true if the save was successful otherwise false
 	 */
-	public abstract boolean saveDataObject(DataObject o);
+	public abstract boolean saveDataObject(DataObject w, WorkFile f);
 
 	/**
 	 * Use this method to tell node if this data source is a local ore a remote
@@ -133,6 +136,12 @@ public abstract class DataSource {
 	 */
 	public abstract void showNewWorkFileDialog();
 
+	/**
+	 * This method saves the entire work file.
+	 * @param f The work file to be saved.
+	 */
+	public abstract void saveWorkFile(WorkFile f);
+	
 	/**
 	 * Use this method to get the human readable name of this data source.
 	 * 

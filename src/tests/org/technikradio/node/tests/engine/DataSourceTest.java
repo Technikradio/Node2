@@ -74,7 +74,7 @@ public class DataSourceTest {
 		}
 
 		@Override
-		public boolean saveDataObject(DataObject o) {
+		public boolean saveDataObject(DataObject o, WorkFile f) {
 			return false;
 		}
 
@@ -85,6 +85,11 @@ public class DataSourceTest {
 
 		@Override
 		public void showNewWorkFileDialog() {
+			
+		}
+
+		@Override
+		public void saveWorkFile(WorkFile f) {
 			
 		}
 		
@@ -111,7 +116,7 @@ public class DataSourceTest {
 		assertEquals(true, cl.save(null, null));
 		assertEquals(null, cl.load(null));
 		assertEquals(null, cl.showResourceOpenDialog());
-		assertEquals(false, cl.saveDataObject(null));
+		assertEquals(false, cl.saveDataObject(null, null));
 	}
 
 }

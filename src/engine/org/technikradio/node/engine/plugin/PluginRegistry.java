@@ -60,6 +60,7 @@ public final class PluginRegistry {
 	private static ArrayList<SettingsObject> settingsTabs;
 	private static DataSource currentActiveDataSource;
 	private static Window currentOpenWindow;
+	private static WorkFile currentActiveWorkFile;
 	private static ArrayList<DataSource> dataSources;
 
 	static {
@@ -228,6 +229,22 @@ public final class PluginRegistry {
 	 */
 	public synchronized static DataSource[] getAllRegisteredDataSources() {
 		return dataSources.toArray(new DataSource[dataSources.size()]);
+	}
+
+	/**
+	 * Use this method in order to get the current active work file.
+	 * @return the current active work file
+	 */
+	public static WorkFile getCurrentActiveWorkFile() {
+		return currentActiveWorkFile;
+	}
+
+	/**
+	 * Use this method in order to set the current active work file.
+	 * @param currentActiveWorkFile the work file to make the current active one
+	 */
+	public synchronized static void setCurrentActiveWorkFile(WorkFile currentActiveWorkFile) {
+		PluginRegistry.currentActiveWorkFile = currentActiveWorkFile;
 	}
 
 }

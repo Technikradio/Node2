@@ -145,11 +145,12 @@ public abstract class DataObject {
 	
 	public boolean save() throws DataNotYetLoadedException{
 		DataSource ds = PluginRegistry.getCurrentActiveDataSource();
+		WorkFile wf = PluginRegistry.getCurrentActiveWorkFile();
 		if(ds == null)
 			throw new DataNotYetLoadedException("Try to save into unaviable data yourself the next time!");
-		return ds.saveDataObject(this);
+		return ds.saveDataObject(this, wf);
 	}
-	
+
 	/**
 	 * This method gets called when the user opens the data object.
 	 * @return an SWT composite object to display the content of the data object
