@@ -53,7 +53,7 @@ public class EventTest {
 	private Event e;
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -94,6 +94,24 @@ public class EventTest {
 	@Test
 	public final void testGetResponder() {
 		assertEquals(er, e.getResponder());
+	}
+	
+	/**
+	 * Test method for {@link org.technikradio.node.engine.event.Event#compareTo(Object)}.
+	 */
+	@Test
+	public final void testComparison(){
+		EventResponder<String> em = new EventResponder<String>();
+		EventType a = new EventType("a", 1, false);
+		EventType b = new EventType("b", 2, false);
+		EventType c = new EventType("c", 1, false);
+		Event A = new Event(a, null, "A", em);
+		Event B = new Event(b, null, "B", em);
+		Event C = new Event(c, null, "C", em);
+		assertEquals("EventType A and C should be worth the same.", 0, A.compareTo(C));
+		assertEquals("B should be more worth than C.", 1, B.compareTo(C));
+		assertEquals("A should be less worth than B.", -1, A.compareTo(B));
+		assertEquals("Comparing thwo different classes with each other should result in 0.", 0, A.compareTo(b));
 	}
 
 }

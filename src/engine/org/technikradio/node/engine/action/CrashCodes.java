@@ -27,86 +27,36 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
 
 /**
- * This class represents an abstract plug-in.
  * 
- * @author doralitze
  */
-public abstract class Plugin {
+package org.technikradio.node.engine.action;
 
-	private Manifest mainfest;
-	protected boolean loaded = false;
-
+/**
+ * This class contains constants for common crash codes.
+ * @author doralitze
+ *
+ */
+public class CrashCodes {
 	/**
-	 * This constructor initializes a new instance of a plug-in handling the
-	 * manifest later though other code.
+	 * Use this constant if the application crashed on schedule.
 	 */
-	public Plugin() {
-
-	}
-
+	public static final int CLEAN_EXIT = 0;
 	/**
-	 * This constructor initializes a new plug-in instance.
-	 * 
-	 * @param m
-	 *            the manifest of the plug-in to use
+	 * Use this constant to mark an general crash reason.
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
-
+	public static final int UNSPECIFIED_REASON = 1;
 	/**
-	 * This method sets the loaded flag. This method gets called after the
-	 * load() function returned.
+	 * Use this constant if an unknown error occurred.
 	 */
-	protected void setLoadedFlag() {
-		loaded = true;
-	}
-
+	public static final int UNKNOWN_REASON = 2;
 	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * 
-	 * @return the loaded flag
+	 * Use this constant if an error occurred doing plug-in or engine initialization.
 	 */
-	protected boolean isPluginLoaded() {
-		return loaded;
-	}
-
+	public static final int ERROR_DURING_INITIALIZATION = 3;
 	/**
-	 * @return the mainfest
+	 * Use this method if the application crashed due to an error inside the UI thread.
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param manifest
-	 *            the manifest of the plug-in to set
-	 */
-	protected void setMainfest(Manifest manifest) {
-		this.mainfest = manifest;
-	}
-
-	/**
-	 * This method gets called when the plug-in should initialize itself
-	 */
-	public abstract void load();
-
-	/**
-	 * This method gets called before the application exits. Use this method to
-	 * save all required things.
-	 */
-	public abstract void unload();
-
-	/**
-	 * This method does nothing on its own. Override this method if you want
-	 * your plug-in to be notified if it got updated.
-	 */
-	public void update() {
-
-	}
-
+	public static final int UI_CRASH = 4;
 }

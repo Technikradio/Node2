@@ -39,169 +39,224 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.technikradio.node.engine.action.Application;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is used to handle events and raise them.
+ * 
  * @author doralitze
  */
 public class EventRegistry {
 
 	private static Hashtable<EventType, List<EventHandler>> handlers;
+	private static List<Event> waitlist;
 	private static ArrayList<Event> processListSync;
 	private static List<Event> processListAssync;
 	private static EventProcessor[] processors;
-	
+
 	/**
 	 * This subclass is used to process raised events.
+	 * 
 	 * @author doralitze
 	 */
-	private static class EventProcessor implements Runnable{
-		
+	private static class EventProcessor implements Runnable {
+
 		private boolean running = false;
-		
+		private int number = 0;
+
+		public EventProcessor(int i) {
+			number = i;
+		}
+
 		@Override
 		public void run() {
 			setRunning(true);
 			Event e = getNextEvent();
-			while(e != null){
+			while (e != null) {
 				EventType type = e.getType();
 				boolean handled = false;
-				for(EventHandler handler : handlers.get(type)){
-					handler.handleEvent(e);
-					if(e.getResponder().isFinal())
-						break;
-					handled = true;
-				}
-				if(!handled && e.getType().shouldAutomaticallyThrowCrash())
+				List<EventHandler> hl = handlers.get(type);
+				if (hl != null)
+					for (EventHandler handler : hl) {
+						try {
+							handler.handleEvent(e);
+						} catch (Exception ee) {
+							Console.log(LogType.Error, this,
+									"Failed to handle event " + e.toString() + ": " + ee.getLocalizedMessage());
+						}
+						if (e.getResponder().isFinal())
+							break;
+						handled = true;
+					}
+				else
+					Console.log(LogType.Warning, this, "There are no handlers for event " + e.getType().toString());
+				if (waitlist.contains(e))
+					waitlist.remove(e);
+				if (!handled && e.getType().shouldAutomaticallyThrowCrash())
 					Application.crash(e);
 				e = getNextEvent();
 			}
 			setRunning(false);
 		}
-		
+
 		/**
-		 * This method is used to determinate whether this processor is currently running or not.
+		 * This method is used to determinate whether this processor is
+		 * currently running or not.
+		 * 
 		 * @return true if the processor is currently running otherwise false
 		 */
 		public boolean isRunning() {
 			return running;
 		}
-		
+
 		/**
-		 * @param running the running flag to set
+		 * @param running
+		 *            the running flag to set
 		 */
 		private void setRunning(boolean running) {
 			this.running = running;
 		}
-		
+
 		/**
 		 * This method is used to get the next event to process from the stack.
-		 * @return It will return the next element or null if the stack is empty.
+		 * 
+		 * @return It will return the next element or null if the stack is
+		 *         empty.
 		 */
-		protected synchronized Event getNextEvent(){
-			if(processListAssync.size() == 0)
+		protected synchronized Event getNextEvent() {
+			if (processListAssync.size() == 0)
 				return null;
 			Event e = processListAssync.get(0);
 			processListAssync.remove(e);
 			return e;
 		}
-		
+
 		/**
-		 * This method is used to start the processor.
-		 * It won't do anything if the processor already runs.
+		 * This method is used to start the processor. It won't do anything if
+		 * the processor already runs.
 		 */
-		public void start(){
-			if(isRunning())
+		public void start() {
+			if (isRunning())
 				return;
 			Thread t = new Thread(this);
 			t.setName("EventProcessor");
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
 		}
-		
+
+		@Override
+		public String toString() {
+			return "EventRegistry.EventProcessor[" + number + "]";
+		}
+
 	}
-	
+
 	/**
-	 * This class is used to deal with the events which need to be processed in order.
+	 * This class is used to deal with the events which need to be processed in
+	 * order.
+	 * 
 	 * @author doralitze
 	 */
-	private static class SynchronizedEventProcessor extends EventProcessor{
-		
+	private static class SynchronizedEventProcessor extends EventProcessor {
+
+		public SynchronizedEventProcessor(int i) {
+			super(0);
+		}
+
 		/**
-		 * This method overrides the super on in order to use the synchronized list.
+		 * This method overrides the super on in order to use the synchronized
+		 * list.
+		 * 
 		 * @return The next item from the stack.
 		 */
 		@Override
-		protected synchronized Event getNextEvent(){
-			if(processListSync.size() == 0)
+		protected synchronized Event getNextEvent() {
+			if (processListSync.size() == 0)
 				return null;
 			Event e = processListSync.get(0);
 			processListSync.remove(e);
 			return e;
 		}
+
+		@Override
+		public String toString() {
+			return "EventRegistry.SynchronizedEventProcessor";
+		}
 	}
-	
+
 	/**
 	 * This method initializes the event registry
 	 */
-	static{
+	static {
 		handlers = new Hashtable<EventType, List<EventHandler>>();
+		waitlist = Collections.synchronizedList(new ArrayList<Event>());
 		processListSync = new ArrayList<Event>();
 		processListAssync = Collections.synchronizedList(new ArrayList<Event>());
 		ArrayList<EventProcessor> ps = new ArrayList<EventProcessor>();
-		ps.add(new SynchronizedEventProcessor());
-		for(int i = 0; i < Runtime.getRuntime().availableProcessors(); i++){
-			ps.add(new EventProcessor());
+		ps.add(new SynchronizedEventProcessor(0));
+		for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {
+			ps.add(new EventProcessor(i));
 		}
 		processors = ps.toArray(new EventProcessor[ps.size()]);
 	}
-	
+
 	/**
-	 * This method raises an event and starts the processing of it.
-	 * Note that if you're using this event responder you may have to
-	 * cast it to the desired responder type.
-	 * This method puts all events inside the parallel processing stack.
-	 * @param event The event to raise
+	 * This method raises an event and starts the processing of it. Note that if
+	 * you're using this event responder you may have to cast it to the desired
+	 * responder type. This method puts all events inside the parallel
+	 * processing stack.
+	 * 
+	 * @param event
+	 *            The event to raise
 	 * @return The EventResponder of the raised event
 	 */
 	@SuppressWarnings("rawtypes")
-	public static EventResponder raiseEvent(Event event){
+	public static EventResponder raiseEvent(Event event) {
 		return raiseEvent(event, false);
 	}
-	
+
 	/**
-	 * This method raises an event and starts the processing of it.
-	 * Note that if you're using this event responder you may have to
-	 * cast it to the desired responder type.
-	 * @param event The event to raise
-	 * @param synchron Should the event be placed inside the synchron list?
+	 * This method raises an event and starts the processing of it. Note that if
+	 * you're using this event responder you may have to cast it to the desired
+	 * responder type.
+	 * 
+	 * @param event
+	 *            The event to raise
+	 * @param synchron
+	 *            Should the event be placed inside the synchron list?
 	 * @return The EventResponder of the raised event
 	 */
 	@SuppressWarnings("rawtypes")
-	public static EventResponder raiseEvent(Event event, boolean synchron){
-		if(synchron){
-			processListSync.add(processListSync.size() * (event.getType().getPriority() / EventType.MAXIMUM_PRIORITY), event);
+	public static EventResponder raiseEvent(Event event, boolean synchron) {
+		if (synchron) {
+			processListSync.add(processListSync.size() * (event.getType().getPriority() / EventType.MAXIMUM_PRIORITY),
+					event);
 			processors[0].start();
 		} else {
-			synchronized(processListAssync){
-				processListAssync.add(processListAssync.size() * (event.getType().getPriority() / EventType.MAXIMUM_PRIORITY), event);
-				for(int i = 0; i < processListAssync.size() && i < processors.length; i++){
+			synchronized (processListAssync) {
+				processListAssync.add(
+						processListAssync.size() * (event.getType().getPriority() / EventType.MAXIMUM_PRIORITY), event);
+				for (int i = 0; i < processListAssync.size() && i < processors.length; i++) {
 					processors[i + 1].start();
 				}
 			}
 		}
 		return event.getResponder();
 	}
-	
+
 	/**
 	 * This method is used to register event handlers.
-	 * @param type The event type to listen for
-	 * @param eventHandler The handler to register
+	 * 
+	 * @param type
+	 *            The event type to listen for
+	 * @param eventHandler
+	 *            The handler to register
 	 * @return true if it is the first handler or otherwise false
 	 */
-	public static boolean addEventHandler(EventType type, EventHandler eventHandler){
+	public static boolean addEventHandler(EventType type, EventHandler eventHandler) {
 		boolean first = false;
-		if(!handlers.containsKey(type)){
+		if (handlers.get(type) == null) {
 			List<EventHandler> l = Collections.synchronizedList(new ArrayList<EventHandler>());
 			handlers.put(type, l);
 			first = true;
@@ -209,41 +264,184 @@ public class EventRegistry {
 		handlers.get(type).add(eventHandler);
 		return first;
 	}
-	
+
 	/**
-	 * This method is used to check if there are event handlers
-	 * registered for a specific event type.
-	 * @param type The event type to look for
-	 * @return true if there are handlers registered for this specific event type or otherwise false
+	 * Use this method to remove a specific event handler from a specific list
+	 * of event handlers for a certain event.
+	 * 
+	 * @param type
+	 *            The event type defining the list of event handlers desired to
+	 *            handle events marked with it where the event handler should be
+	 *            removed from.
+	 * @param eh
+	 *            The event handler that should be removed from the desired
+	 *            list.
+	 * @return true if the removal operation was successful or false in every
+	 *         other case.
 	 */
-	public static boolean hasHandlers(EventType type){
+	public static boolean removeEventHandler(EventType type, EventHandler eh) {
+		if (type == null || eh == null)
+			return false;
+		List<EventHandler> l = handlers.get(type);
+		if (l == null)
+			return false;
+		if (!l.contains(eh))
+			return false;
+		l.remove(eh);
+		doGC(type);
+		return true;
+	}
+
+	/**
+	 * Use this method in order to remove an event handler from all event types
+	 * that he is listening for.
+	 * 
+	 * @param eh
+	 *            The event handler to remove.
+	 * @return true if the removal operation was successful or false in every
+	 *         other case.
+	 */
+	public static boolean removeEventHandler(EventHandler eh) {
+		if (eh == null)
+			return false;
+		boolean found = false;
+		boolean problem = false;
+		for (EventType et : handlers.keySet()) {
+			if (handlers.get(et).contains(eh)) {
+				found = true;
+				if (!removeEventHandler(et, eh))
+					problem = true;
+			}
+		}
+		if (!problem)
+			return found;
+		return false;
+	}
+
+	/**
+	 * This method is used to scan the event handlers for garbage and takes care
+	 * of it.
+	 * 
+	 * @param et
+	 *            The event type to scan for.
+	 */
+	private static void doGC(EventType et) {
+		List<EventHandler> l = handlers.get(et);
+		if (l.isEmpty())
+			handlers.remove(et);
+	}
+
+	/**
+	 * This method is used to check if there are event handlers registered for a
+	 * specific event type.
+	 * 
+	 * @param type
+	 *            The event type to look for
+	 * @return true if there are handlers registered for this specific event
+	 *         type or otherwise false
+	 */
+	public static boolean hasHandlers(EventType type) {
 		return handlers.containsKey(type);
 	}
-	
+
 	/**
 	 * This method is used to register a bunch of event handlers.
-	 * @param type The event type to register the handlers for
-	 * @param handlers The handlers to register
+	 * 
+	 * @param type
+	 *            The event type to register the handlers for
+	 * @param handlers
+	 *            The handlers to register
 	 * @return true if they were the first handlers or otherwise false
 	 */
-	public static boolean addEventHandlers(EventType type, EventHandler[] handlers){
+	public static boolean addEventHandlers(EventType type, EventHandler[] handlers) {
 		boolean first = false;
-		for(EventHandler h : handlers){
-			if(addEventHandler(type, h))
+		for (EventHandler h : handlers) {
+			if (addEventHandler(type, h))
 				first = true;
 		}
 		return first;
 	}
-	
+
 	/**
-	 * This method is used to get the number of event processors currently active.
+	 * This method is used to get the number of event processors currently
+	 * active.
+	 * 
 	 * @return The number of currently running processors.
 	 */
-	public static int getNumberOfRunningProcessors(){
+	public static int getNumberOfRunningProcessors() {
 		int running = 0;
-		for(int i = 0; i < processors.length; i++)
-			if(processors[i].isRunning())
+		for (int i = 0; i < processors.length; i++)
+			if (processors[i].isRunning())
 				running++;
 		return running;
+	}
+
+	/**
+	 * Call this method in order to prepare an event synchronization. You should
+	 * call this method before you call the raiseEvent method.
+	 * 
+	 * @param e
+	 *            The Event to wait for.
+	 */
+	public static void registerWaitSync(Event e) {
+		waitlist.add(e);
+	}
+
+	/**
+	 * Call this method in order to wait for an event being handled. Make sure
+	 * to call registerWaitSync(Event e) before.
+	 * 
+	 * @param e
+	 *            The event to wait for.
+	 */
+	public static void waitForProcessedEvent(Event e) {
+		while (waitlist.contains(e)) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e1) {
+				Console.log(LogType.Warning, "EventRegistry", "Synchronizing event got interrupted.");
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Use this method in order to check if the given event handler is
+	 * registered to watch for any event type at all.
+	 * 
+	 * @param eh
+	 *            The event handler to check
+	 * @return true if the event handler is registered somewhere or otherwise
+	 *         false.
+	 */
+	public static boolean isEventHandlerSomewhereRegistered(EventHandler eh) {
+		if (eh == null)
+			return false;
+		boolean found = false;
+		for (EventType et : handlers.keySet()) {
+			if (isEventHandlerRegistered(et, eh))
+				found = true;
+		}
+		return found;
+	}
+
+	/**
+	 * Use this method in order to check if the given event handler is
+	 * registered to watch for specific event type.
+	 * 
+	 * @param type
+	 *            The event handler to check
+	 * @param eh
+	 *            The event type to check for
+	 * @return true if the event handler is registered for the desired event
+	 *         type or otherwise false.
+	 */
+	public static boolean isEventHandlerRegistered(EventType type, EventHandler eh) {
+		if (type == null || eh == null)
+			return false;
+		List<EventHandler> l = handlers.get(type);
+		if (l == null)
+			return false;
+		return l.contains(eh);
 	}
 }

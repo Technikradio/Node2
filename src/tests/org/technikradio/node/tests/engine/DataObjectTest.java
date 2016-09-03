@@ -44,6 +44,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.plugin.DataNotYetLoadedException;
 import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.WorkFile;
 
 /**
  * @author doralitze
@@ -51,11 +52,11 @@ import org.technikradio.node.engine.plugin.DataObject;
  */
 public class DataObjectTest {
 	
-	private TestClass cl;
+	private DataObjectTestClass cl;
 	
-	private class TestClass extends DataObject{
+	private class DataObjectTestClass extends DataObject{
 
-		public TestClass(String identifier, String title) {
+		public DataObjectTestClass(String identifier, String title) {
 			super(identifier, title);
 		}
 
@@ -67,19 +68,24 @@ public class DataObjectTest {
 		@Override
 		public void onClose() {
 		}
+
+		@Override
+		public void onAddToWorkSheet(WorkFile wf) {
+			//Do nothing here
+		}
 		
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		cl = new TestClass("bla", null);
+		cl = new DataObjectTestClass("bla", null);
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@After
 	public void tearDown() throws Exception {

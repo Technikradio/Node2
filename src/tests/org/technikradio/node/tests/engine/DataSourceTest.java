@@ -33,16 +33,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.tests.engine;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
-import java.util.Iterator;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
+import org.technikradio.node.engine.plugin.WorkFile;
 
 /**
  * @author doralitze
@@ -59,18 +59,13 @@ public class DataSourceTest {
 		}
 
 		@Override
-		public Iterator<DataObject> getChildObjects() {
-			return null;
-		}
-
-		@Override
-		public boolean save(URI uri) {
+		public boolean save(URI uri, WorkFile f) {
 			return true;
 		}
 
 		@Override
-		public boolean load(URI uri) {
-			return false;
+		public WorkFile load(URI uri) {
+			return null;
 		}
 
 		@Override
@@ -82,11 +77,21 @@ public class DataSourceTest {
 		public boolean saveDataObject(DataObject o) {
 			return false;
 		}
+
+		@Override
+		public boolean isRemoteDataSource() {
+			return false;
+		}
+
+		@Override
+		public void showNewWorkFileDialog() {
+			
+		}
 		
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -94,7 +99,7 @@ public class DataSourceTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -103,9 +108,8 @@ public class DataSourceTest {
 	@Test
 	public final void test() {
 		assertEquals("blah", cl.getIdentifier());
-		assertEquals(null, cl.getChildObjects());
-		assertEquals(true, cl.save(null));
-		assertEquals(false, cl.load(null));
+		assertEquals(true, cl.save(null, null));
+		assertEquals(null, cl.load(null));
 		assertEquals(null, cl.showResourceOpenDialog());
 		assertEquals(false, cl.saveDataObject(null));
 	}

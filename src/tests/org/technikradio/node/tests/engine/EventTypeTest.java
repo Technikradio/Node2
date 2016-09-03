@@ -40,15 +40,16 @@ import org.junit.Test;
 import org.technikradio.node.engine.event.EventType;
 
 /**
- * @author doralitze
  * The test case for EventType
+ * @author doralitze
+ * 
  */
 public class EventTypeTest {
 
 	private EventType et;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -88,6 +89,37 @@ public class EventTypeTest {
 		assertTrue(EventType.MAXIMUM_PRIORITY > EventType.MINIMUM_PRIORITY);
 		assertTrue(EventType.MINIMUM_PRIORITY > 0);
 		assertTrue(EventType.MAXIMUM_PRIORITY > 0);
+	}
+	
+	/**
+	 * Test method for {@link org.technikradio.node.engine.event.EventType#compareTo(Object)}.
+	 */
+	@Test
+	public final void testComparison(){
+		EventType a = new EventType("a", 1, false);
+		EventType b = new EventType("b", 2, false);
+		EventType c = new EventType("c", 1, false);
+		assertEquals("EventType A and C should be worth the same.", 0, a.compareTo(c));
+		assertEquals("B should be more worth than C.", 1, b.compareTo(c));
+		assertEquals("A should be less worth than B.", -1, a.compareTo(b));
+	}
+	
+	/**
+	 * Test method for lower out of range exception of {@link org.technikradio.node.engine.event.EventType#EventType(String, int, boolean)}.
+	 */
+	@Test(expected=RuntimeException.class)
+	public final void testPriorityLowerOutOfRange(){
+		@SuppressWarnings("unused")
+		EventType ff = new EventType("FailTestLower", EventType.MINIMUM_PRIORITY - 1, false);
+	}
+	
+	/**
+	 * Test method for upper out of range exception of {@link org.technikradio.node.engine.event.EventType#EventType(String, int, boolean)}.
+	 */
+	@Test(expected=RuntimeException.class)
+	public final void testPriorityUpperOutOfRange(){
+		@SuppressWarnings("unused")
+		EventType ff = new EventType("FailTestLower", EventType.MAXIMUM_PRIORITY + 1, false);
 	}
 
 }

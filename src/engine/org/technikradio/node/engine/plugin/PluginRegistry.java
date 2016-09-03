@@ -37,12 +37,20 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.technikradio.node.engine.RuntimeRelevant;
+import org.technikradio.node.engine.action.Hints;
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventHandler;
+import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.plugin.settings.SettingsObject;
 import org.technikradio.node.engine.plugin.ui.Window;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is used to register all required components that enable the
- * plugins to work.
+ * plug-ins to work.
  * 
  * @author doralitze
  */
@@ -52,15 +60,28 @@ public final class PluginRegistry {
 	private static ArrayList<SettingsObject> settingsTabs;
 	private static DataSource currentActiveDataSource;
 	private static Window currentOpenWindow;
+	private static ArrayList<DataSource> dataSources;
 
 	static {
 		plugins = new Hashtable<String, Plugin>();
 		settingsTabs = new ArrayList<SettingsObject>();
 		currentActiveDataSource = null;
+		dataSources = new ArrayList<DataSource>();
+		EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler() {
+
+			@Override
+			public void handleEvent(Event e) {
+				Enumeration<Plugin> ee = plugins.elements();
+				while (ee.hasMoreElements()) {
+					Plugin p = ee.nextElement();
+					p.unload();
+				}
+			}
+		});
 	}
 
 	/**
-	 * This method returns an enumeration of all registered plugins
+	 * This method returns an enumeration of all registered plug-ins
 	 * 
 	 * @return the enumeration
 	 */
@@ -69,24 +90,42 @@ public final class PluginRegistry {
 	}
 
 	/**
-	 * This method loads a plugin from a desired location
+	 * This method registers a plug-in loaded by the PluginLoader class.
 	 * 
-	 * @param manifestFile
-	 *            The manifest file of the plugin
-	 * @return true if the plugin successfully loaded or false otherwise
+	 * @param plugin
+	 *            The plug-in to register.
+	 * @return true if the plug-in successfully loaded or false otherwise
 	 */
-	protected static boolean loadPlugin(String manifestFile) {
-		// TODO implement
+	protected synchronized static boolean registerPlugin(Plugin plugin) {
+		try {
+			boolean keep = true;
+			if (plugin.getClass().isAnnotationPresent(RuntimeRelevant.class)) {
+				RuntimeRelevant ann = plugin.getClass().getAnnotation(RuntimeRelevant.class);
+				keep = ann.required();
+			} else {
+				Console.log(LogType.Warning, "PluginRegistry", "The plugin '" + plugin.getMainfest().getName() + "' doesn't specify its runtime requirement.");
+			}
+			if (keep)
+				plugins.put(plugin.getMainfest().getIdentifier(), plugin);
+			if (Hints.wasUpdated(plugin.getMainfest().getIdentifier()))
+				plugin.update();
+			plugin.load();
+			plugin.setLoadedFlag();
+			return true;
+		} catch (Exception e) {
+			Console.log(LogType.Warning, "PluginRegistry", "Error on invoking plugins init methods.");
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	/**
-	 * This method searches the known plugins for the desired one. It will
+	 * This method searches the known plug-ins for the desired one. It will
 	 * return <code>null</code> if it can't find one.
 	 * 
 	 * @param identifier
 	 *            to look for
-	 * @return The requested plugin or <code>null</code> otherwise
+	 * @return The requested plug-in or <code>null</code> otherwise
 	 */
 	public static Plugin findPlugin(String identifier) {
 		return plugins.get(identifier);
@@ -99,7 +138,7 @@ public final class PluginRegistry {
 	 * @param tab
 	 *            to use
 	 */
-	public static void registerSettingsTab(SettingsObject tab) {
+	public synchronized static void registerSettingsTab(SettingsObject tab) {
 		if (!settingsTabs.contains(tab))
 			settingsTabs.add(tab);
 	}
@@ -113,23 +152,23 @@ public final class PluginRegistry {
 
 	/**
 	 * This method looks for the requested identifier and returns true if the
-	 * plugin is successfully registrered.
+	 * plug-in is successfully registered.
 	 * 
 	 * @param identifier
 	 *            to look for
-	 * @return true if it can find the plugin otherwise false
+	 * @return true if it can find the plug-in otherwise false
 	 */
 	public static boolean isPluginPresent(String identifier) {
 		return plugins.containsKey(identifier) && (plugins.get(identifier) != null);
 	}
 
 	/**
-	 * This method checks if the desired plugin already finished initializing
+	 * This method checks if the desired plug-in already finished initializing
 	 * itself.
 	 * 
 	 * @param identifier
 	 *            to look for
-	 * @return true if the plugin finished loading otherwise false
+	 * @return true if the plug-in finished loading otherwise false
 	 */
 	public static boolean isPluginLoaded(String identifier) {
 		if (!plugins.contains(identifier))
@@ -140,6 +179,7 @@ public final class PluginRegistry {
 
 	/**
 	 * This method is used to get the current open window.
+	 * 
 	 * @return the current open window
 	 */
 	public static Window getCurrentOpenWindow() {
@@ -147,11 +187,47 @@ public final class PluginRegistry {
 	}
 
 	/**
-	 * This is the setter for the current open window. Be very careful using this setter!
-	 * @param currentOpenWindow the window to set
+	 * This is the setter for the current open window. Be very careful using
+	 * this setter!
+	 * 
+	 * @param currentOpenWindow
+	 *            the window to set
 	 */
-	public static void setCurrentOpenWindow(Window currentOpenWindow) {
+	public synchronized static void setCurrentOpenWindow(Window currentOpenWindow) {
 		PluginRegistry.currentOpenWindow = currentOpenWindow;
+	}
+
+	/**
+	 * Use this method to get the number of loaded plug-ins.
+	 * 
+	 * @return The number of registered plug-ins.
+	 */
+	public static int getNumberOfLoadedPlugins() {
+		return plugins.size();
+	}
+
+	/**
+	 * Use this method to add a possible DataSource.
+	 * 
+	 * @param ds
+	 *            The DataSource to register.
+	 * @return False if the given DataSource was already added or otherwise
+	 *         true.
+	 */
+	public synchronized static boolean addDataSource(DataSource ds) {
+		if (dataSources.contains(ds))
+			return false;
+		dataSources.add(ds);
+		return true;
+	}
+
+	/**
+	 * Use this method to get all registered DataSources.
+	 * 
+	 * @return An array containing all registered DataSource's.
+	 */
+	public synchronized static DataSource[] getAllRegisteredDataSources() {
+		return dataSources.toArray(new DataSource[dataSources.size()]);
 	}
 
 }

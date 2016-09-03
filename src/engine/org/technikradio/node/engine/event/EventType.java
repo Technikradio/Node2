@@ -38,11 +38,23 @@ package org.technikradio.node.engine.event;
  * that the behavior doesn't get ridiculous. For example an instance of this
  * class may define a save event an another one an load event.
  * 
+ * This an instance of this class will be compared with another instance of this
+ * class based on the priority. A higher priority means a higher rating.
+ * 
  * @author doralitze
+ * @see java.lang.Comparable For further information on the comparable
+ *      interface.
  */
-public class EventType {
+@SuppressWarnings("rawtypes")
+public class EventType implements Comparable {
 
+	/**
+	 * This constant represents the minimum priority an event can have.
+	 */
 	public static final int MINIMUM_PRIORITY = 1;
+	/**
+	 * This constant represents the maximum priority an Event can have.
+	 */
 	public static final int MAXIMUM_PRIORITY = 100;
 
 	private final String identifier;
@@ -55,6 +67,9 @@ public class EventType {
 	 * 
 	 * @param identifier
 	 *            The identifier used to separate two different events.
+	 * @throws RuntimeException
+	 *             if the given priority is less than the minimum priority ore
+	 *             greater than the maximum priority.
 	 */
 	public EventType(String identifier) {
 		this(identifier, MINIMUM_PRIORITY);
@@ -69,6 +84,9 @@ public class EventType {
 	 * @param priority
 	 *            The priority to process the event (smaller being less
 	 *            important).
+	 * @throws RuntimeException
+	 *             if the given priority is less than the minimum priority ore
+	 *             greater than the maximum priority.
 	 */
 	public EventType(String identifier, int priority) {
 		this(identifier, priority, false);
@@ -84,8 +102,13 @@ public class EventType {
 	 *            important).
 	 * @param autothrow
 	 *            should the event automatically throw an exception if raised?
+	 * @throws RuntimeException
+	 *             if the given priority is less than the minimum priority ore
+	 *             greater than the maximum priority.
 	 */
 	public EventType(String identifier, int priority, boolean autothrow) {
+		if (priority < MINIMUM_PRIORITY || priority > MAXIMUM_PRIORITY)
+			throw new RuntimeException("The given priority was out of range.");
 		this.identifier = identifier;
 		this.priority = priority;
 		this.autothrow = autothrow;
@@ -117,6 +140,33 @@ public class EventType {
 	 */
 	public boolean shouldAutomaticallyThrowCrash() {
 		return autothrow;
+	}
+
+	/**
+	 * This method overrides Object.toString().
+	 * 
+	 * @return The identifier of this EventType.
+	 */
+	@Override
+	public String toString() {
+		return identifier;
+	}
+
+	/**
+	 * This method is used to satisfy the comparison needs for this class. A
+	 * higher priority means a higher rating.
+	 */
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof EventType))
+			return 0;
+		EventType e = (EventType) o;
+		if (this.priority == e.priority)
+			return 0;
+		else if (this.priority > e.priority)
+			return 1;
+		else
+			return -1;
 	}
 
 }

@@ -35,72 +35,67 @@ package org.technikradio.node.tests.engine;
 
 import static org.junit.Assert.*;
 
+import java.net.URI;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.technikradio.node.engine.event.EventResponse;
+import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.DataSource;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.node.engine.plugin.WorkFile;
 
 /**
+ * Test case for testable parts of the plug-in registry
  * @author doralitze
- * The test case for event response
+ *
  */
-public class EventResponseTest {
+public class PluginRegistryTest {
 
-	private EventResponse<String> er;
-	
 	/**
-	 * @throws java.lang.Exception In case of an exception
+	 * @throws java.lang.Exception If the construction fails.
 	 */
 	@Before
 	public void setUp() throws Exception {
-		er = new EventResponse<String>("id", true, "test");
 	}
 
-	/**
-	 * Test method for {@link org.technikradio.node.engine.event.EventResponse#getResponseSourceIdentifier()}.
-	 */
 	@Test
-	public final void testGetResponseSourceIdentifier() {
-		assertEquals("id", er.getResponseSourceIdentifier());
-	}
+	public final void testDataSources() {
+		DataSource ds = new DataSource("test.datasource.testidentifier"){
 
-	/**
-	 * Test method for {@link org.technikradio.node.engine.event.EventResponse#hasReactedProperly()}.
-	 */
-	@Test
-	public final void testIsReacted() {
-		assertTrue(er.hasReactedProperly());
-	}
+			@Override
+			public boolean save(URI uri, WorkFile file) {
+				return false;
+			}
 
-	/**
-	 * Test method for {@link org.technikradio.node.engine.event.EventResponse#getReaction()}.
-	 */
-	@Test
-	public final void testGetReaction() {
-		assertEquals("test", er.getReaction());
-	}
-	
-	/**
-	 * Test method to test if the constructor crashes at the right time.
-	 */
-	@Test(expected=RuntimeException.class)
-	public final void testIDNullCrash(){
-		new EventResponse<String>(null, true, "test");
-	}
-	
-	/**
-	 * Test method to test if the constructor crashes at the right time.
-	 */
-	@Test(expected=RuntimeException.class)
-	public final void testResponseNullCrash(){
-		new EventResponse<String>("test", true, null);
-	}
-	
-	/**
-	 * Test method to test if the constructor crashes at the right time.
-	 */
-	@Test(expected=RuntimeException.class)
-	public final void testIdentifierEmptyCrash(){
-		new EventResponse<String>("", true, "test");
+			@Override
+			public WorkFile load(URI uri) {
+				return null;
+			}
+
+			@Override
+			public URI showResourceOpenDialog() {
+				return null;
+			}
+
+			@Override
+			public boolean saveDataObject(DataObject o) {
+				return false;
+			}
+
+			@Override
+			public boolean isRemoteDataSource() {
+				return false;
+			}
+
+			@Override
+			public void showNewWorkFileDialog() {
+				
+			}};
+		assertEquals("The array of all registered data sources should be empty at the beginning.", 0, PluginRegistry.getAllRegisteredDataSources().length);
+		assertTrue("First it should be possible to register the given DataSource.", PluginRegistry.addDataSource(ds));
+		assertFalse("Now it should be impossible to register the given DataSource.", PluginRegistry.addDataSource(ds));
+		DataSource[] dss = {ds};
+		assertArrayEquals("It should return an array containing only theone registered data source.", dss, PluginRegistry.getAllRegisteredDataSources());
 	}
 
 }

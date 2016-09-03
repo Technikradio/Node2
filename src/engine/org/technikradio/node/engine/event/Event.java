@@ -36,68 +36,133 @@ package org.technikradio.node.engine.event;
 import org.technikradio.node.engine.plugin.Plugin;
 
 /**
- * This class represents an event that can be raised using the EventRegisty class.
+ * This class represents an event that can be raised using the EventRegisty
+ * class. The same comparison rules like the ones of the EventType class apply
+ * to this class.
+ * 
  * @author doralitze
+ * @see java.lang.Comparable The comparable interface
+ * @see EventType The EventType class.
  */
 @SuppressWarnings("rawtypes")
-public class Event {
+public class Event implements Comparable {
 
 	private final EventType type;
 	private final Plugin source;
 	private final String messageDetails;
 	private final EventResponder responder;
-	
+	private Object eventHint;
+
 	/**
-	 * This constructor generates an instance of an event using the given parameters.
-	 * It will use an empty text as the message details.
-	 * @param type The type of the event
-	 * @param source The source of the event
-	 * @param responder A responder to keep for the source in order to process the responses later
+	 * This constructor generates an instance of an event using the given
+	 * parameters. It will use an empty text as the message details.
+	 * 
+	 * @param type
+	 *            The type of the event
+	 * @param source
+	 *            The source of the event
+	 * @param responder
+	 *            A responder to keep for the source in order to process the
+	 *            responses later
 	 */
-	public Event(EventType type, Plugin source, EventResponder responder){
+	public Event(EventType type, Plugin source, EventResponder responder) {
 		this(type, source, "", responder);
 	}
 
 	/**
-	 * This constructor generates an instance of an event using the given parameters.
-	 * @param type The type of the event
-	 * @param source The source of the event
-	 * @param messageDetails Some details of the event
-	 * @param responder A responder to keep for the source in order to process the responses later
+	 * This constructor generates an instance of an event using the given
+	 * parameters.
+	 * 
+	 * @param type
+	 *            The type of the event
+	 * @param source
+	 *            The source of the event
+	 * @param messageDetails
+	 *            Some details of the event
+	 * @param responder
+	 *            A responder to keep for the source in order to process the
+	 *            responses later
 	 */
-	public Event(EventType type, Plugin source, String messageDetails, EventResponder responder){
+	public Event(EventType type, Plugin source, String messageDetails, EventResponder responder) {
 		super();
 		this.type = type;
 		this.source = source;
 		this.messageDetails = messageDetails;
 		this.responder = responder;
 	}
-	
+
 	/**
-	 * @return the type
+	 * Use this message to get the type of this event.
+	 * 
+	 * @return the type of this event
 	 */
 	public EventType getType() {
 		return type;
 	}
 
 	/**
-	 * @return the source
+	 * Use this method in order to get the source of this event.
+	 * 
+	 * @return the source of this event
 	 */
 	public Plugin getSource() {
 		return source;
 	}
 
 	/**
-	 * @return the messageDetails
+	 * Use this method in order to get advanced information about the event.
+	 * 
+	 * @return the message details
 	 */
 	public String getMessageDetails() {
 		return messageDetails;
 	}
 
 	/**
+	 * Use this method to get the event responder for this event.
+	 * 
 	 * @return the responder
 	 */
 	public EventResponder getResponder() {
 		return responder;
+	}
+
+	/**
+	 * This method is used to compare two Events with each other.
+	 * 
+	 * @see EventType#compareTo(Object) The underlaying rules for further
+	 *      information.
+	 * @see java.lang.Comparable Have a look at the Comparable interface for
+	 *      further information on it.
+	 */
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof Event))
+			return 0;
+		Event e = (Event) o;
+		return this.getType().compareTo(e.getType());
+	}
+
+	/**
+	 * Use this method to get the Event hint. An event hint is an object usually
+	 * provided by the creator of the event if a string isn't enough information
+	 * in order to process the event.
+	 * 
+	 * @return the event hint
+	 */
+	public Object getEventHint() {
+		return eventHint;
+	}
+
+	/**
+	 * Use this method to set the event hint to a desired value. An event hint
+	 * is an object usually provided by the creator of the event if a string
+	 * isn't enough information in order to process the event.
+	 * 
+	 * @param eventHint
+	 *            the event hint to set
+	 */
+	public void setEventHint(Object eventHint) {
+		this.eventHint = eventHint;
 	}
 }

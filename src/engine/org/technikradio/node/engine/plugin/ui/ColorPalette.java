@@ -27,86 +27,66 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
 
 /**
- * This class represents an abstract plug-in.
  * 
- * @author doralitze
  */
-public abstract class Plugin {
+package org.technikradio.node.engine.plugin.ui;
 
-	private Manifest mainfest;
-	protected boolean loaded = false;
+import org.eclipse.swt.graphics.Color;
 
-	/**
-	 * This constructor initializes a new instance of a plug-in handling the
-	 * manifest later though other code.
-	 */
-	public Plugin() {
-
-	}
+/**
+ * This class is a prototype for an color theme
+ * @author doralitze
+ *
+ */
+public abstract class ColorPalette {
 
 	/**
-	 * This constructor initializes a new plug-in instance.
-	 * 
-	 * @param m
-	 *            the manifest of the plug-in to use
+	 * Use this method to get the background color.
+	 * @return The provided color.
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
-
+	public abstract Color getMainBackground();
+	
 	/**
-	 * This method sets the loaded flag. This method gets called after the
-	 * load() function returned.
+	 * Use this method to get the secondary background color.
+	 * @return The provided color.
 	 */
-	protected void setLoadedFlag() {
-		loaded = true;
-	}
-
+	public abstract Color getSecondaryBackground();
+	
 	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * 
-	 * @return the loaded flag
+	 * Use this color to get the color of separators used inside the UI.
+	 * @return The provided color.
 	 */
-	protected boolean isPluginLoaded() {
-		return loaded;
-	}
-
+	public abstract Color getSeparatorBackground();
+	
 	/**
-	 * @return the mainfest
+	 * Use this method to get the color of the component shadow.
+	 * @return The provided color.
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
+	public abstract Color getComponentShadow();
+	
 	/**
-	 * @param manifest
-	 *            the manifest of the plug-in to set
+	 * Use this method to get the size of the shadow in pixels.
+	 * @return The size of the desired shadow.
 	 */
-	protected void setMainfest(Manifest manifest) {
-		this.mainfest = manifest;
-	}
-
+	public abstract int getShadingDeph();
+	
 	/**
-	 * This method gets called when the plug-in should initialize itself
+	 * Use this method to get the text color.
+	 * @return The provided color.
 	 */
-	public abstract void load();
-
+	public abstract Color getTextColor();
+	
 	/**
-	 * This method gets called before the application exits. Use this method to
-	 * save all required things.
+	 * Use this method in order to get the accent color.
+	 * @return The provided color.
 	 */
-	public abstract void unload();
-
+	public abstract Color getAccentColor();
+	
 	/**
-	 * This method does nothing on its own. Override this method if you want
-	 * your plug-in to be notified if it got updated.
+	 * Use this method to dispose all created colors.
 	 */
-	public void update() {
-
-	}
-
+	public abstract void dispose();
+	
 }

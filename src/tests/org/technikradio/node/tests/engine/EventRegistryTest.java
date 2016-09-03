@@ -64,7 +64,7 @@ public class EventRegistryTest {
 	private Event e;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * @throws java.lang.Exception In case of an exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -98,13 +98,26 @@ public class EventRegistryTest {
 	public final void testHasHandlers() {
 		assertTrue(EventRegistry.hasHandlers(typeA));
 		assertFalse(EventRegistry.hasHandlers(typeB));
-		assertTrue(EventRegistry.addEventHandler(typeB, new EventHandler(){
+		EventHandler eh = new EventHandler(){
 			@Override
-			public void handleEvent(Event e) {}}));
+			public void handleEvent(Event e) {}};
+		assertFalse(EventRegistry.isEventHandlerSomewhereRegistered(eh));
+		assertTrue(EventRegistry.addEventHandler(typeB, eh));
 		assertFalse(EventRegistry.addEventHandler(typeB, new EventHandler(){
 			@Override
 			public void handleEvent(Event e) {}}));
 		assertTrue(EventRegistry.hasHandlers(typeB));
+		assertFalse(EventRegistry.removeEventHandler(null, null));
+		assertFalse(EventRegistry.removeEventHandler(typeA, null));
+		assertFalse(EventRegistry.removeEventHandler(typeA, eh));
+		assertTrue(EventRegistry.isEventHandlerRegistered(typeB, eh));
+		assertTrue(EventRegistry.removeEventHandler(typeB, eh));
+		assertFalse(EventRegistry.isEventHandlerRegistered(typeB, eh));
+		assertFalse(EventRegistry.addEventHandler(typeB, eh));
+		assertTrue(EventRegistry.isEventHandlerSomewhereRegistered(eh));
+		assertFalse(EventRegistry.removeEventHandler(null));
+		assertTrue(EventRegistry.removeEventHandler(eh));
+		assertFalse(EventRegistry.isEventHandlerSomewhereRegistered(eh));
 	}
 
 }

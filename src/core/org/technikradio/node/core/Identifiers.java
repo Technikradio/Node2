@@ -1,16 +1,21 @@
 /*
 Copyright (c) 2016, Technikradio
 All rights reserved.
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
+
 * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
+
 * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
+
 * Neither the name of Node2 nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -23,39 +28,22 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.technikradio.node.tests.engine;
+/**
+ * 
+ */
+package org.technikradio.node.core;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.technikradio.node.engine.plugin.ui.DisplayFactory;
-import org.technikradio.universal_tools.Console;
-import org.technikradio.universal_tools.Console.LogType;
-import org.junit.Test;
+import org.technikradio.node.engine.IdentifierClass;
+import org.technikradio.node.engine.event.EventType;
 
 /**
- * This class should be used to test the loading of SWT
- * 
+ * This class contains all the identifiers used by the core plug-in.
  * @author doralitze
+ *
  */
-public class DisplayFactorySWTTest {
+@IdentifierClass
+public class Identifiers {
 
-	@Before
-	public final void setUp() {
-		try {
-			if (!DisplayFactory.isInitialized())
-				DisplayFactory.init();
-		} catch (Throwable e) {
-			Console.log(LogType.Warning, this, "Failed to init SWT.");
-		}
-	}
-
-	/**
-	 * Test method for SWT
-	 */
-	@Test
-	public final void testGetDisplay() {
-		if (DisplayFactory.isInitialized())
-			assertNotNull(DisplayFactory.getDisplay());
-	}
+	public static final EventType WORK_WINDOW_CREATING_EVENT = new EventType("org.technikradio.node.core.WorkWindowCreatingEvent");
+	
 }

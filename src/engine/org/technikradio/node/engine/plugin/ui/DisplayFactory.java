@@ -34,10 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin.ui;
 
 import org.eclipse.swt.widgets.Display;
-import org.technikradio.node.engine.event.BasicEvents;
-import org.technikradio.node.engine.event.Event;
-import org.technikradio.node.engine.event.EventHandler;
-import org.technikradio.node.engine.event.EventRegistry;
+import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.action.CrashCodes;
+import org.technikradio.node.engine.action.Main;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -61,22 +60,10 @@ public class DisplayFactory {
 	 */
 	private static class EventLoopHandler implements Runnable {
 
-		private boolean apprunning = true;
-
 		/**
 		 * This constructor creates a new instance.
 		 */
 		public EventLoopHandler() {
-			EventRegistry.addEventHandler(BasicEvents.APPLICATION_CLOSING_EVENT, new EventHandler() {
-
-				/**
-				 * This implements the abstract method of an event handler.
-				 */
-				@Override
-				public void handleEvent(Event e) {
-					apprunning = false;
-				}
-			});
 		}
 
 		/**
@@ -86,13 +73,25 @@ public class DisplayFactory {
 		@Override
 		public void run() {
 			Console.log(LogType.StdOut, this, "Starting SWT event loop.");
-			while (apprunning) {
-				if (!d.readAndDispatch()) {
-					d.sleep();
+			
+			try {
+				while (Main.isAppRunning()) {
+					Thread.sleep(500);
 				}
+			} catch (Exception e) {
+				Console.log(LogType.Error, this, "The UI thread crashed.");
+				e.printStackTrace();
+				Application.crash(e, CrashCodes.UI_CRASH);
+			} finally {
+				Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
+				d.syncExec(new Runnable(){
+
+					@Override
+					public void run() {
+						Colors.disposeAll();
+						d.dispose();
+					}});
 			}
-			Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
-			d.dispose();
 		}
 
 		/**
@@ -114,10 +113,16 @@ public class DisplayFactory {
 		if(initialized)
 			throw new RuntimeException("DisplayFactory already initialized by main thread.");
 		d = new Display();
+		Display.setAppName("Node");
+		Display.setAppVersion(Application.VERSION);
+		d.readAndDispatch();
+		d.wake();
 		eventLoopThread = new Thread(new EventLoopHandler());
 		eventLoopThread.setPriority(8);
 		eventLoopThread.setName("SWT-EVENT-LOOP-THREAD");
 		eventLoopThread.start();
+		//EventLoopHandler d = new EventLoopHandler();
+		//d.run();
 		initialized = true;
 	}
 

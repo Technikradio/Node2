@@ -27,86 +27,77 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
 
 /**
- * This class represents an abstract plug-in.
+ * 
+ */
+package org.technikradio.node.engine.event;
+
+import org.technikradio.node.engine.action.Main;
+import org.technikradio.node.engine.plugin.ui.DisplayFactory;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
+
+/**
+ * This EventHandler is used to process the events on the UI thread.
  * 
  * @author doralitze
+ *
  */
-public abstract class Plugin {
-
-	private Manifest mainfest;
-	protected boolean loaded = false;
+public abstract class UIEventHandler implements EventHandler {
 
 	/**
-	 * This constructor initializes a new instance of a plug-in handling the
-	 * manifest later though other code.
-	 */
-	public Plugin() {
-
-	}
-
-	/**
-	 * This constructor initializes a new plug-in instance.
+	 * Implement this method in order to process something inside the UI thread.
 	 * 
-	 * @param m
-	 *            the manifest of the plug-in to use
+	 * @param e
+	 *            The event that is given by the EventHandler.
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
-	}
+	public abstract void execute(Event e);
+
+	private boolean sync = false;
 
 	/**
-	 * This method sets the loaded flag. This method gets called after the
-	 * load() function returned.
-	 */
-	protected void setLoadedFlag() {
-		loaded = true;
-	}
-
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
+	 * Use this method to check if the Event should be processed asynchronous
+	 * inside the UI thread.
 	 * 
-	 * @return the loaded flag
+	 * @return the sync flag
 	 */
-	protected boolean isPluginLoaded() {
-		return loaded;
+	public boolean isSync() {
+		return sync;
 	}
 
 	/**
-	 * @return the mainfest
+	 * Use this method to enable or disable synchronous UI execution.
+	 * 
+	 * @param sync
+	 *            the sync flag to set
 	 */
-	public Manifest getMainfest() {
-		return mainfest;
+	public void setSync(boolean sync) {
+		this.sync = sync;
 	}
 
-	/**
-	 * @param manifest
-	 *            the manifest of the plug-in to set
-	 */
-	protected void setMainfest(Manifest manifest) {
-		this.mainfest = manifest;
-	}
+	@Override
+	public void handleEvent(final Event e) {
+		if(Main.isDEBUG_MODE())
+			Console.log(LogType.Information, this, "Executing on UI thread. (sync=" + isSync() + ")");
+		if (isSync())
+			DisplayFactory.getDisplay().syncExec(new Runnable() {
 
-	/**
-	 * This method gets called when the plug-in should initialize itself
-	 */
-	public abstract void load();
+				@Override
+				public void run() {
+					execute(e);
+				}
 
-	/**
-	 * This method gets called before the application exits. Use this method to
-	 * save all required things.
-	 */
-	public abstract void unload();
+			});
+		else
+			DisplayFactory.getDisplay().asyncExec(new Runnable() {
 
-	/**
-	 * This method does nothing on its own. Override this method if you want
-	 * your plug-in to be notified if it got updated.
-	 */
-	public void update() {
+				@Override
+				public void run() {
+					execute(e);
+				}
 
+			});
 	}
 
 }

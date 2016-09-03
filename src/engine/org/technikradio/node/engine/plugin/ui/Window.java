@@ -33,12 +33,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin.ui;
 
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This class represents a window. Plugins can add their content to it.
+ * This class represents a window. Plug-ins can add their content to it.
  * 
  * @author doralitze
  *
@@ -46,24 +54,91 @@ import org.eclipse.swt.widgets.Shell;
 public class Window {
 
 	private Shell shell;
+	private CoolBar toolC;
+	private Composite bottomC;
+	private Composite topC;
+	private Composite centerC;
+	private Composite leftC;
+	private Composite rightC;
+	private ColorPalette theme;
 
 	/**
 	 * This constructor initializes a new instance.
-	 * @param title The title to use for the new window created.
+	 * 
+	 * @param title
+	 *            The title to use for the new window created.
 	 */
 	public Window(String title) {
 		super();
 		shell = new Shell(DisplayFactory.getDisplay());
 		shell.setText(title);
 		shell.setSize(250, 250);
-		Rectangle bds = shell.getDisplay().getBounds();
+		shell.setLayout(new FillLayout());
+		SashForm mc = new SashForm(shell, SWT.VERTICAL);
 
-		Point p = shell.getSize();
+		getShell().addListener(SWT.Close, new Listener() {
 
-		int nLeft = (bds.width - p.x) / 2;
-		int nTop = (bds.height - p.y) / 2;
+			@Override
+			public void handleEvent(Event arg0) {
+				internalClose();
+			}
+		});
 
-		shell.setBounds(nLeft, nTop, p.x, p.y);
+		FillLayout topLayout = new FillLayout();
+		topLayout.type = SWT.VERTICAL;
+		mc.setLayout(topLayout);
+		mc.setBackground(Colors.GRAY_DESIGN.getTextColor());
+		toolC = new CoolBar(mc, SWT.HORIZONTAL);
+		SashForm middleC = new SashForm(mc, SWT.HORIZONTAL);
+		middleC.setBackground(Colors.GRAY_DESIGN.getTextColor());
+		//leftC = new ScrolledComposite(middleC, SWT.VERTICAL);
+		leftC = new Composite(middleC, SWT.NONE);
+		{
+			SashForm cc = new SashForm(middleC, SWT.VERTICAL);
+			cc.setBackground(Colors.GRAY_DESIGN.getTextColor());
+			topC = new Composite(cc, SWT.NONE);
+			centerC = new Composite(cc, SWT.NONE);
+			int[] w = { 35, 65 };
+			cc.setWeights(w);
+		}
+		rightC = new Composite(middleC, SWT.NONE);
+		{
+			int[] mmr = { 25, 60, 15 };
+			middleC.setWeights(mmr);
+		}
+		bottomC = new Composite(mc, SWT.NONE);
+
+		{
+			RowLayout rl = new RowLayout();
+			bottomC.setLayout(rl);
+		}
+		{
+			RowLayout rl = new RowLayout();
+			topC.setLayout(rl);
+		}
+		{
+			RowLayout rl = new RowLayout();
+			bottomC.setLayout(rl);
+		}
+		{
+			FillLayout fl = new FillLayout();
+			fl.type = SWT.VERTICAL;
+			centerC.setLayout(fl);
+		}
+		{
+			FillLayout fl = new FillLayout();
+			fl.type = SWT.VERTICAL;
+			leftC.setLayout(fl);
+		}
+		{
+			FillLayout fl = new FillLayout();
+			fl.type = SWT.VERTICAL;
+			rightC.setLayout(fl);
+		}
+		{
+			int[] w = {5, 80, 15};
+			mc.setWeights(w);
+		}
 	}
 
 	/**
@@ -77,6 +152,109 @@ public class Window {
 	public void setSize(int width, int height) {
 		shell.setSize(width, height);
 	}
-	
 
+	/**
+	 * Use this method in order to manipulate the underlying shell. Use the
+	 * methods of the window class in order to add UI elements.
+	 * 
+	 * @return The shell of this window.
+	 */
+	public Shell getShell() {
+		return shell;
+	}
+
+	/**
+	 * Use this method to open the window.
+	 */
+	public void open() {
+		shell.pack();
+		shell.open();
+	}
+
+	/**
+	 * Position the window inside the middle of the monitor.
+	 */
+	public void center() {
+		Monitor primary = DisplayFactory.getDisplay().getPrimaryMonitor();
+		Rectangle monitorBounds = primary.getBounds();
+		Rectangle windowBounds = shell.getBounds();
+		int posX = monitorBounds.x + (monitorBounds.width - windowBounds.width) / 2;
+		int posY = monitorBounds.y + (monitorBounds.height - windowBounds.height) / 2;
+		shell.setLocation(posX, posY);
+	}
+
+	/**
+	 * This method closes the window. Note that the color theme won't be
+	 * disposed by this method.
+	 */
+	public void close() {
+		internalClose();
+		shell.dispose();
+	}
+
+	/**
+	 * This method invokes all things that need to be done in order to gentelly
+	 * close this window.
+	 */
+	private void internalClose() {
+	}
+
+	/**
+	 * Use this method to access the different containers of this window.
+	 * 
+	 * NOTE: It's highly recommended to pack every component that should go
+	 * inside the right tray inside a ExpandBar
+	 * 
+	 * @param position
+	 *            The container to request.
+	 * @return The requested container.
+	 */
+	public Composite getContainer(WindowOrientation position) {
+		switch (position) {
+		case BOTTOM:
+			return bottomC;
+		case CENTER:
+			return centerC;
+		case LEFT_TRAY:
+			return leftC;
+		case RIGHT_TRAY:
+			return rightC;
+		case TOOLBAR:
+			return toolC;
+		case TOP:
+			return topC;
+		default:
+			return null;
+
+		}
+	}
+
+	/**
+	 * Use this method in order to set the current active theme to a different
+	 * one. NOTE: that the closing method of this class won't dispose the
+	 * ColorPalette object.
+	 * 
+	 * @param p
+	 *            The color theme to set.
+	 */
+	public void setColorTheme(ColorPalette p) {
+		if (p == null)
+			return;
+		this.theme = p;
+		toolC.setBackground(p.getAccentColor());
+		bottomC.setBackground(p.getAccentColor());
+		topC.setBackground(p.getMainBackground());
+		centerC.setBackground(p.getMainBackground());
+		leftC.setBackground(p.getSecondaryBackground());
+		rightC.setBackground(p.getSecondaryBackground());
+	}
+
+	/**
+	 * Use this method to get the current active color theme.
+	 * 
+	 * @return The currently applied color theme.
+	 */
+	public ColorPalette getColorTheme() {
+		return this.theme;
+	}
 }

@@ -27,86 +27,46 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.technikradio.node.engine.plugin;
 
 /**
- * This class represents an abstract plug-in.
  * 
- * @author doralitze
  */
-public abstract class Plugin {
+package org.technikradio.node.engine.action;
 
-	private Manifest mainfest;
-	protected boolean loaded = false;
+import java.util.ArrayList;
 
+/**
+ * This class contains startup hints.
+ * @author doralitze
+ *
+ */
+public class Hints {
+
+	private static ArrayList<String> updatedPlugins;
+	
 	/**
-	 * This constructor initializes a new instance of a plug-in handling the
-	 * manifest later though other code.
+	 * This method initializes all hint fields.
 	 */
-	public Plugin() {
-
+	static {
+		updatedPlugins = new ArrayList<String>();
+		
 	}
-
+	
 	/**
-	 * This constructor initializes a new plug-in instance.
-	 * 
-	 * @param m
-	 *            the manifest of the plug-in to use
+	 * This method is used to add plug-ins that should update their content. 
+	 * @param identifier The identifier of the plug-in that was updated.
 	 */
-	protected Plugin(Manifest m) {
-		super();
-		this.setMainfest(m);
+	protected static void addPluginUpdateHine(String identifier){
+		updatedPlugins.add(identifier);
 	}
-
+	
 	/**
-	 * This method sets the loaded flag. This method gets called after the
-	 * load() function returned.
+	 * Use this method to check if a certain plug-in was updated doing the start of Node.
+	 * @param identifier The identifier of the plug-in to check for.
+	 * @return True if the plug-in was updated doing the start of Node or otherwise false.
 	 */
-	protected void setLoadedFlag() {
-		loaded = true;
-	}
-
-	/**
-	 * This method indicates if the plugin did successfully loaded or not.
-	 * 
-	 * @return the loaded flag
-	 */
-	protected boolean isPluginLoaded() {
-		return loaded;
-	}
-
-	/**
-	 * @return the mainfest
-	 */
-	public Manifest getMainfest() {
-		return mainfest;
-	}
-
-	/**
-	 * @param manifest
-	 *            the manifest of the plug-in to set
-	 */
-	protected void setMainfest(Manifest manifest) {
-		this.mainfest = manifest;
-	}
-
-	/**
-	 * This method gets called when the plug-in should initialize itself
-	 */
-	public abstract void load();
-
-	/**
-	 * This method gets called before the application exits. Use this method to
-	 * save all required things.
-	 */
-	public abstract void unload();
-
-	/**
-	 * This method does nothing on its own. Override this method if you want
-	 * your plug-in to be notified if it got updated.
-	 */
-	public void update() {
-
+	public static boolean wasUpdated(String identifier){
+		return updatedPlugins.contains(identifier);
 	}
 
 }

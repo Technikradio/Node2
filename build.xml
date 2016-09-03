@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Node2">
 
+
+<property name="scala.home" value="${env.SCALA_HOME}"/>
+<!-- Note: this currently only affects the linux target. -->
+<property name="build.targetarch" value="64" />
+
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
 
-<target name="all" depends="core,launcher" description="This compiles a working program."/>
+<target name="all" depends="core,launcher" description="This compiles a working program.">
+  <copy file="${dir.projectfolder}/src/tools/testlaunch.bash" tofile="${dir.buildfolder}/tmp/construct/testlaunch.bash"/>
+  <chmod file="${dir.buildfolder}/tmp/construct/testlaunch.bash" perm="+x" />
+</target>
 
 <target name="clean" description="This target cleans the build environment.">
   <delete dir="${dir.buildfolder}" />
@@ -17,6 +25,8 @@
 				 optimize="on"
 				 includeAntRuntime="no">
     <classpath refid="test.classpath"/>
+    <include name="**/*.scala"/>
+    <include name="**/*.java"/>
   </javac>
   <jar destfile="${dir.buildfolder}/test/tests.jar">
     <fileset dir="${dir.buildfolder}/compile/tests" />
@@ -34,16 +44,21 @@
 
 <target name="doc" depends="create-build-folders" description="This target creates the javadoc.">
   <mkdir dir="${dir.buildfolder}/doc" />
-  <mkdir dir="${dir.buildfolder}/doc/engine" />
-  <mkdir dir="${dir.buildfolder}/doc/core" />
-  <javadoc sourcepath="${dir.projectfolder}/src/engine"
-           destdir="${dir.buildfolder}/doc/engine"
+  <mkdir dir="${dir.buildfolder}/doc/src-doc" />
+  <mkdir dir="${dir.buildfolder}/doc/javadoc" />
+  <copy todir="${dir.buildfolder}/doc/src-doc">
+    <fileset dir="${dir.projectfolder}/src/engine" includes="**" />
+  </copy>
+  <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/core">
+    <fileset dir="${dir.projectfolder}/src/core/org/technikradio/node/core" includes="**" />
+  </copy>
+  <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/tests">
+    <fileset dir="${dir.projectfolder}/src/tests/org/technikradio/node/tests" includes="**" />
+  </copy>
+  <javadoc sourcepath="${dir.buildfolder}/doc/src-doc"
+           destdir="${dir.buildfolder}/doc/javadoc"
            includenosourcepackages="true"
            classpathref="test.classpath"/>
-  <javadoc sourcepath="${dir.projectfolder}/src/core"
-           destdir="${dir.buildfolder}/doc/core"
-           includenosourcepackages="true"
-           classpathref="test.classpath" />
 </target>
 
 <target name="install" />
@@ -97,7 +112,16 @@
 
   <target name="determinate-swt">
     <condition property="rightswtlib" value="swt-linux.jar">
-      <equals arg1="${isLinuxOrBSD}" arg2="true" />
+      <and>
+        <equals arg1="${isLinuxOrBSD}" arg2="true" />
+        <equals arg1="${build.targetarch}" arg2="64" />
+      </and>
+    </condition>
+    <condition property="rightswtlib" value="swt-linux-32bit.jar">
+      <and>
+        <equals arg1="${build.targetarch}" arg2="32" />
+        <equals arg1="${isLinuxOrBSD}" arg2="true" />
+      </and>
     </condition>
     <condition property="rightswtlib" value="swt-mac.jar">
       <equals arg1="${isMac}" arg2="true" />
@@ -106,11 +130,14 @@
       <equals arg1="${isWindows}" arg2="true" />
     </condition>
     <echo message="Set SWT library to: ${rightswtlib}" />
+
+    <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar" />
+    <echo message="Located scala at: ${scala-library.jar}"/>
   </target>
 
 <!-- ======================== End of environment analysis ================== -->
 
-<target name="cycle" depends="all,test,doc" />
+<target name="cycle" depends="all,test,doc" description="This target does all the stuff within an development cycle"/>
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
@@ -125,7 +152,7 @@
   <jar destfile="${dir.buildfolder}/tmp/construct/plugins/core/core.jar">
     <fileset dir="${dir.buildfolder}/compile/core" />
   </jar>
-  <copy file="${dir.projectfolder}/src/core/org/technikradio/node/core/manifest.json"
+  <copy file="${dir.projectfolder}/src/core/manifest.json"
         todir="${dir.buildfolder}/tmp/construct/plugins/core/" />
 </target>
 
@@ -158,7 +185,7 @@
     <fileset dir="${dir.buildfolder}/compile/engine" />
     <manifest>
         <attribute name="Main-Class" value="org.technikradio.node.engine.action.Main"/>
-        <attribute name="Class-Path" value="../lib/json.jar,../lib/Utils.jar,../lib/${rightswtlib}"/>
+        <attribute name="Class-Path" value="../lib/json.jar ../lib/Utils.jar ../lib/${rightswtlib}"/>
     </manifest>
   </jar>
 </target>

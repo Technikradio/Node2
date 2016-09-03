@@ -38,6 +38,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.Event;
+import org.technikradio.node.engine.event.EventRegistry;
+import org.technikradio.node.engine.event.EventResponder;
+import org.technikradio.node.engine.plugin.Manifest;
+import org.technikradio.node.engine.plugin.PluginLoader;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.node.engine.plugin.UnsolvedDependencyException;
 import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -48,6 +56,10 @@ import org.technikradio.universal_tools.Console.LogType;
  */
 public class Application {
 	
+	/**
+	 * This field contains the current version of the engine.
+	 */
+	public static final String VERSION = "2.0.0d";
 	/**
 	 * This path points to the directory where node stores local user dependent stuff like settings.
 	 */
@@ -61,7 +73,7 @@ public class Application {
 	 */
 	public static final boolean LOCAL_APPDATA_FOLDER_AVAIABLE;
 	/**
-	 * This field contains the path to the plugin folder.
+	 * This field contains the path to the plug-in folder.
 	 */
 	public static final String PLUGIN_FOLDER;
 	/**
@@ -114,8 +126,40 @@ public class Application {
 	/**
 	 * This method gets called to initialize stuff like the look and feel
 	 */
-	protected static void setupUIBehaviour(){
+	protected static void setupApp(){
 		DisplayFactory.init();
+		Manifest[] ms = null;
+		try {
+			ms = PluginLoader.calculateDependencys(PLUGIN_FOLDER);
+		} catch (IOException | UnsolvedDependencyException e) {
+			Console.log(LogType.Error, "Application", "Failed to retrieve information about plugins.");
+			e.printStackTrace();
+			crash("Failed to retrieve information about plugins.", CrashCodes.ERROR_DURING_INITIALIZATION);
+			return;
+		}
+		for(int i = 0; i < ms.length; i++){
+			try {
+				Console.log(LogType.StdOut, "Application", "Loading plugin '" + ms[i].getName() + "'.");
+				PluginLoader.loadPlugin(ms[i]);
+			} catch (Exception e) {
+				Console.log(LogType.Warning, "Application", "Failed to load plugin '" + ms[i].getName() + "'.");
+				e.printStackTrace();
+			}
+		}
+		if(PluginRegistry.getNumberOfLoadedPlugins() == 0){
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {}
+					Console.log(LogType.StdOut, "Application",
+							"No plugins loaded. Exiting Node. Please install some plugins.");
+					close();
+				}
+			});
+			t.setName("ExitThread");
+			t.start();
+		}
 	}
 	
 	/**
@@ -124,7 +168,7 @@ public class Application {
 	 * @param reason The reason why the application crashed
 	 */
 	public static void crash(Object reason){
-		crash(reason, 1);
+		crash(reason, CrashCodes.UNKNOWN_REASON);
 	}
 	
 	/**
@@ -134,8 +178,29 @@ public class Application {
 	 */
 	public static void crash(Object reason, int code){
 		Console.log(LogType.Error, "Application", "The application is about to crash");
-		//TODO implement the rest of the method
+		Event e = new Event(BasicEvents.APPLICATION_CRASHED_EVENT, null, new EventResponder<String>());
+		EventRegistry.raiseEvent(e, true);
 		System.err.println(reason.toString());
 		System.exit(code);
+	}
+	
+	/**
+	 * Use this method to safely close the application.
+	 */
+	public static void close(){
+		Event e = new Event(BasicEvents.APPLICATION_CLOSING_EVENT, null, new EventResponder<String>());
+		EventRegistry.registerWaitSync(e);
+		EventRegistry.raiseEvent(e, false);
+		EventRegistry.waitForProcessedEvent(e);
+		Console.log(LogType.StdOut, "Application", "The Application will now exit.");
+		System.exit(0);
+	}
+	
+	/**
+	 * Use this method to check if this version is a development version.
+	 * @return true if this build is a development build or otherwise false.
+	 */
+	public static boolean isDevelopmentVersion(){
+		return VERSION.endsWith("d");
 	}
 }
