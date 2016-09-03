@@ -137,7 +137,7 @@
 
 <!-- ======================== End of environment analysis ================== -->
 
-<target name="cycle" depends="all,test,doc" />
+<target name="cycle" depends="all,test,doc" description="This target does all the stuff within an development cycle"/>
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />

@@ -51,6 +51,7 @@ public class Event implements Comparable {
 	private final Plugin source;
 	private final String messageDetails;
 	private final EventResponder responder;
+	private Object eventHint;
 
 	/**
 	 * This constructor generates an instance of an event using the given
@@ -91,27 +92,35 @@ public class Event implements Comparable {
 	}
 
 	/**
-	 * @return the type
+	 * Use this message to get the type of this event.
+	 * 
+	 * @return the type of this event
 	 */
 	public EventType getType() {
 		return type;
 	}
 
 	/**
-	 * @return the source
+	 * Use this method in order to get the source of this event.
+	 * 
+	 * @return the source of this event
 	 */
 	public Plugin getSource() {
 		return source;
 	}
 
 	/**
-	 * @return the messageDetails
+	 * Use this method in order to get advanced information about the event.
+	 * 
+	 * @return the message details
 	 */
 	public String getMessageDetails() {
 		return messageDetails;
 	}
 
 	/**
+	 * Use this method to get the event responder for this event.
+	 * 
 	 * @return the responder
 	 */
 	public EventResponder getResponder() {
@@ -132,5 +141,28 @@ public class Event implements Comparable {
 			return 0;
 		Event e = (Event) o;
 		return this.getType().compareTo(e.getType());
+	}
+
+	/**
+	 * Use this method to get the Event hint. An event hint is an object usually
+	 * provided by the creator of the event if a string isn't enough information
+	 * in order to process the event.
+	 * 
+	 * @return the event hint
+	 */
+	public Object getEventHint() {
+		return eventHint;
+	}
+
+	/**
+	 * Use this method to set the event hint to a desired value. An event hint
+	 * is an object usually provided by the creator of the event if a string
+	 * isn't enough information in order to process the event.
+	 * 
+	 * @param eventHint
+	 *            the event hint to set
+	 */
+	public void setEventHint(Object eventHint) {
+		this.eventHint = eventHint;
 	}
 }
