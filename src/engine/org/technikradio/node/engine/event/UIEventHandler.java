@@ -78,7 +78,7 @@ public abstract class UIEventHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(final Event e) {
-		if(Main.DEBUG_MODE)
+		if(Main.isDEBUG_MODE())
 			Console.log(LogType.Information, this, "Executing on UI thread. (sync=" + isSync() + ")");
 		if (isSync())
 			DisplayFactory.getDisplay().syncExec(new Runnable() {

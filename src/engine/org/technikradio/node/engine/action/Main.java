@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.action;
 
+import java.awt.SplashScreen;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -57,8 +58,9 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  */
 public class Main {
-	public static final boolean DEBUG_MODE = Application.isDevelopmentVersion();
-	private static String APP_HOME;
+	
+	protected static boolean DEBUG_MODE;
+	private static String APP_HOME = ".";
 	private static boolean appRunning = true;
 	private static Display d;
 	private static Thread commandThread;
@@ -67,6 +69,8 @@ public class Main {
 	 * @return The path
 	 */
 	protected static String getAppHome(){
+		if(APP_HOME == null)
+			Console.log(LogType.Error, "UpstartAgent", "Apphome wasn't specified.");
 		return APP_HOME;
 	}
 	/**
@@ -78,6 +82,11 @@ public class Main {
 			Application.crash("Launched without launch variables", 1);
 		}
 		APP_HOME = args[0];
+		
+		DEBUG_MODE = Application.isDevelopmentVersion();
+		Console.log(LogType.StdOut, "UpstartAgent", "Launched with the following args:");
+		for(int i = 0; i < args.length; i++)
+			System.out.println("\t[" + i + "] " + args[i]);
 		Console.log(LogType.StdOut, "UpstartAgent", "Starting node...");
 		processFurtherCommands(args);
 		try {
@@ -140,6 +149,11 @@ public class Main {
 			commandThread.setName("STDIN-COMMAND-THREAD");
 		}
 		commandThread.start();
+		if(SplashScreen.getSplashScreen() != null){
+			SplashScreen.getSplashScreen().close();
+		} else {
+			Console.log(LogType.Warning, "UpsartAgent", "There wasn't a splash screen provided by the start script.");
+		}
 		d = DisplayFactory.getDisplay();
 		while(appRunning){
 			try {
@@ -176,6 +190,14 @@ public class Main {
 	 */
 	public static boolean isAppRunning(){
 		return appRunning;
+	}
+	
+	/**
+	 * Use this method to check if the application is running in debug mode.
+	 * @return the DEBUG_MODE flag.
+	 */
+	public static boolean isDEBUG_MODE() {
+		return DEBUG_MODE;
 	}
 
 }

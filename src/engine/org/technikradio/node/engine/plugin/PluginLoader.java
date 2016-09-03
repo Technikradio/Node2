@@ -246,17 +246,21 @@ public class PluginLoader {
 
 			File dir = new File(topLevelFolder);
 			String[] content = dir.list();
-			for (String child : content) {
-				File f = new File(topLevelFolder + File.separator + child);
-				if (f.isDirectory()) {
-					try {
-						mfFiles.add(loadManifest(f));
-					} catch (Exception e) {
-						Console.log(LogType.Warning, "PluginLoader.calculateDependencies", "Couldn't load plug-in: ");
-						e.printStackTrace();
+			if (content != null)
+				for (String child : content) {
+					File f = new File(topLevelFolder + File.separator + child);
+					if (f.isDirectory()) {
+						try {
+							mfFiles.add(loadManifest(f));
+						} catch (Exception e) {
+							Console.log(LogType.Warning, "PluginLoader.calculateDependencies",
+									"Couldn't load plug-in: ");
+							e.printStackTrace();
+						}
 					}
 				}
-			}
+			else
+				Console.log(LogType.Error, "PluginLoader.calculateDependencies", "dir.list returned null on " + dir.toString());
 		}
 		// Sort the order
 		ArrayList<Manifest> a = new ArrayList<Manifest>();
@@ -346,8 +350,9 @@ public class PluginLoader {
 	 */
 	private static URL[] doBatchTest(File pathToInspect) {
 		ArrayList<URL> a = new ArrayList<URL>();
-		if(Main.DEBUG_MODE)
-			Console.log(LogType.Information, "PluginLoader.doBatchTest", "Scanning directory: " + pathToInspect.toURI().toString());
+		if (Main.isDEBUG_MODE())
+			Console.log(LogType.Information, "PluginLoader.doBatchTest",
+					"Scanning directory: " + pathToInspect.toURI().toString());
 		{
 			String[] content = pathToInspect.list();
 			for (String child : content) {
@@ -356,24 +361,27 @@ public class PluginLoader {
 					try {
 						URL[] m = doBatchTest(f);
 						for (URL u : m) {
-							if(u != null)
+							if (u != null)
 								a.add(u);
 						}
 					} catch (Exception e) {
 						Console.log(LogType.Warning, "PluginLoader.doBatchTest", "Couldn't load jar: ");
 						e.printStackTrace();
 					}
-				} else if(f.isFile()){
-					if(Main.DEBUG_MODE)
-						Console.log(LogType.Information, "PluginLoader.doBatchTest", "Scanning entry: " + f.toURI().toString());
-					if(f.getAbsolutePath().endsWith(".jar")){
+				} else if (f.isFile()) {
+					if (Main.isDEBUG_MODE())
+						Console.log(LogType.Information, "PluginLoader.doBatchTest",
+								"Scanning entry: " + f.toURI().toString());
+					if (f.getAbsolutePath().endsWith(".jar")) {
 						try {
 							a.add(f.toURI().toURL());
-							if(Main.DEBUG_MODE)
+							if (Main.isDEBUG_MODE())
 								try {
-									Console.log(LogType.Information, "PluginLoader.doBatchTest", "Adding " + f.getCanonicalPath() + " to list of jar files.");
+									Console.log(LogType.Information, "PluginLoader.doBatchTest",
+											"Adding " + f.getCanonicalPath() + " to list of jar files.");
 								} catch (IOException e) {
-									Console.log(LogType.Warning, "PluginLoader.doBatchTest", "Failed to print debug message:");
+									Console.log(LogType.Warning, "PluginLoader.doBatchTest",
+											"Failed to print debug message:");
 									e.printStackTrace();
 								}
 						} catch (MalformedURLException e) {

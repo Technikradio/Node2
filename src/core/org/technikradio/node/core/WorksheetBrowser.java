@@ -33,21 +33,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.technikradio.node.engine.action.Application;
 import org.technikradio.node.engine.action.Main;
+import org.technikradio.node.engine.event.BasicEvents;
+import org.technikradio.node.engine.event.EventHandler;
+import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.PluginRegistry;
-import org.technikradio.node.engine.plugin.ui.Colors;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.node.engine.plugin.ui.WindowOrientation;
 import org.technikradio.universal_tools.Console;
@@ -66,10 +70,14 @@ public final class WorksheetBrowser {
 	private ExpandBar dataSourceBar;
 	private ExpandItem localExpandItem;
 	private ExpandItem remoteExpandItem;
-	private Composite localComposite;
-	private Composite remoteComposite;
+	private List localList;
+	private List remoteList;
+	private Label infoLabel;
+	private ArrayList<DataSource> ldsa = new ArrayList<DataSource>();
+	private ArrayList<DataSource> rdsa = new ArrayList<DataSource>();
 	private DataSource currentSelectedDS = null;
 	private boolean first = false;
+	private EventHandler openedHandler;
 
 	public WorksheetBrowser() {
 		w = new Window("Worksheetbrowser");
@@ -77,6 +85,7 @@ public final class WorksheetBrowser {
 
 			@Override
 			public void handleEvent(Event arg0) {
+				internalClose();
 				if (!isFirst())
 					return;
 				Console.log(LogType.StdOut, this, "Aborted worksheet selection. Closing app.");
@@ -86,8 +95,8 @@ public final class WorksheetBrowser {
 		w.center();
 		{
 
-			Label l1 = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.BORDER);
-			l1.setText("Bottom-Info");
+			infoLabel = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.BORDER);
+			infoLabel.setText("Bottom-Info");
 
 		}
 		{
@@ -128,28 +137,19 @@ public final class WorksheetBrowser {
 		}
 		{
 			dataSourceBar = new ExpandBar(w.getContainer(WindowOrientation.LEFT_TRAY), SWT.V_SCROLL);
-			localComposite = new Composite(dataSourceBar, SWT.NONE);
-			GridLayout layout = new GridLayout();
-			layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
-			layout.verticalSpacing = 10;
-			localComposite.setLayout(layout);
+			localList = new List(dataSourceBar, SWT.MULTI);
 			localExpandItem = new ExpandItem(dataSourceBar, SWT.NONE, 0);
 			localExpandItem.setText("Local data sources");
-			localExpandItem.setHeight(localComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-			localExpandItem.setControl(localComposite);
+			localExpandItem.setHeight(localList.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+			localExpandItem.setControl(localList);
 			localExpandItem.setExpanded(true);
 			// localExpandItem.setImage(image);
 
-			remoteComposite = new Composite(dataSourceBar, SWT.NONE);
-			layout = new GridLayout();
-			layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
-			layout.verticalSpacing = 10;
-
-			remoteComposite.setLayout(layout);
+			remoteList = new List(dataSourceBar, SWT.MULTI);
 			remoteExpandItem = new ExpandItem(dataSourceBar, SWT.NONE, 1);
 			remoteExpandItem.setText("Remote data sources");
-			remoteExpandItem.setHeight(localComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-			remoteExpandItem.setControl(remoteComposite);
+			remoteExpandItem.setHeight(localList.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+			remoteExpandItem.setControl(remoteList);
 			// localExpandItem.setImage(image);
 
 			dataSourceBar.setSpacing(8);
@@ -157,63 +157,81 @@ public final class WorksheetBrowser {
 		fillDSS();
 		w.open();
 		w.setSize(750, 400);
+		openedHandler = new EventHandler(){
 
+			@Override
+			public void handleEvent(org.technikradio.node.engine.event.Event e) {
+				close();
+			}};
+		EventRegistry.addEventHandler(BasicEvents.WORK_FILE_LOADED, openedHandler);
 	}
 
 	private void fillDSS() {
-		int numLoc = 0;
-		int numRem = 0;
 		boolean first = true;
-		for (DataSource ds : PluginRegistry.getAllRegisteredDataSources()) {
-			if (first && !ds.isRemoteDataSource()) {
-				first = false;
-				setCurrentSelectedDS(ds);
+		
+		remoteList.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				findItem();
 			}
-			if (Main.DEBUG_MODE)
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				findItem();
+			}});
+		localList.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				findItem();
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				findItem();
+			}});
+		
+		for (DataSource ds : PluginRegistry.getAllRegisteredDataSources()) {
+			if (Main.isDEBUG_MODE())
 				Console.log(LogType.Information, this,
 						"Adding data source: " + ds.getIdentifier() + "; " + ds.getName());
 
-			Composite c = null;
-			int ci;
 			if (ds.isRemoteDataSource()) {
-				numRem++;
-				c = new Composite(remoteComposite, SWT.NONE);
-				ci = numRem;
+				remoteList.add(ds.getName());
+				rdsa.add(ds);
 			} else {
-				numLoc++;
-				c = new Composite(localComposite, SWT.NONE);
-				ci = numLoc;
+				localList.add(ds.getName());
+				ldsa.add(ds);
 			}
-
-			GridLayout layout = new GridLayout(2, false);
-			layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
-			layout.verticalSpacing = 10;
-			c.setLayout(new FillLayout());
-
-			if (ci % 2 == 0) {
-				c.setBackground(Colors.GRAY_DESIGN.getTextColor());
+			
+			if (first && !ds.isRemoteDataSource()) {
+				first = false;
+				setCurrentSelectedDS(ds);
+				localList.setSelection(0);
 			}
-			{
-				// GridLayout l = (GridLayout) remoteComposite.getLayout();
-				// l.numColumns++;
-			}
-			Label l = new Label(c, SWT.BORDER);
-			l.setText(ds.getName());
-
-			final DataSource d = ds;
-			c.addListener(SWT.MouseDown, new Listener() {
-
-				@Override
-				public void handleEvent(Event arg0) {
-					Console.log(LogType.StdOut, this, "Clicked. " + d.getIdentifier());
-					setCurrentSelectedDS(d);
-				}
-
-			});
 		}
-		remoteExpandItem.setHeight(remoteComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-		localExpandItem.setHeight(localComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-
+		remoteExpandItem.setHeight(remoteList.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+		localExpandItem.setHeight(localList.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+	}
+	
+	private void findItem(){
+		for(int i : localList.getSelectionIndices()){
+			if(ldsa.get(i) != getCurrentSelectedDS()){
+				setCurrentSelectedDS(ldsa.get(i));
+				localList.deselectAll();
+				remoteList.deselectAll();
+				localList.select(i);
+			}
+		}
+		for(int i : remoteList.getSelectionIndices()){
+			if(rdsa.get(i) != getCurrentSelectedDS()){
+				setCurrentSelectedDS(rdsa.get(i));
+				localList.deselectAll();
+				remoteList.deselectAll();
+				remoteList.select(i);
+			}
+		}
 	}
 
 	/**
@@ -249,10 +267,23 @@ public final class WorksheetBrowser {
 	/**
 	 * Use this method to set the current selected data source.
 	 * 
-	 * @param currentSelectedDS
+	 * @param ds
 	 *            the current selected data source to set
 	 */
-	public void setCurrentSelectedDS(DataSource currentSelectedDS) {
-		this.currentSelectedDS = currentSelectedDS;
+	private void setCurrentSelectedDS(DataSource ds) {
+		this.currentSelectedDS = ds;
+		infoLabel.setText(getCurrentSelectedDS().getName());
+	}
+	
+	private void internalClose() {
+		Console.log(LogType.StdOut, this, "Removing event handler from list");
+		EventRegistry.removeEventHandler(BasicEvents.WORK_FILE_LOADED, openedHandler);
+	}
+	
+	/**
+	 * Use this method in order to close the worksheet browser.
+	 */
+	public void close(){
+		w.close();
 	}
 }

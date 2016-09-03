@@ -64,8 +64,8 @@ public class EventRegistry {
 
 		private boolean running = false;
 		private int number = 0;
-		
-		public EventProcessor(int i){
+
+		public EventProcessor(int i) {
 			number = i;
 		}
 
@@ -144,9 +144,9 @@ public class EventRegistry {
 			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
 		}
-		
+
 		@Override
-		public String toString(){
+		public String toString() {
 			return "EventRegistry.EventProcessor[" + number + "]";
 		}
 
@@ -178,9 +178,9 @@ public class EventRegistry {
 			processListSync.remove(e);
 			return e;
 		}
-		
+
 		@Override
-		public String toString(){
+		public String toString() {
 			return "EventRegistry.SynchronizedEventProcessor";
 		}
 	}
@@ -266,6 +266,72 @@ public class EventRegistry {
 	}
 
 	/**
+	 * Use this method to remove a specific event handler from a specific list
+	 * of event handlers for a certain event.
+	 * 
+	 * @param type
+	 *            The event type defining the list of event handlers desired to
+	 *            handle events marked with it where the event handler should be
+	 *            removed from.
+	 * @param eh
+	 *            The event handler that should be removed from the desired
+	 *            list.
+	 * @return true if the removal operation was successful or false in every
+	 *         other case.
+	 */
+	public static boolean removeEventHandler(EventType type, EventHandler eh) {
+		if (type == null || eh == null)
+			return false;
+		List<EventHandler> l = handlers.get(type);
+		if (l == null)
+			return false;
+		if (!l.contains(eh))
+			return false;
+		l.remove(eh);
+		doGC(type);
+		return true;
+	}
+
+	/**
+	 * Use this method in order to remove an event handler from all event types
+	 * that he is listening for.
+	 * 
+	 * @param eh
+	 *            The event handler to remove.
+	 * @return true if the removal operation was successful or false in every
+	 *         other case.
+	 */
+	public static boolean removeEventHandler(EventHandler eh) {
+		if (eh == null)
+			return false;
+		boolean found = false;
+		boolean problem = false;
+		for (EventType et : handlers.keySet()) {
+			if (handlers.get(et).contains(eh)) {
+				found = true;
+				if (!removeEventHandler(et, eh))
+					problem = true;
+			}
+		}
+		if (!problem)
+			return found;
+		return false;
+	}
+
+	/**
+	 * This method is used to scan the event handlers for garbage and takes care
+	 * of it.
+	 * 
+	 * @param et
+	 *            The event type to scan for.
+	 */
+	private static void doGC(EventType et) {
+		List<EventHandler> l = handlers.get(et);
+		if (l.isEmpty())
+			handlers.remove(et);
+	}
+
+	/**
 	 * This method is used to check if there are event handlers registered for a
 	 * specific event type.
 	 * 
@@ -337,5 +403,45 @@ public class EventRegistry {
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Use this method in order to check if the given event handler is
+	 * registered to watch for any event type at all.
+	 * 
+	 * @param eh
+	 *            The event handler to check
+	 * @return true if the event handler is registered somewhere or otherwise
+	 *         false.
+	 */
+	public static boolean isEventHandlerSomewhereRegistered(EventHandler eh) {
+		if (eh == null)
+			return false;
+		boolean found = false;
+		for (EventType et : handlers.keySet()) {
+			if (isEventHandlerRegistered(et, eh))
+				found = true;
+		}
+		return found;
+	}
+
+	/**
+	 * Use this method in order to check if the given event handler is
+	 * registered to watch for specific event type.
+	 * 
+	 * @param type
+	 *            The event handler to check
+	 * @param eh
+	 *            The event type to check for
+	 * @return true if the event handler is registered for the desired event
+	 *         type or otherwise false.
+	 */
+	public static boolean isEventHandlerRegistered(EventType type, EventHandler eh) {
+		if (type == null || eh == null)
+			return false;
+		List<EventHandler> l = handlers.get(type);
+		if (l == null)
+			return false;
+		return l.contains(eh);
 	}
 }

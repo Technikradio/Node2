@@ -55,6 +55,7 @@ import org.technikradio.universal_tools.Console.LogType;
  * @author doralitze
  */
 public class Application {
+	
 	/**
 	 * This field contains the current version of the engine.
 	 */

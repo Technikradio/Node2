@@ -51,6 +51,7 @@ public abstract class DataSource {
 
 	private String identifier = "";
 	private String name = "";
+	private URI lastLoadedWorkFile = null;
 
 	/**
 	 * This is the most basic constructor. It only sets the identifier. The
@@ -97,9 +98,15 @@ public abstract class DataSource {
 
 	/**
 	 * This method gets called when the user clicks on the 'open database'
-	 * button.
+	 * button.<br/>
+	 * Note that a class implementing this method should call the
+	 * {@link org.technikradio.node.plugin.DataSource#setLastLoadedWorkFile(URI) }
+	 * method before it is about to load the data due to classes like the
+	 * {@link org.technikradio.core.WorksheetBrowser} class relying on it.
 	 * 
 	 * @return the URI that the user selected.
+	 * @see org.technikradio.node.event.BasicEvents#WORK_FILE_LOADED To get
+	 *      further understanding about the event topic.
 	 */
 	public abstract URI showResourceOpenDialog();
 
@@ -119,14 +126,16 @@ public abstract class DataSource {
 	 * @return true if the data source is on a remote host or otherwise false.
 	 */
 	public abstract boolean isRemoteDataSource();
-	
+
 	/**
-	 * Use this method in order to open a dialog capable of creating a new work file.
+	 * Use this method in order to open a dialog capable of creating a new work
+	 * file.
 	 */
 	public abstract void showNewWorkFileDialog();
 
 	/**
 	 * Use this method to get the human readable name of this data source.
+	 * 
 	 * @return the localized name
 	 */
 	public String getName() {
@@ -135,9 +144,33 @@ public abstract class DataSource {
 
 	/**
 	 * Use this method to set the displayed name of this data source.
-	 * @param name the localized name to set
+	 * 
+	 * @param name
+	 *            the localized name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Use this method in order to retrieve the URI of the last loaded work
+	 * file.
+	 * 
+	 * @return the last loaded work file location
+	 */
+	public URI getLastLoadedWorkFile() {
+		return lastLoadedWorkFile;
+	}
+
+	/**
+	 * Use this method in order to set the location of the last loaded work file
+	 * or invoke it if a newly created work file is saved for the first time.
+	 * NOTE that this method also raises the corresponding events.
+	 * 
+	 * @param lastLoadedWorkFile
+	 *            the location of the last loaded work file to set
+	 */
+	public void setLastLoadedWorkFile(URI lastLoadedWorkFile) {
+		this.lastLoadedWorkFile = lastLoadedWorkFile;
 	}
 }
