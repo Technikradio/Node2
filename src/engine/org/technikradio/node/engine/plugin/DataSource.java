@@ -51,6 +51,7 @@ public abstract class DataSource {
 
 	private String identifier = "";
 	private String name = "";
+	private String description = "";
 	private URI lastLoadedWorkFile = null;
 
 	/**
@@ -181,5 +182,21 @@ public abstract class DataSource {
 	 */
 	public void setLastLoadedWorkFile(URI lastLoadedWorkFile) {
 		this.lastLoadedWorkFile = lastLoadedWorkFile;
+	}
+
+	/**
+	 * Use this method to get the human readable description of this data source.
+	 * @return the description of this data source
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Use this method in order to set a human readable description of this data source.
+	 * @param description the description value to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

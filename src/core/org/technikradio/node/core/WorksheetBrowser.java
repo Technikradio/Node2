@@ -73,6 +73,7 @@ public final class WorksheetBrowser {
 	private List localList;
 	private List remoteList;
 	private Label infoLabel;
+	private Label descriptionLabel;
 	private ArrayList<DataSource> ldsa = new ArrayList<DataSource>();
 	private ArrayList<DataSource> rdsa = new ArrayList<DataSource>();
 	private DataSource currentSelectedDS = null;
@@ -97,7 +98,7 @@ public final class WorksheetBrowser {
 
 			infoLabel = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.BORDER);
 			infoLabel.setText("Bottom-Info");
-
+			descriptionLabel = new Label(w.getContainer(WindowOrientation.RIGHT_TRAY), SWT.WRAP);
 		}
 		{
 			Button newButton = new Button(w.getContainer(WindowOrientation.TOP), SWT.PUSH);
@@ -273,6 +274,7 @@ public final class WorksheetBrowser {
 	private void setCurrentSelectedDS(DataSource ds) {
 		this.currentSelectedDS = ds;
 		infoLabel.setText(getCurrentSelectedDS().getName());
+		descriptionLabel.setText(getCurrentSelectedDS().getDescription());
 	}
 	
 	private void internalClose() {

@@ -50,6 +50,7 @@ public class SNFDataSource extends DataSource {
 	public SNFDataSource() {
 		super("org.technikradio.node.snfsource.SNFDataSource");
 		this.setName(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.name", "SNF File"));
+		this.setDescription(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.description", "This module enables you to save and load data using the old SNF format."));
 	}
 
 	/* (non-Javadoc)

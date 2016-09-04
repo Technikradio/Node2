@@ -64,7 +64,9 @@
            classpathref="test.classpath"/>
 </target>
 
-<target name="install" />
+<target name="install" depends="cycle" description="This target installs node to your local computer.">
+	
+</target>
 
 <!-- ======================== Start of hidden procedures ================== -->
 
@@ -137,7 +139,7 @@
 
 <!-- ======================== End of environment analysis ================== -->
 
-<target name="cycle" depends="all,test,doc" description="This target does all the stuff within an development cycle"/>
+<target name="cycle" depends="all,test,doc"/>
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
