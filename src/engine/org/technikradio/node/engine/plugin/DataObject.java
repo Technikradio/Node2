@@ -34,12 +34,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.engine.plugin;
 
 import java.awt.image.BufferedImage;
+import java.util.Hashtable;
+import java.util.Set;
 
 import org.eclipse.swt.widgets.Composite;
 import org.technikradio.node.engine.Permission;
 
 /**
  * This class represents an abstract data object
+ * 
  * @author doralitze
  */
 public abstract class DataObject {
@@ -49,63 +52,87 @@ public abstract class DataObject {
 	private BufferedImage icon;
 	private DataObject parent;
 	private Permission permissions;
-	
+	private Hashtable<String, String> metadata;
+
 	/**
-	 * This is the most basic constructor. It only sets the identifier of this DataObject.
-	 * The identifier should be set at all time. Note that you're highly recommended to set
-	 * the parent after constructing this object. If this is a top level DataObject you can leave it to null.
-	 * @param identifier The identifier used to identify the data object
+	 * This is the most basic constructor. It only sets the identifier of this
+	 * DataObject. The identifier should be set at all time. Note that you're
+	 * highly recommended to set the parent after constructing this object. If
+	 * this is a top level DataObject you can leave it to null.
+	 * 
+	 * @param identifier
+	 *            The identifier used to identify the data object
 	 */
-	public DataObject(String identifier){
+	public DataObject(String identifier) {
 		this(null, identifier, "");
 	}
-	
+
 	/**
-	 * This is the most basic constructor. It only sets the identifier and the parent of this DataObject.
-	 * The identifier should be set at all time.
-	 * @param parent The parent of this DataObject
-	 * @param identifier The identifier used to identify the data object
+	 * This is the most basic constructor. It only sets the identifier and the
+	 * parent of this DataObject. The identifier should be set at all time.
+	 * 
+	 * @param parent
+	 *            The parent of this DataObject
+	 * @param identifier
+	 *            The identifier used to identify the data object
 	 */
-	public DataObject(DataObject parent, String identifier){
+	public DataObject(DataObject parent, String identifier) {
 		this(parent, identifier, "");
 	}
-	
+
 	/**
-	 * This constructor sets beside the identifier and parent also the title of the data object.
-	 * @param parent The parent of this DataObject
-	 * @param identifier The identifier used to identify the data object
-	 * @param title The title displayed inside the tree of data objects
+	 * This constructor sets beside the identifier and parent also the title of
+	 * the data object.
+	 * 
+	 * @param parent
+	 *            The parent of this DataObject
+	 * @param identifier
+	 *            The identifier used to identify the data object
+	 * @param title
+	 *            The title displayed inside the tree of data objects
 	 */
-	public DataObject(DataObject parent, String identifier, String title){
+	public DataObject(DataObject parent, String identifier, String title) {
 		this(parent, identifier, title, null, null);
 	}
-	
+
 	/**
-	 * This constructor sets beside the identifier and parent also the title of the data object.
-	 * Note that you're highly recommended to set
-	 * the parent after constructing this object. If this is a top level DataObject you can leave it to null.
-	 * @param identifier The identifier used to identify the data object
-	 * @param title The title displayed inside the tree of data objects
+	 * This constructor sets beside the identifier and parent also the title of
+	 * the data object. Note that you're highly recommended to set the parent
+	 * after constructing this object. If this is a top level DataObject you can
+	 * leave it to null.
+	 * 
+	 * @param identifier
+	 *            The identifier used to identify the data object
+	 * @param title
+	 *            The title displayed inside the tree of data objects
 	 */
-	public DataObject(String identifier, String title){
+	public DataObject(String identifier, String title) {
 		this(null, identifier, title, null, null);
 	}
-	
+
 	/**
 	 * This constructor creates a complete instance of a DataOject.
-	 * @param parent The parent of this DataObject
-	 * @param identifier The identifier used to identify the data object
-	 * @param title The title displayed inside the tree of data objects
-	 * @param p The permissions of this DataObject (leave them to null in order to use the same permissions as the parent object)
-	 * @param icon The icon of this DataObject to display inside the UI
+	 * 
+	 * @param parent
+	 *            The parent of this DataObject
+	 * @param identifier
+	 *            The identifier used to identify the data object
+	 * @param title
+	 *            The title displayed inside the tree of data objects
+	 * @param p
+	 *            The permissions of this DataObject (leave them to null in
+	 *            order to use the same permissions as the parent object)
+	 * @param icon
+	 *            The icon of this DataObject to display inside the UI
 	 */
-	public DataObject(DataObject parent, String identifier, String title, Permission p, BufferedImage icon){
+	public DataObject(DataObject parent, String identifier, String title, Permission p, BufferedImage icon) {
 		super();
 		this.identifier = identifier;
 		this.setTitle(title);
 		setIcon(icon);
 		setParent(parent);
 		setPermissions(p);
+		metadata = new Hashtable<String, String>();
 	}
 
 	/**
@@ -123,7 +150,8 @@ public abstract class DataObject {
 	}
 
 	/**
-	 * @param title the title to set
+	 * @param title
+	 *            the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -137,41 +165,47 @@ public abstract class DataObject {
 	}
 
 	/**
-	 * @param icon the icon to set
+	 * @param icon
+	 *            the icon to set
 	 */
 	public void setIcon(BufferedImage icon) {
 		this.icon = icon;
 	}
-	
-	public boolean save() throws DataNotYetLoadedException{
+
+	public boolean save() throws DataNotYetLoadedException {
 		DataSource ds = PluginRegistry.getCurrentActiveDataSource();
 		WorkFile wf = PluginRegistry.getCurrentActiveWorkFile();
-		if(ds == null)
+		if (ds == null)
 			throw new DataNotYetLoadedException("Try to save into unaviable data yourself the next time!");
 		return ds.saveDataObject(this, wf);
 	}
 
 	/**
 	 * This method gets called when the user opens the data object.
+	 * 
 	 * @return an SWT composite object to display the content of the data object
 	 */
 	public abstract Composite onOpen();
-	
+
 	/**
 	 * This method gets called when the user closes the content of the
 	 * DataObject.
 	 */
 	public abstract void onClose();
-	
+
 	/**
 	 * This method gets called when the DataObject gets added to a work file.
-	 * @param wf The WorkFile that added the DataObject.
+	 * 
+	 * @param wf
+	 *            The WorkFile that added the DataObject.
 	 */
 	public abstract void onAddToWorkSheet(WorkFile wf);
 
 	/**
-	 * This method is used to get the parent of this DataObject.
-	 * If it returns null it means that it is located at the top of the tree (e.g. that its parent is the work sheet).
+	 * This method is used to get the parent of this DataObject. If it returns
+	 * null it means that it is located at the top of the tree (e.g. that its
+	 * parent is the work sheet).
+	 * 
 	 * @return the parent
 	 */
 	public DataObject getParent() {
@@ -180,47 +214,100 @@ public abstract class DataObject {
 
 	/**
 	 * Use this method to set a different parent for this DataObject.
-	 * @param parent the parent to set
+	 * 
+	 * @param parent
+	 *            the parent to set
 	 */
 	public void setParent(DataObject parent) {
 		this.parent = parent;
 	}
 
 	/**
-	 * Use this method to get the permissions of this DataObject.
-	 * If they're set to null it will return the ones of its parent.
-	 * NOTE: This method can still return null if there are no permissions set at all.
+	 * Use this method to get the permissions of this DataObject. If they're set
+	 * to null it will return the ones of its parent. NOTE: This method can
+	 * still return null if there are no permissions set at all.
+	 * 
 	 * @return the permissions applying to this DataObject
 	 */
 	public Permission getPermissions() {
-		if(permissions != null)
+		if (permissions != null)
 			return permissions;
-		if(parent != null)
+		if (parent != null)
 			return parent.getPermissions();
-		//Should we query the work sheet?
+		// Should we query the work sheet?
 		return null;
 	}
 
 	/**
 	 * Use this method to set separate permissions for this DataObject.
-	 * @param permissions the permissions to set
+	 * 
+	 * @param permissions
+	 *            the permissions to set
 	 */
 	public void setPermissions(Permission permissions) {
 		this.permissions = permissions;
 	}
-	
+
 	@Override
-	public boolean equals(Object o){
-		if(o == null)
+	public boolean equals(Object o) {
+		if (o == null)
 			return false;
-		if(!(o instanceof DataObject))
+		if (!(o instanceof DataObject))
 			return false;
 		DataObject d = (DataObject) o;
-		if(!d.getIdentifier().equals(this.getIdentifier()))
+		if (!d.getIdentifier().equals(this.getIdentifier()))
 			return false;
-		if(!d.getTitle().equals(this.getTitle()))
+		if (!d.getTitle().equals(this.getTitle()))
 			return false;
 		return true;
 	}
+
+	/**
+	 * Use this method in order to add meta data to this object.
+	 * 
+	 * @param key
+	 *            The key to use for the meta data entry.
+	 * @param value
+	 *            The value to use for the meta data entry.
+	 * @return The old value corresponding to the given key (if one was
+	 *         specified)
+	 */
+	public String setMetadata(String key, String value) {
+		return metadata.put(key, value);
+	}
+
+	/**
+	 * Use this method in order to remove an meta data entry from the meta data
+	 * storage.
+	 * 
+	 * @param key
+	 *            The key to remove
+	 * @return true if it successfully removed the key or otherwise false.
+	 */
+	public boolean removeMetadataEntry(String key) {
+		if (!metadata.containsKey(key))
+			return false;
+		metadata.remove(key);
+		return true;
+	}
+
+	/**
+	 * Use this method in order to retrieve a set of the meta data stored inside
+	 * this object.
+	 * 
+	 * @return A set of keys stored inside this data object.
+	 */
+	public Set<String> getAllKeys() {
+		return metadata.keySet();
+	}
 	
+	/**
+	 * Use this method to load an entry from the meta data.
+	 * @param key The key used to identify the desired entry.
+	 * @return The value associated with the given key.
+	 */
+	public String getMetadataValue(String key){
+		return metadata.get(key);
+	}
+
 }
