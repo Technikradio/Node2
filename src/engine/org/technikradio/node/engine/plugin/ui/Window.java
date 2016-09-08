@@ -63,6 +63,13 @@ public class Window {
 	private ColorPalette theme;
 
 	/**
+	 * This constructor creates a new window with an empty title.
+	 */
+	public Window() {
+		this("");
+	}
+
+	/**
 	 * This constructor initializes a new instance.
 	 * 
 	 * @param title
@@ -91,7 +98,7 @@ public class Window {
 		toolC = new CoolBar(mc, SWT.HORIZONTAL);
 		SashForm middleC = new SashForm(mc, SWT.HORIZONTAL);
 		middleC.setBackground(Colors.GRAY_DESIGN.getTextColor());
-		//leftC = new ScrolledComposite(middleC, SWT.VERTICAL);
+		// leftC = new ScrolledComposite(middleC, SWT.VERTICAL);
 		leftC = new Composite(middleC, SWT.NONE);
 		{
 			SashForm cc = new SashForm(middleC, SWT.VERTICAL);
@@ -136,7 +143,7 @@ public class Window {
 			rightC.setLayout(fl);
 		}
 		{
-			int[] w = {5, 80, 15};
+			int[] w = { 5, 80, 15 };
 			mc.setWeights(w);
 		}
 	}
@@ -257,4 +264,18 @@ public class Window {
 	public ColorPalette getColorTheme() {
 		return this.theme;
 	}
+
+	/**
+	 * This method sets the title of the window.
+	 * 
+	 * @param newTitle
+	 *            The new title to set
+	 * @return The old title of this window.
+	 */
+	public String setTitle(String newTitle) {
+		String st = shell.getText();
+		shell.setText(newTitle);
+		return st;
+	}
+
 }
