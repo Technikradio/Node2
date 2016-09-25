@@ -31,18 +31,62 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * 
  */
-package org.technikradio.node.engine.plugin;
+package org.technikradio.node.tests.engine;
+
+import static org.junit.Assert.*;
+
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.technikradio.node.engine.plugin.Row;
+import org.technikradio.node.engine.plugin.TableObject;
 
 /**
- * This interface tells node that the content of an DataObject can be summed up.
+ * This class is designed to test the TableObject class.
  * @author doralitze
+ *
  */
-public interface Calculatable {
+public class TableObjectTest {
+	
+	private TableObject to;
+
 	/**
-	 * This calculates the sum of the DataObject.
-	 * Not that $1.02 will result in 102 due to
-	 * the fact that there is no type like 'long float'.
-	 * @return the sum
+	 * @throws java.lang.Exception
+	 *             if anything goes wrong
 	 */
-	public abstract long getSum();
+	@Before
+	public void setUp() throws Exception {
+		to = new TableObject("Test table object");
+		for(int i = 0; i < 150500; i++){
+			Date d = new Date();
+			to.addRow(new Row(i * 100, i, "Row description #" + Integer.toString(i), "AMF", d.toString()));
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.TableObject#getRows(int, int)}.
+	 */
+	@Test
+	public final void testGetRows() {
+		for(int i = 0; i < to.getLength() / 5; i ++){
+			Row[] frag = to.getRows(i * 5, (i + 1) * 5);
+			for(int j = 0; j < 5; j++){
+				if(frag[j] == null){
+					fail("The query test failed.");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.TableObject#getSum()}.
+	 */
+	@Test
+	public final void testGetSum() {
+		assertTrue("The computed sum must be greater than 11325049700", to.getSum() > 11325049700L);
+	}
+
 }

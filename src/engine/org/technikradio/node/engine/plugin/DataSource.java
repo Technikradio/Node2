@@ -116,7 +116,7 @@ public abstract class DataSource {
 	 * NOTE that this method is desired to store only the requested data object
 	 * and not the entire work file.
 	 * 
-	 * @param o
+	 * @param w
 	 *            The object that want's to be stored.
 	 * @param f The corresponding work file of the object.
 	 * @return true if the save was successful otherwise false

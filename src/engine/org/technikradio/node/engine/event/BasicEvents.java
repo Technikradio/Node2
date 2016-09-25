@@ -52,7 +52,7 @@ public class BasicEvents {
 	 */
 	public static final EventType APPLICATION_LOADED_EVENT = new EventType("org.technikradio.node.engine.event.basic_events.app_loaded");
 	/**
-	 * This event will be raised when a data source finished the loading query and is about to load the work file.<br/>
+	 * This event will be raised when a data source finished the loading query and is about to load the work file.<br>
 	 * NOTE that this event should also be risen if a data source creates a new work file.
 	 */
 	public static final EventType WORK_FILE_LOADED = new EventType("org.technikradio.node.engine.event.basic_events");

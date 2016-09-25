@@ -31,18 +31,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * 
  */
-package org.technikradio.node.engine.plugin;
+package org.technikradio.node.snfsource;
+
+import java.io.PrintStream;
+
+import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.TableObject;
 
 /**
- * This interface tells node that the content of an DataObject can be summed up.
+ * This class is used to generate an SNF file from an data object.
  * @author doralitze
+ *
  */
-public interface Calculatable {
+public class SNFObjectExport {
+	
+	private final PrintStream ps;
+
 	/**
-	 * This calculates the sum of the DataObject.
-	 * Not that $1.02 will result in 102 due to
-	 * the fact that there is no type like 'long float'.
-	 * @return the sum
+	 * This constructor creates a new instance capable of outputting to the given print stream.
+	 * @param output The print stream to output to.
 	 */
-	public abstract long getSum();
+	public SNFObjectExport(PrintStream output) {
+		this.ps = output;
+	}
+	
+	public void serialize(DataObject o){
+		if(!(o instanceof TableObject))
+			throw new RuntimeException("Only instances of the TableObject class or its subclasses can be serialized.");
+		
+	}
+
 }
