@@ -65,7 +65,7 @@
 </target>
 
 <target name="install" depends="cycle" description="This target installs node to your local computer.">
-	
+
 </target>
 
 <!-- ======================== Start of hidden procedures ================== -->
@@ -87,6 +87,9 @@
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="${dir.buildfolder}/tmp/construct/bin">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.buildfolder}/tmp/construct/plugins">
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="${dir.projectfolder}/lib">
@@ -157,7 +160,7 @@
   <copy file="${dir.projectfolder}/src/core/manifest.json"
         todir="${dir.buildfolder}/tmp/construct/plugins/core/" />
 </target>
-	
+
 <target name="snf-source-plugin" depends="core">
 	<mkdir dir="${dir.buildfolder}/compile/snf-source" />
 	<mkdir dir="${dir.buildfolder}/tmp/construct/plugins/snf-source" />
