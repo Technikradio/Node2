@@ -168,5 +168,13 @@ public class Row {
 	public void setDate(String date) {
 		this.date = date;
 	}
+	
+	/**
+	 * Use this function in order to retrieve an exact copy of this row.
+	 * @return The new copy of this row.
+	 */
+	public Row copy(){
+		return new Row(this.value, this.id, this.description, this.costCenter, this.date);
+	}
 
 }

@@ -36,6 +36,7 @@ package org.technikradio.node.snfsource;
 import java.io.PrintStream;
 
 import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.Row;
 import org.technikradio.node.engine.plugin.TableObject;
 
 /**
@@ -55,10 +56,49 @@ public class SNFObjectExport {
 		this.ps = output;
 	}
 	
+	/**
+	 * Use this method in order to serialize the object to the prior specified print stream.
+	 * NOTE that this will only work with TableObjects. This method will throw an exception otherwise.
+	 * @param o The object to serialize. (This must be an TableObject)
+	 * @param autoclose use true here if you wan't the stream to be closed after performing the serialization.
+	 */
+	public void serialize(DataObject o, boolean autoclose){
+		serialize(o);
+		if(autoclose)
+			ps.close();
+	}
+	
+	/**
+	 * Use this method in order to serialize the object to the prior specified print stream.
+	 * @param o The object to serialize. (This must be an TableObject)
+	 */
 	public void serialize(DataObject o){
 		if(!(o instanceof TableObject))
 			throw new RuntimeException("Only instances of the TableObject class or its subclasses can be serialized.");
 		
+		TableObject t = (TableObject) o;
+		ps.print(t.getTitle());
+		ps.print("&$%");
+		ps.print(t.getMetadataValue("HTMLPRE"));
+		ps.print("&$%");
+		ps.print(t.getMetadataValue("HTMLAFT"));
+		ps.println("&$%");
+		ps.print("!'##*!");
+		for(int i = 0; i < t.getLength(); i++){
+			Row r = t.getRows(i, i + 1)[0];
+			ps.print(Long.toString(r.getId()));
+			ps.print("&$%");
+			ps.print(r.getDescription());
+			ps.print("&$%");
+			ps.print(Long.toString(r.getValue()));
+			ps.print("&$%");
+			ps.print(r.getCostCenter());
+			ps.print("&$%");
+			ps.print(r.getDate());
+			if(i + 1 != t.getLength())
+				ps.println("&§%!!");
+			ps.flush();
+		}
 	}
 
 }
