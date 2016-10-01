@@ -33,12 +33,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.snfsource;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.net.URI;
 
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.WorkFile;
 import org.technikradio.node.engine.resources.Localisation;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This data source adds support for the old SNF data format.
@@ -67,8 +73,12 @@ public class SNFDataSource extends DataSource {
 	 */
 	@Override
 	public WorkFile load(URI uri) {
-		// TODO Auto-generated method stub
-		return null;
+		File f = new File(uri);
+		if(!f.exists() || !f.isFile())
+			return null;
+		WorkFile wf = SNFImporter.load(f);
+		wf.setLocation(uri);
+		return wf;
 	}
 
 	/* (non-Javadoc)
@@ -85,8 +95,16 @@ public class SNFDataSource extends DataSource {
 	 */
 	@Override
 	public boolean saveDataObject(DataObject o, WorkFile f) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			FileOutputStream os = new FileOutputStream(new File(f.getLocation()));
+			SNFObjectExport e = new SNFObjectExport(new PrintStream(os));
+			e.serialize(o, true);
+		} catch (FileNotFoundException e1) {
+			Console.log(LogType.Error, this, "Something went wrong doing the saving of the object:");
+			e1.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	/* (non-Javadoc)

@@ -159,7 +159,7 @@ public class TableObject extends DataObject implements Calculatable {
 	@Override
 	public void onClose() {
 		// TODO Auto-generated method stub
-
+		//Check object saved? here
 	}
 
 	/* (non-Javadoc)
@@ -167,7 +167,6 @@ public class TableObject extends DataObject implements Calculatable {
 	 */
 	@Override
 	public void onAddToWorkSheet(WorkFile wf) {
-		// TODO Auto-generated method stub
 
 	}
 	
