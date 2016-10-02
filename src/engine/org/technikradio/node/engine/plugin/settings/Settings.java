@@ -215,4 +215,16 @@ public class Settings {
 		return pairs.put(identifier, value);
 	}
 
+	/**
+	 * Use this method in order to check if a certain key already exists in the
+	 * database.
+	 * 
+	 * @param key
+	 *            The key to check for.
+	 * @return True if the key is already stored or otherwise false.
+	 */
+	public static boolean avaiable(String key) {
+		return pairs.containsKey(key);
+	}
+
 }

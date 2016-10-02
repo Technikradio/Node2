@@ -33,63 +33,56 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import java.util.Currency;
+
 import org.technikradio.node.engine.CurrencyCode;
-import org.technikradio.node.engine.RuntimeRelevant;
-import org.technikradio.node.engine.event.BasicEvents;
-import org.technikradio.node.engine.event.Event;
-import org.technikradio.node.engine.event.EventHandler;
-import org.technikradio.node.engine.event.EventRegistry;
-import org.technikradio.node.engine.plugin.Plugin;
-import org.technikradio.node.engine.plugin.ui.DisplayFactory;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * This plug-in will provide the basic functionality of node.
- * 
+ * This class is designed to let the user choose a currency.
  * @author doralitze
- * 
+ *
  */
-@RuntimeRelevant
-public class CorePlugin extends Plugin {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.technikradio.node.engine.plugin.Plugin#load()
+public class CurrencyBrowser {
+	
+	private static CurrencyCode defaultCurrency;
+
+	/**
+	 * Use this method in order to display a currency browser and get the result.
+	 * @param message The message to prompt the user for.
+	 * @param start The default currency to display.
+	 * @return The currency selected by the user.
 	 */
-	@Override
-	public void load() {
-		{
-			EventHandler eh = new EventHandler() {
-
-				public void handleEvent(Event e) {
-					DisplayFactory.getDisplay().syncExec(new Runnable() {
-						public void run() {
-							WorksheetBrowser wsb = new WorksheetBrowser();
-							wsb.setFirst(true);
-							Console.log(LogType.Information, this, "Opened worksheetbrowser.");
-						}
-					});
-				}
-
-			};
-			if (!EventRegistry.addEventHandler(BasicEvents.APPLICATION_LOADED_EVENT, eh)) {
-				Console.log(LogType.Information, this,
-						"There are other plugin listening on the app start, registered before the core plugin.");
-			}
-		}
-		CurrencyBrowser.setDefaultCurrency(CurrencyCode.EUR);
-		Console.log(LogType.StdOut, this, "Successfully loaded core plug-in.");
+	public static Currency browse(String message, CurrencyCode start){
+		return browse(message, "", start);
+	}
+	
+	/**
+	 * Use this method in order to display a currency browser and get the result.
+	 * @param message The message to prompt the user for.
+	 * @param title The title of the dialog created.
+	 * @param start The default currency to display.
+	 * @return The currency selected by the user.
+	 */
+	public static Currency browse(String message, String title, CurrencyCode start){
+		return start.getCorrespondingCurrency(); //TODO change
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.technikradio.node.engine.plugin.Plugin#unload()
+	/**
+	 * Use this method in order to set the default currency of this system.
+	 * @return the default currency
 	 */
-	@Override
-	public void unload() {
-		
+	public static CurrencyCode getDefaultCurrency() {
+		return defaultCurrency;
 	}
 
+	/**
+	 * Use this method in order to set the default currency.
+	 * @param defaultCurrency the currency to use as the default one.
+	 */
+	public static void setDefaultCurrency(CurrencyCode defaultCurrency) {
+		Console.log(LogType.StdOut, "CurrencyBrowser", "Setting default currency to: " + defaultCurrency.getCorrespondingCurrency().getCurrencyCode());
+		CurrencyBrowser.defaultCurrency = defaultCurrency;
+	}
 }

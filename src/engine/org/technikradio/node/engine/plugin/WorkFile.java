@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Iterator;
@@ -47,6 +48,7 @@ public class WorkFile {
 	 */
 	private Currency currency;
 	private ArrayList<DataObject> childs;
+	private URI location;
 
 	/**
 	 * This constructor instantiates a new work sheet. If you're not sure what
@@ -132,5 +134,21 @@ public class WorkFile {
 				return o;
 		}
 		return null;
+	}
+
+	/**
+	 * Use this method to check where the work file needs to be saved.
+	 * @return the location of the work file
+	 */
+	public URI getLocation() {
+		return location;
+	}
+
+	/**
+	 * Use this method to change where the work file should be saved.
+	 * @param location the location of the work file to set
+	 */
+	public void setLocation(URI location) {
+		this.location = location;
 	}
 }

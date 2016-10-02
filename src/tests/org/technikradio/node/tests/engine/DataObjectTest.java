@@ -34,9 +34,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.node.tests.engine;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.image.BufferedImage;
+import java.util.Set;
 
 import org.eclipse.swt.widgets.Composite;
 import org.junit.After;
@@ -136,6 +140,41 @@ public class DataObjectTest {
 	@Test
 	public final void testOnOpen() {
 		assertNull(cl.onOpen());
+	}
+	
+	/**
+	 * Test method for the meta data functionality of the data object class.
+	 */
+	@Test
+	public final void testMetadata(){
+		assertFalse("Trying to remove an non existant entry shouldn't be possible.", cl.removeMetadataEntry("k1"));
+		assertNull("There shouldn't be an k1 entry registered", cl.setMetadata("k1", "t1"));
+		assertEquals("The method should return the correct value", cl.getMetadataValue("k1"), "t1");
+		assertTrue("There shouldn't be a problem removing k1", cl.removeMetadataEntry("k1"));
+		assertNull("There shouldn't be an k3 entry registered when querring", cl.getMetadataValue("k1"));
+		assertNull("There shouldn't be an k1 entry registered anymore", cl.setMetadata("k1", "t1"));
+		assertNull("There shouldn't be an k2 entry registered", cl.setMetadata("k2", "t2"));
+		assertEquals("Registering a new k2 entry should return the old one.", cl.setMetadata("k2", "t3"), "t2");
+		assertNull("There shouldn't be an k3 entry registered", cl.setMetadata("k3", "t2"));
+		Set<String> set = cl.getAllKeys();
+		int t1 = 0, t2 = 0, t3 = 0;
+		for(String s : set){
+			if(s.equals("k1")){
+				t1++;
+				assertEquals(cl.getMetadataValue(s), "t1");
+			} else if(s.equals("k2")){
+				t2++;
+				assertEquals(cl.getMetadataValue(s), "t3");
+			} else if(s.equals("k3")){
+				t3++;
+				assertEquals(cl.getMetadataValue(s), "t2");
+			} else {
+				fail("There was meta data that doesn't belong to the object: " + s);
+			}
+		}
+		assertEquals("There wasn't the correct amount of t1 inside the meta data: " + t1, t1, 1);
+		assertEquals("There wasn't the correct amount of t2 inside the meta data: " + t2, t2, 1);
+		assertEquals("There wasn't the correct amount of t3 inside the meta data: " + t3, t3, 1);
 	}
 
 }

@@ -44,6 +44,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class represents a window. Plug-ins can add their content to it.
@@ -91,7 +95,7 @@ public class Window {
 		toolC = new CoolBar(mc, SWT.HORIZONTAL);
 		SashForm middleC = new SashForm(mc, SWT.HORIZONTAL);
 		middleC.setBackground(Colors.GRAY_DESIGN.getTextColor());
-		//leftC = new ScrolledComposite(middleC, SWT.VERTICAL);
+		// leftC = new ScrolledComposite(middleC, SWT.VERTICAL);
 		leftC = new Composite(middleC, SWT.NONE);
 		{
 			SashForm cc = new SashForm(middleC, SWT.VERTICAL);
@@ -136,9 +140,16 @@ public class Window {
 			rightC.setLayout(fl);
 		}
 		{
-			int[] w = {5, 80, 15};
+			int[] w = { 5, 80, 15 };
 			mc.setWeights(w);
 		}
+		shell.addListener(SWT.SELECTED, new Listener() {
+//TODO fix
+			@Override
+			public void handleEvent(Event arg0) {
+				bringToForeground();
+			}
+		});
 	}
 
 	/**
@@ -193,7 +204,7 @@ public class Window {
 	}
 
 	/**
-	 * This method invokes all things that need to be done in order to gentelly
+	 * This method invokes all things that need to be done in order to genteelly
 	 * close this window.
 	 */
 	private void internalClose() {
@@ -256,5 +267,15 @@ public class Window {
 	 */
 	public ColorPalette getColorTheme() {
 		return this.theme;
+	}
+
+	/**
+	 * Override this method when your implementation of an window needs to do
+	 * stuff when the window was brought to the front. Don not call this method on your own!
+	 */
+	public void bringToForeground() {
+		if(Application.isDevelopmentVersion())
+			Console.log(LogType.Information, this, "Window was brought to the front.");
+		PluginRegistry.setCurrentOpenWindow(this);
 	}
 }

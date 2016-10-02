@@ -40,8 +40,8 @@ package org.technikradio.node.engine.plugin;
 public interface Calculatable {
 	/**
 	 * This calculates the sum of the DataObject.
-	 * Not that 1.02$ will result in 102 due to
-	 * the fact that there is now type like 'long float'.
+	 * Not that $1.02 will result in 102 due to
+	 * the fact that there is no type like 'long float'.
 	 * @return the sum
 	 */
 	public abstract long getSum();

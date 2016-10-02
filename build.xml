@@ -9,7 +9,7 @@
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
 
-<target name="all" depends="core,launcher" description="This compiles a working program.">
+<target name="all" depends="snf-source-plugin,launcher" description="This compiles a working program.">
   <copy file="${dir.projectfolder}/src/tools/testlaunch.bash" tofile="${dir.buildfolder}/tmp/construct/testlaunch.bash"/>
   <chmod file="${dir.buildfolder}/tmp/construct/testlaunch.bash" perm="+x" />
 </target>
@@ -52,6 +52,9 @@
   <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/core">
     <fileset dir="${dir.projectfolder}/src/core/org/technikradio/node/core" includes="**" />
   </copy>
+  <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/snfsource">
+	<fileset dir="${dir.projectfolder}/src/snf-source/org/technikradio/node/snfsource" includes="**" />
+  </copy>
   <copy todir="${dir.buildfolder}/doc/src-doc/org/technikradio/node/tests">
     <fileset dir="${dir.projectfolder}/src/tests/org/technikradio/node/tests" includes="**" />
   </copy>
@@ -61,7 +64,9 @@
            classpathref="test.classpath"/>
 </target>
 
-<target name="install" />
+<target name="install" depends="cycle" description="This target installs node to your local computer.">
+
+</target>
 
 <!-- ======================== Start of hidden procedures ================== -->
 
@@ -69,10 +74,7 @@
   <property name="test.report.dir" location="${dir.buildfolder}/testresults" />
 
   <path id="build.classpath">
-    <fileset dir="${dir.buildfolder}/tmp/construct/lib">
-      <include name="**/*.jar"/>
-    </fileset>
-    <fileset dir="${dir.buildfolder}/tmp/construct/bin">
+    <fileset dir="${dir.buildfolder}/tmp/construct">
       <include name="**/*.jar"/>
     </fileset>
   </path>
@@ -85,6 +87,9 @@
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="${dir.buildfolder}/tmp/construct/bin">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${dir.buildfolder}/tmp/construct/plugins">
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="${dir.projectfolder}/lib">
@@ -137,7 +142,7 @@
 
 <!-- ======================== End of environment analysis ================== -->
 
-<target name="cycle" depends="all,test,doc" description="This target does all the stuff within an development cycle"/>
+<target name="cycle" depends="all,test,doc"/>
 
 <target name="core" depends="engine">
   <mkdir dir="${dir.buildfolder}/compile/core" />
@@ -154,6 +159,23 @@
   </jar>
   <copy file="${dir.projectfolder}/src/core/manifest.json"
         todir="${dir.buildfolder}/tmp/construct/plugins/core/" />
+</target>
+
+<target name="snf-source-plugin" depends="core">
+	<mkdir dir="${dir.buildfolder}/compile/snf-source" />
+	<mkdir dir="${dir.buildfolder}/tmp/construct/plugins/snf-source" />
+	<javac destdir="${dir.buildfolder}/compile/snf-source"
+					 optimize="on"
+	         excludes="manifest.json"
+					 includeAntRuntime="no">
+	    <src path="${dir.projectfolder}/src/snf-source" />
+	    <classpath refid="build.classpath"/>
+	  </javac>
+	<jar destfile="${dir.buildfolder}/tmp/construct/plugins/snf-source/snf-source.jar">
+	    <fileset dir="${dir.buildfolder}/compile/snf-source" />
+	</jar>
+	<copy file="${dir.projectfolder}/src/snf-source/manifest.json"
+	        todir="${dir.buildfolder}/tmp/construct/plugins/snf-source/" />
 </target>
 
 <target name="compile-json-lib" depends="create-build-folders">
