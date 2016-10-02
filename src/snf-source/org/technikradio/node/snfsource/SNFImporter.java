@@ -63,6 +63,7 @@ final class SNFImporter {
 		if(!f.toString().toUpperCase().endsWith(".SNF"))
 			return null;
 		//WorkFile wf = new WorkFile(CurrencyBrowser.browse(Localisation.getString("org.technikradio.node.snfsource.SNFImporter.browserMessage", "Please enter the desired currency for the opened file."), CurrencyBrowser.getDefaultCurrency()));
+		//TODO fix
 		WorkFile wf = new WorkFile(CurrencyCode.EUR.getCorrespondingCurrency());
 		try{
 			String[] containers = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())), StandardCharsets.UTF_8).split("!'##\\*!");

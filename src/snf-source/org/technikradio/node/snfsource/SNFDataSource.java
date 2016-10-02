@@ -38,13 +38,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.NoSuchFileException;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
+import org.technikradio.node.engine.plugin.TableObject;
 import org.technikradio.node.engine.plugin.WorkFile;
 import org.technikradio.node.engine.plugin.ui.NotificationBox;
 import org.technikradio.node.engine.plugin.ui.Window;
@@ -65,7 +65,7 @@ public class SNFDataSource extends DataSource {
 		this.setName(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.name", "SNF File"));
 		this.setDescription(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.description",
 				"This module enables you to save and load data using the old SNF format."));
-		String[] filters = {"*.snf"};
+		String[] filters = { "*.snf" };
 		this.setUriSeparators(filters);
 	}
 
@@ -77,8 +77,28 @@ public class SNFDataSource extends DataSource {
 	 */
 	@Override
 	public boolean save(URI uri, WorkFile file) {
-		// TODO Auto-generated method stub
-		return false;
+		NotificationBox.notify(Localisation.getString(
+				"org.technikradio.node.snfsource.SNFDataSource.snflimitationwarning",
+				"Due to the limitations of the deprecated SNF file format Node will only save the first Element containing data."));
+		boolean found = false;
+		Iterator<DataObject> i = file.getChildObjects();
+		while(!found){
+			DataObject o = i.next();
+			if(o == null)
+				return false;
+			if(i instanceof TableObject){
+				found = true;
+				try {
+					SNFObjectExport e = new SNFObjectExport(new PrintStream(new FileOutputStream(new File(uri))));
+					e.serialize(o, true);
+				} catch (FileNotFoundException e) {
+					Console.log(LogType.Error, this, "Something went wrong doing the saving of the object:");
+					e.printStackTrace();
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/*
@@ -91,10 +111,11 @@ public class SNFDataSource extends DataSource {
 		File f = new File(uri);
 		if (!f.exists() || !f.isFile())
 			return null;
-		WorkFile wf;		
+		WorkFile wf;
 		wf = SNFImporter.load(f);
 		wf.setLocation(uri);
-		Console.log(LogType.Information, this, "Successfully loaded SNF file: " + wf.getChildObjects().next().getTitle());
+		Console.log(LogType.Information, this,
+				"Successfully loaded SNF file: " + wf.getChildObjects().next().getTitle());
 		return wf;
 	}
 
@@ -107,10 +128,11 @@ public class SNFDataSource extends DataSource {
 	@Override
 	public URI showResourceOpenDialog(Window parent) {
 		FileDialog fd = new FileDialog(parent.getShell(), SWT.OPEN);
-		fd.setText(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.opendialogtitle", "Open an SNF file"));
+		fd.setText(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.opendialogtitle",
+				"Open an SNF file"));
 		fd.setFilterExtensions(this.getUriSeparators());
 		String found = fd.open();
-		if(found == null)
+		if (found == null)
 			return null;
 		try {
 			return new File(found).toURI();
@@ -163,18 +185,22 @@ public class SNFDataSource extends DataSource {
 	 */
 	@Override
 	public void showNewWorkFileDialog() {
-		NotificationBox.notify(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.showdeprecationmessage", "Please do not use the SNF file format anymore. It is deprecated."),
-				Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.depmessagetitle", "Attention!"), SWT.ICON_WARNING | SWT.ABORT);
+		NotificationBox.notify(
+				Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.showdeprecationmessage",
+						"Please do not use the SNF file format anymore. It is deprecated."),
+				Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.depmessagetitle", "Attention!"),
+				SWT.ICON_WARNING | SWT.ABORT);
 	}
 
 	@Override
 	public void saveWorkFile(WorkFile f) {
-		// TODO Auto-generated method stub
-
+		if(!this.save(f.getLocation(), f)){
+			NotificationBox.notify(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.failedtosave", "Node failed to save the file.\nSee the console output for further information."));
+		}
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return "SNFDataSource";
 	}
 
