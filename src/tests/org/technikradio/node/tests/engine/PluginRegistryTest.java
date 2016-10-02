@@ -43,6 +43,7 @@ import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.PluginRegistry;
 import org.technikradio.node.engine.plugin.WorkFile;
+import org.technikradio.node.engine.plugin.ui.Window;
 
 /**
  * Test case for testable parts of the plug-in registry
@@ -73,7 +74,7 @@ public class PluginRegistryTest {
 			}
 
 			@Override
-			public URI showResourceOpenDialog() {
+			public URI showResourceOpenDialog(Window w) {
 				return null;
 			}
 

@@ -35,6 +35,8 @@ package org.technikradio.node.engine.plugin;
 
 import java.net.URI;
 
+import org.technikradio.node.engine.plugin.ui.Window;
+
 /**
  * This class represents a data source where the plug-ins load and save all of
  * their data. The class determinates where and how the data is stored so the
@@ -52,6 +54,7 @@ public abstract class DataSource {
 	private String identifier = "";
 	private String name = "";
 	private String description = "";
+	private String[] uriSeperators = null;
 	private URI lastLoadedWorkFile = null;
 
 	/**
@@ -105,11 +108,13 @@ public abstract class DataSource {
 	 * method before it is about to load the data due to classes like the
 	 * {@link org.technikradio.core.WorksheetBrowser} class relying on it.
 	 * 
+	 * @param parent The parent shell required for displaying a dialog.
+	 * 
 	 * @return the URI that the user selected.
 	 * @see org.technikradio.node.event.BasicEvents#WORK_FILE_LOADED To get
 	 *      further understanding about the event topic.
 	 */
-	public abstract URI showResourceOpenDialog();
+	public abstract URI showResourceOpenDialog(Window parent);
 
 	/**
 	 * This method gets called when a specific data object whant's to be stored.
@@ -118,7 +123,8 @@ public abstract class DataSource {
 	 * 
 	 * @param w
 	 *            The object that want's to be stored.
-	 * @param f The corresponding work file of the object.
+	 * @param f
+	 *            The corresponding work file of the object.
 	 * @return true if the save was successful otherwise false
 	 */
 	public abstract boolean saveDataObject(DataObject w, WorkFile f);
@@ -139,10 +145,12 @@ public abstract class DataSource {
 
 	/**
 	 * This method saves the entire work file.
-	 * @param f The work file to be saved.
+	 * 
+	 * @param f
+	 *            The work file to be saved.
 	 */
 	public abstract void saveWorkFile(WorkFile f);
-	
+
 	/**
 	 * Use this method to get the human readable name of this data source.
 	 * 
@@ -185,7 +193,9 @@ public abstract class DataSource {
 	}
 
 	/**
-	 * Use this method to get the human readable description of this data source.
+	 * Use this method to get the human readable description of this data
+	 * source.
+	 * 
 	 * @return the description of this data source
 	 */
 	public String getDescription() {
@@ -193,10 +203,34 @@ public abstract class DataSource {
 	}
 
 	/**
-	 * Use this method in order to set a human readable description of this data source.
-	 * @param description the description value to set
+	 * Use this method in order to set a human readable description of this data
+	 * source.
+	 * 
+	 * @param description
+	 *            the description value to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * Use this method in order to get the rules that need to be complied by a
+	 * resource to be displayed inside a resource browser in order to be loaded.
+	 * 
+	 * @return the URI separators
+	 */
+	public String[] getUriSeparators() {
+		return uriSeperators;
+	}
+
+	/**
+	 * Use this method in order to set the rules that need to be complied by a
+	 * resource to be displayed inside a resource browser in order to be loaded.
+	 * 
+	 * @param uriSeparators
+	 *            the URI separators to set
+	 */
+	public void setUriSeparators(String[] uriSeparators) {
+		this.uriSeperators = uriSeparators;
 	}
 }

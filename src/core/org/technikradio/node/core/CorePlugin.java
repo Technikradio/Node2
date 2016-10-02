@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import org.technikradio.node.engine.CurrencyCode;
 import org.technikradio.node.engine.RuntimeRelevant;
 import org.technikradio.node.engine.event.BasicEvents;
 import org.technikradio.node.engine.event.Event;
@@ -77,6 +78,7 @@ public class CorePlugin extends Plugin {
 						"There are other plugin listening on the app start, registered before the core plugin.");
 			}
 		}
+		CurrencyBrowser.setDefaultCurrency(CurrencyCode.EUR);
 		Console.log(LogType.StdOut, this, "Successfully loaded core plug-in.");
 	}
 

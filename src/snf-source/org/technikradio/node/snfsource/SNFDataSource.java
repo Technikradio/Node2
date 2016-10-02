@@ -38,11 +38,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.NoSuchFileException;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.FileDialog;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.WorkFile;
 import org.technikradio.node.engine.plugin.ui.NotificationBox;
+import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.node.engine.resources.Localisation;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
@@ -60,6 +65,8 @@ public class SNFDataSource extends DataSource {
 		this.setName(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.name", "SNF File"));
 		this.setDescription(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.description",
 				"This module enables you to save and load data using the old SNF format."));
+		String[] filters = {"*.snf"};
+		this.setUriSeparators(filters);
 	}
 
 	/*
@@ -84,8 +91,10 @@ public class SNFDataSource extends DataSource {
 		File f = new File(uri);
 		if (!f.exists() || !f.isFile())
 			return null;
-		WorkFile wf = SNFImporter.load(f);
+		WorkFile wf;		
+		wf = SNFImporter.load(f);
 		wf.setLocation(uri);
+		Console.log(LogType.Information, this, "Successfully loaded SNF file: " + wf.getChildObjects().next().getTitle());
 		return wf;
 	}
 
@@ -96,9 +105,20 @@ public class SNFDataSource extends DataSource {
 	 * org.technikradio.node.engine.plugin.DataSource#showResourceOpenDialog()
 	 */
 	@Override
-	public URI showResourceOpenDialog() {
-		// TODO Auto-generated method stub
-		return null;
+	public URI showResourceOpenDialog(Window parent) {
+		FileDialog fd = new FileDialog(parent.getShell(), SWT.OPEN);
+		fd.setText(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.opendialogtitle", "Open an SNF file"));
+		fd.setFilterExtensions(this.getUriSeparators());
+		String found = fd.open();
+		if(found == null)
+			return null;
+		try {
+			return new File(found).toURI();
+		} catch (Exception e) {
+			Console.log(LogType.Error, this, "Failed to parse selected path:");
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/*
@@ -143,14 +163,19 @@ public class SNFDataSource extends DataSource {
 	 */
 	@Override
 	public void showNewWorkFileDialog() {
-		// TODO Auto-generated method stub
-
+		NotificationBox.notify(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.showdeprecationmessage", "Please do not use the SNF file format anymore. It is deprecated."),
+				Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.depmessagetitle", "Attention!"), SWT.ICON_WARNING | SWT.ABORT);
 	}
 
 	@Override
 	public void saveWorkFile(WorkFile f) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public String toString(){
+		return "SNFDataSource";
 	}
 
 }

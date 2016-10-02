@@ -36,6 +36,8 @@ package org.technikradio.node.core;
 import java.util.Currency;
 
 import org.technikradio.node.engine.CurrencyCode;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class is designed to let the user choose a currency.
@@ -43,6 +45,8 @@ import org.technikradio.node.engine.CurrencyCode;
  *
  */
 public class CurrencyBrowser {
+	
+	private static CurrencyCode defaultCurrency;
 
 	/**
 	 * Use this method in order to display a currency browser and get the result.
@@ -63,5 +67,22 @@ public class CurrencyBrowser {
 	 */
 	public static Currency browse(String message, String title, CurrencyCode start){
 		return start.getCorrespondingCurrency(); //TODO change
+	}
+
+	/**
+	 * Use this method in order to set the default currency of this system.
+	 * @return the default currency
+	 */
+	public static CurrencyCode getDefaultCurrency() {
+		return defaultCurrency;
+	}
+
+	/**
+	 * Use this method in order to set the default currency.
+	 * @param defaultCurrency the currency to use as the default one.
+	 */
+	public static void setDefaultCurrency(CurrencyCode defaultCurrency) {
+		Console.log(LogType.StdOut, "CurrencyBrowser", "Setting default currency to: " + defaultCurrency.getCorrespondingCurrency().getCurrencyCode());
+		CurrencyBrowser.defaultCurrency = defaultCurrency;
 	}
 }

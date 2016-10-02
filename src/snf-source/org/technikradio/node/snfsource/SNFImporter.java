@@ -62,9 +62,10 @@ final class SNFImporter {
 	protected static WorkFile load(File f){
 		if(!f.toString().toUpperCase().endsWith(".SNF"))
 			return null;
-		WorkFile wf = new WorkFile(CurrencyBrowser.browse(Localisation.getString("org.technikradio.node.snfsource.SNFImporter.browserMessage", "Please enter the desired currency for the opened file."), CurrencyCode.EUR));
+		//WorkFile wf = new WorkFile(CurrencyBrowser.browse(Localisation.getString("org.technikradio.node.snfsource.SNFImporter.browserMessage", "Please enter the desired currency for the opened file."), CurrencyBrowser.getDefaultCurrency()));
+		WorkFile wf = new WorkFile(CurrencyCode.EUR.getCorrespondingCurrency());
 		try{
-			String[] containers = new String(Files.readAllBytes(Paths.get("file")), StandardCharsets.UTF_8).split("!'##\\*!");
+			String[] containers = new String(Files.readAllBytes(Paths.get(f.getAbsolutePath())), StandardCharsets.UTF_8).split("!'##\\*!");
 			TableObject t = new TableObject("File:" + f.toString());
 			String[] metaentries = containers[0].split("&\\$%");
 			String[] dataentries = containers[1].split("&§%!!");
