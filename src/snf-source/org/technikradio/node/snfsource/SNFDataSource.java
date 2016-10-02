@@ -42,12 +42,14 @@ import java.net.URI;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.WorkFile;
+import org.technikradio.node.engine.plugin.ui.NotificationBox;
 import org.technikradio.node.engine.resources.Localisation;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This data source adds support for the old SNF data format.
+ * 
  * @author doralitze
  *
  */
@@ -56,11 +58,15 @@ public class SNFDataSource extends DataSource {
 	public SNFDataSource() {
 		super("org.technikradio.node.snfsource.SNFDataSource");
 		this.setName(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.name", "SNF File"));
-		this.setDescription(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.description", "This module enables you to save and load data using the old SNF format."));
+		this.setDescription(Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.description",
+				"This module enables you to save and load data using the old SNF format."));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.DataSource#save(java.net.URI, org.technikradio.node.engine.plugin.WorkFile)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.technikradio.node.engine.plugin.DataSource#save(java.net.URI,
+	 * org.technikradio.node.engine.plugin.WorkFile)
 	 */
 	@Override
 	public boolean save(URI uri, WorkFile file) {
@@ -68,21 +74,26 @@ public class SNFDataSource extends DataSource {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.technikradio.node.engine.plugin.DataSource#load(java.net.URI)
 	 */
 	@Override
 	public WorkFile load(URI uri) {
 		File f = new File(uri);
-		if(!f.exists() || !f.isFile())
+		if (!f.exists() || !f.isFile())
 			return null;
 		WorkFile wf = SNFImporter.load(f);
 		wf.setLocation(uri);
 		return wf;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.DataSource#showResourceOpenDialog()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.technikradio.node.engine.plugin.DataSource#showResourceOpenDialog()
 	 */
 	@Override
 	public URI showResourceOpenDialog() {
@@ -90,11 +101,18 @@ public class SNFDataSource extends DataSource {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.DataSource#saveDataObject(org.technikradio.node.engine.plugin.DataObject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.technikradio.node.engine.plugin.DataSource#saveDataObject(org.
+	 * technikradio.node.engine.plugin.DataObject)
 	 */
 	@Override
 	public boolean saveDataObject(DataObject o, WorkFile f) {
+		NotificationBox.show(
+				Localisation.getString("org.technikradio.node.snfsource.SNFDataSource.deprecationwarning",
+						"Please do note that it is not recommendet to save any object as an SNF file."),
+				"org.technikradio.node.snfsource.SNFDataSource.showdeprecationwarning");
 		try {
 			FileOutputStream os = new FileOutputStream(new File(f.getLocation()));
 			SNFObjectExport e = new SNFObjectExport(new PrintStream(os));
@@ -107,7 +125,9 @@ public class SNFDataSource extends DataSource {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.technikradio.node.engine.plugin.DataSource#isRemoteDataSource()
 	 */
 	@Override
@@ -115,19 +135,22 @@ public class SNFDataSource extends DataSource {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.technikradio.node.engine.plugin.DataSource#showNewWorkFileDialog()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.technikradio.node.engine.plugin.DataSource#showNewWorkFileDialog()
 	 */
 	@Override
 	public void showNewWorkFileDialog() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void saveWorkFile(WorkFile f) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
