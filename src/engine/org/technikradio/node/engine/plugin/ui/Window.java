@@ -33,6 +33,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin.ui;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Rectangle;
@@ -56,6 +58,8 @@ import org.technikradio.universal_tools.Console.LogType;
  *
  */
 public class Window {
+	
+	private static ArrayList<Window> openWindows = new ArrayList<Window>();
 
 	private Shell shell;
 	private CoolBar toolC;
@@ -151,7 +155,7 @@ public class Window {
 			mc.setWeights(w);
 		}
 		shell.addListener(SWT.SELECTED, new Listener() {
-//TODO fix
+			//TODO fix
 			@Override
 			public void handleEvent(Event arg0) {
 				bringToForeground();
@@ -187,6 +191,7 @@ public class Window {
 	public void open() {
 		shell.pack();
 		shell.open();
+		openWindows.add(this);
 	}
 
 	/**
@@ -208,6 +213,7 @@ public class Window {
 	public void close() {
 		internalClose();
 		shell.dispose();
+		openWindows.remove(this);
 	}
 
 	/**
@@ -297,5 +303,13 @@ public class Window {
 		if(Application.isDevelopmentVersion())
 			Console.log(LogType.Information, this, "Window was brought to the front.");
 		PluginRegistry.setCurrentOpenWindow(this);
+	}
+	
+	/**
+	 * Use this method in order to retrieve an array of all open windows.
+	 * @return A list containing all open windows.
+	 */
+	public static Window[] getOpenWindows(){
+		return openWindows.toArray(new Window[openWindows.size()]);
 	}
 }
