@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.WorkFile;
+import org.technikradio.node.engine.plugin.ui.Window;
 
 /**
  * @author doralitze
@@ -69,12 +70,12 @@ public class DataSourceTest {
 		}
 
 		@Override
-		public URI showResourceOpenDialog() {
+		public URI showResourceOpenDialog(Window w) {
 			return null;
 		}
 
 		@Override
-		public boolean saveDataObject(DataObject o) {
+		public boolean saveDataObject(DataObject o, WorkFile f) {
 			return false;
 		}
 
@@ -85,6 +86,11 @@ public class DataSourceTest {
 
 		@Override
 		public void showNewWorkFileDialog() {
+			
+		}
+
+		@Override
+		public void saveWorkFile(WorkFile f) {
 			
 		}
 		
@@ -110,8 +116,8 @@ public class DataSourceTest {
 		assertEquals("blah", cl.getIdentifier());
 		assertEquals(true, cl.save(null, null));
 		assertEquals(null, cl.load(null));
-		assertEquals(null, cl.showResourceOpenDialog());
-		assertEquals(false, cl.saveDataObject(null));
+		assertEquals(null, cl.showResourceOpenDialog(null));
+		assertEquals(false, cl.saveDataObject(null, null));
 	}
 
 }

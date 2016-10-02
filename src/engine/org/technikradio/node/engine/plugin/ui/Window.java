@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
- * 
+ *
  */
 package org.technikradio.node.engine.plugin.ui;
 
@@ -44,10 +44,14 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
+import org.technikradio.node.engine.action.Application;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class represents a window. Plug-ins can add their content to it.
- * 
+ *
  * @author doralitze
  *
  */
@@ -71,7 +75,7 @@ public class Window {
 
 	/**
 	 * This constructor initializes a new instance.
-	 * 
+	 *
 	 * @param title
 	 *            The title to use for the new window created.
 	 */
@@ -146,11 +150,18 @@ public class Window {
 			int[] w = { 5, 80, 15 };
 			mc.setWeights(w);
 		}
+		shell.addListener(SWT.SELECTED, new Listener() {
+//TODO fix
+			@Override
+			public void handleEvent(Event arg0) {
+				bringToForeground();
+			}
+		});
 	}
 
 	/**
 	 * This method is used to set the dimensions of the window.
-	 * 
+	 *
 	 * @param width
 	 *            The width to set.
 	 * @param height
@@ -163,7 +174,7 @@ public class Window {
 	/**
 	 * Use this method in order to manipulate the underlying shell. Use the
 	 * methods of the window class in order to add UI elements.
-	 * 
+	 *
 	 * @return The shell of this window.
 	 */
 	public Shell getShell() {
@@ -200,7 +211,7 @@ public class Window {
 	}
 
 	/**
-	 * This method invokes all things that need to be done in order to gentelly
+	 * This method invokes all things that need to be done in order to genteelly
 	 * close this window.
 	 */
 	private void internalClose() {
@@ -208,10 +219,10 @@ public class Window {
 
 	/**
 	 * Use this method to access the different containers of this window.
-	 * 
+	 *
 	 * NOTE: It's highly recommended to pack every component that should go
 	 * inside the right tray inside a ExpandBar
-	 * 
+	 *
 	 * @param position
 	 *            The container to request.
 	 * @return The requested container.
@@ -240,7 +251,7 @@ public class Window {
 	 * Use this method in order to set the current active theme to a different
 	 * one. NOTE: that the closing method of this class won't dispose the
 	 * ColorPalette object.
-	 * 
+	 *
 	 * @param p
 	 *            The color theme to set.
 	 */
@@ -258,7 +269,7 @@ public class Window {
 
 	/**
 	 * Use this method to get the current active color theme.
-	 * 
+	 *
 	 * @return The currently applied color theme.
 	 */
 	public ColorPalette getColorTheme() {
@@ -267,7 +278,7 @@ public class Window {
 
 	/**
 	 * This method sets the title of the window.
-	 * 
+	 *
 	 * @param newTitle
 	 *            The new title to set
 	 * @return The old title of this window.
@@ -278,4 +289,13 @@ public class Window {
 		return st;
 	}
 
+	/**
+	 * Override this method when your implementation of an window needs to do
+	 * stuff when the window was brought to the front. Don not call this method on your own!
+	 */
+	public void bringToForeground() {
+		if(Application.isDevelopmentVersion())
+			Console.log(LogType.Information, this, "Window was brought to the front.");
+		PluginRegistry.setCurrentOpenWindow(this);
+	}
 }

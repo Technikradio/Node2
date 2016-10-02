@@ -1,0 +1,15 @@
+{
+	"version" : "2.0.0d",
+	"compatibleVersion" : "2.0.0+",
+	"name" : "SNF Plugin",
+	"maintainer" : "TechnikRadio",
+	"updateSide" : "https://technikradio.org/tools/nodequerry?plugin=core",
+	"license" : "3-Clause BSD license",
+	"website" : "http://technikradio.org",
+	"description" : "This plugin adds compatibillity to the old Node1.x SNF data format.",
+	"longInfoText" : "This plugin will make sure that you're able of migrating modern documents with old ones.",
+	"dependancys" : ["org.technikradio.node.plugins.core"],
+	"incompatiblePlugins" : [],
+	"identifier" : "org.technikradio.node.plugins.snf-source",
+	"mainClass" : "org.technikradio.node.snfsource.SNFPlugin"
+}

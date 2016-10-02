@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -52,8 +53,11 @@ import org.technikradio.node.engine.event.EventHandler;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.plugin.DataSource;
 import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.node.engine.plugin.WorkFile;
+import org.technikradio.node.engine.plugin.ui.NotificationBox;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.node.engine.plugin.ui.WindowOrientation;
+import org.technikradio.node.engine.resources.Localisation;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
@@ -73,6 +77,7 @@ public final class WorksheetBrowser {
 	private List localList;
 	private List remoteList;
 	private Label infoLabel;
+	private Label descriptionLabel;
 	private ArrayList<DataSource> ldsa = new ArrayList<DataSource>();
 	private ArrayList<DataSource> rdsa = new ArrayList<DataSource>();
 	private DataSource currentSelectedDS = null;
@@ -97,7 +102,7 @@ public final class WorksheetBrowser {
 
 			infoLabel = new Label(w.getContainer(WindowOrientation.BOTTOM), SWT.BORDER);
 			infoLabel.setText("Bottom-Info");
-
+			descriptionLabel = new Label(w.getContainer(WindowOrientation.RIGHT_TRAY), SWT.WRAP);
 		}
 		{
 			Button newButton = new Button(w.getContainer(WindowOrientation.TOP), SWT.PUSH);
@@ -124,13 +129,35 @@ public final class WorksheetBrowser {
 
 				@Override
 				public void handleEvent(Event arg0) {
-					if (getCurrentSelectedDS() != null) {
-						Console.log(LogType.StdOut, "org.technikradio.node.core.WorksheetBrowser.openButton",
-								"Clicked on OpenButton. DS: " + getCurrentSelectedDS().getIdentifier());
-						getCurrentSelectedDS().showResourceOpenDialog();
-					} else {
-						Console.log(LogType.StdOut, "org.technikradio.node.core.WorksheetBrowser.openButton",
-								"Clicked on OpenButton. No data source.");
+					try {
+						if (getCurrentSelectedDS() != null) {
+							Console.log(LogType.StdOut, "org.technikradio.node.core.WorksheetBrowser.openButton",
+									"Clicked on OpenButton. DS: " + getCurrentSelectedDS().getIdentifier());
+							URI uri = getCurrentSelectedDS().showResourceOpenDialog(w);
+							if (uri != null) {
+								WorkFile wf = getCurrentSelectedDS().load(uri);
+								// TODO implement window loading when branch got
+								// merged
+							}
+
+						} else {
+							Console.log(LogType.StdOut, "org.technikradio.node.core.WorksheetBrowser.openButton",
+									"Clicked on OpenButton. No data source.");
+						}
+					} catch (Exception e) {
+						Console.log(LogType.Warning, this,
+								"While trying to load a work file the desired data source crashed:");
+						e.printStackTrace();
+						NotificationBox.notify(
+								Localisation.getString("org.technikradio.node.core.WorksheetBrowser.opencrash",
+										"While trying to load a work file the desired data source crashed:") + "\n"
+										+ e.getLocalizedMessage()
+										+ Localisation
+												.getString("org.technikradio.node.core.WorksheetBrowser.opencrash2",
+														"\n See the console output fur further information"),
+								Localisation.getString("org.technikradio.node.core.WorksheetBrowser.opencrashtitle",
+										"An error occured"),
+								SWT.ICON_ERROR | SWT.OK);
 					}
 				}
 			});
@@ -157,19 +184,20 @@ public final class WorksheetBrowser {
 		fillDSS();
 		w.open();
 		w.setSize(750, 400);
-		openedHandler = new EventHandler(){
+		openedHandler = new EventHandler() {
 
 			@Override
 			public void handleEvent(org.technikradio.node.engine.event.Event e) {
 				close();
-			}};
+			}
+		};
 		EventRegistry.addEventHandler(BasicEvents.WORK_FILE_LOADED, openedHandler);
 	}
 
 	private void fillDSS() {
 		boolean first = true;
-		
-		remoteList.addSelectionListener(new SelectionListener(){
+
+		remoteList.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -179,8 +207,9 @@ public final class WorksheetBrowser {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				findItem();
-			}});
-		localList.addSelectionListener(new SelectionListener(){
+			}
+		});
+		localList.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -190,8 +219,9 @@ public final class WorksheetBrowser {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				findItem();
-			}});
-		
+			}
+		});
+
 		for (DataSource ds : PluginRegistry.getAllRegisteredDataSources()) {
 			if (Main.isDEBUG_MODE())
 				Console.log(LogType.Information, this,
@@ -204,7 +234,7 @@ public final class WorksheetBrowser {
 				localList.add(ds.getName());
 				ldsa.add(ds);
 			}
-			
+
 			if (first && !ds.isRemoteDataSource()) {
 				first = false;
 				setCurrentSelectedDS(ds);
@@ -214,18 +244,18 @@ public final class WorksheetBrowser {
 		remoteExpandItem.setHeight(remoteList.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		localExpandItem.setHeight(localList.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 	}
-	
-	private void findItem(){
-		for(int i : localList.getSelectionIndices()){
-			if(ldsa.get(i) != getCurrentSelectedDS()){
+
+	private void findItem() {
+		for (int i : localList.getSelectionIndices()) {
+			if (ldsa.get(i) != getCurrentSelectedDS()) {
 				setCurrentSelectedDS(ldsa.get(i));
 				localList.deselectAll();
 				remoteList.deselectAll();
 				localList.select(i);
 			}
 		}
-		for(int i : remoteList.getSelectionIndices()){
-			if(rdsa.get(i) != getCurrentSelectedDS()){
+		for (int i : remoteList.getSelectionIndices()) {
+			if (rdsa.get(i) != getCurrentSelectedDS()) {
 				setCurrentSelectedDS(rdsa.get(i));
 				localList.deselectAll();
 				remoteList.deselectAll();
@@ -273,17 +303,18 @@ public final class WorksheetBrowser {
 	private void setCurrentSelectedDS(DataSource ds) {
 		this.currentSelectedDS = ds;
 		infoLabel.setText(getCurrentSelectedDS().getName());
+		descriptionLabel.setText(getCurrentSelectedDS().getDescription());
 	}
-	
+
 	private void internalClose() {
 		Console.log(LogType.StdOut, this, "Removing event handler from list");
 		EventRegistry.removeEventHandler(BasicEvents.WORK_FILE_LOADED, openedHandler);
 	}
-	
+
 	/**
 	 * Use this method in order to close the worksheet browser.
 	 */
-	public void close(){
+	public void close() {
 		w.close();
 	}
 }

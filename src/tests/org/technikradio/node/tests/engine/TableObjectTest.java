@@ -28,29 +28,65 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.technikradio.node.engine;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-
-@Documented
-@Retention(RUNTIME)
 /**
- * This annotation tells the plug-in loader about the requirement to keep the
- * plug-in loaded doing runtime.
  * 
+ */
+package org.technikradio.node.tests.engine;
+
+import static org.junit.Assert.*;
+
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.technikradio.node.engine.plugin.Row;
+import org.technikradio.node.engine.plugin.TableObject;
+
+/**
+ * This class is designed to test the TableObject class.
  * @author doralitze
  *
  */
-public @interface RuntimeRelevant {
+public class TableObjectTest {
+	
+	private TableObject to;
 
 	/**
-	 * If this value is set to true the plug-in will be kept doing runtime.
-	 * 
-	 * @return The set value
+	 * @throws java.lang.Exception
+	 *             if anything goes wrong
 	 */
-	boolean required() default true;
+	@Before
+	public void setUp() throws Exception {
+		to = new TableObject("Test table object");
+		for(int i = 0; i < 150500; i++){
+			Date d = new Date();
+			to.addRow(new Row(i * 100, i, "Row description #" + Integer.toString(i), "AMF", d.toString()));
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.TableObject#getRows(int, int)}.
+	 */
+	@Test
+	public final void testGetRows() {
+		for(int i = 0; i < to.getLength() / 5; i ++){
+			Row[] frag = to.getRows(i * 5, (i + 1) * 5);
+			for(int j = 0; j < 5; j++){
+				if(frag[j] == null){
+					fail("The query test failed.");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.technikradio.node.engine.plugin.TableObject#getSum()}.
+	 */
+	@Test
+	public final void testGetSum() {
+		assertTrue("The computed sum must be greater than 11325049700", to.getSum() > 11325049700L);
+	}
 
 }

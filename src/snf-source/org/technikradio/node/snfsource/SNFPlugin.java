@@ -28,29 +28,41 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.technikradio.node.engine;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-
-@Documented
-@Retention(RUNTIME)
 /**
- * This annotation tells the plug-in loader about the requirement to keep the
- * plug-in loaded doing runtime.
  * 
+ */
+package org.technikradio.node.snfsource;
+
+import org.technikradio.node.engine.RuntimeRelevant;
+import org.technikradio.node.engine.plugin.Plugin;
+import org.technikradio.node.engine.plugin.PluginRegistry;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
+
+/**
+ * This class is the main class of the SNF source plug-in.
  * @author doralitze
  *
  */
-public @interface RuntimeRelevant {
+@RuntimeRelevant(required=false)
+public class SNFPlugin extends Plugin {
 
-	/**
-	 * If this value is set to true the plug-in will be kept doing runtime.
-	 * 
-	 * @return The set value
+	/* (non-Javadoc)
+	 * @see org.technikradio.node.engine.plugin.Plugin#load()
 	 */
-	boolean required() default true;
+	@Override
+	public void load() {
+		PluginRegistry.addDataSource(new SNFDataSource());
+		Console.log(LogType.StdOut, this, "Successfully loaded SNF plugin.");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.technikradio.node.engine.plugin.Plugin#unload()
+	 */
+	@Override
+	public void unload() {
+		// TODO Auto-generated method stub
+
+	}
 
 }

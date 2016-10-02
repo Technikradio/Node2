@@ -169,6 +169,7 @@ public class Localisation {
 			return main.get(key);
 		if (fallback.containsKey(key))
 			return fallback.get(key);
+		Console.log(LogType.Warning, "Localisation", "Couldn't find entry: " + key);
 		return escape;
 	}
 

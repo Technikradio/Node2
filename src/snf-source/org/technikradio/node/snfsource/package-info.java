@@ -27,30 +27,9 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package org.technikradio.node.engine;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-
-@Documented
-@Retention(RUNTIME)
 /**
- * This annotation tells the plug-in loader about the requirement to keep the
- * plug-in loaded doing runtime.
- * 
+ * This package contains the SNF migration plugin.
  * @author doralitze
  *
  */
-public @interface RuntimeRelevant {
-
-	/**
-	 * If this value is set to true the plug-in will be kept doing runtime.
-	 * 
-	 * @return The set value
-	 */
-	boolean required() default true;
-
-}
+package org.technikradio.node.snfsource;
