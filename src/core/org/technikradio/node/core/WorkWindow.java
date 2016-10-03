@@ -33,7 +33,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventRegistry;
@@ -53,7 +52,6 @@ public class WorkWindow {
 
 	private final Window w;
 	private final Tree tree;
-	private final Table table;
 	private WorkFile file;
 
 	/**
@@ -76,7 +74,6 @@ public class WorkWindow {
 
 			}
 		});
-		table = new Table(w.getContainer(WindowOrientation.CENTER), SWT.VIRTUAL | SWT.BORDER);
 
 		{
 			EventResponder<Composite> er = new EventResponder<Composite>();

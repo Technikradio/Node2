@@ -36,7 +36,9 @@ package org.technikradio.node.engine.plugin;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.technikradio.node.engine.Permission;
 
 /**
@@ -47,6 +49,7 @@ import org.technikradio.node.engine.Permission;
 public class TableObject extends DataObject implements Calculatable {
 	
 	private final ArrayList<Row> rows;
+	private Table table;
 
 	//#REGION constructors
 	
@@ -148,9 +151,8 @@ public class TableObject extends DataObject implements Calculatable {
 	 * @see org.technikradio.node.engine.plugin.DataObject#onOpen()
 	 */
 	@Override
-	public Composite onOpen() {
-		// TODO Auto-generated method stub
-		return null;
+	public void onOpen(Composite parent) {
+		table = new Table(parent, SWT.VIRTUAL | SWT.BORDER);
 	}
 
 	/* (non-Javadoc)

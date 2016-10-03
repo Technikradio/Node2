@@ -65,8 +65,7 @@ public class DataObjectTest {
 		}
 
 		@Override
-		public Composite onOpen() {
-			return null;
+		public void onOpen(Composite p) {
 		}
 
 		@Override
@@ -139,7 +138,7 @@ public class DataObjectTest {
 	 */
 	@Test
 	public final void testOnOpen() {
-		assertNull(cl.onOpen());
+		cl.onOpen(null);
 	}
 	
 	/**
