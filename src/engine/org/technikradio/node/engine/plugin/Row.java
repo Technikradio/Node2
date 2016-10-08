@@ -43,9 +43,11 @@ public class Row {
 
 	private long value;
 	private long id;
+	private long sum;
 	private String description;
 	private String costCenter;
 	private String date;
+	
 
 	/**
 	 * This constructor creates a new instance of the row element class.
@@ -175,6 +177,22 @@ public class Row {
 	 */
 	public Row copy(){
 		return new Row(this.value, this.id, this.description, this.costCenter, this.date);
+	}
+
+	/**
+	 * Use this method in order to get the sum data of this row. Note that the sum data is computed at runtime.
+	 * @return the sum of this row object
+	 */
+	protected long getSum() {
+		return sum;
+	}
+
+	/**
+	 * Use this method in order to set the sum of this row object.
+	 * @param sum the sum to set
+	 */
+	protected void setSum(long sum) {
+		this.sum = sum;
 	}
 
 }
