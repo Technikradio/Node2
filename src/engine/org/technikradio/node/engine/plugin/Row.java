@@ -33,6 +33,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.engine.plugin;
 
+import org.technikradio.node.engine.resources.Localisation;
+
 /**
  * This class represents a table entry.
  * 
@@ -40,6 +42,8 @@ package org.technikradio.node.engine.plugin;
  *
  */
 public class Row {
+	
+	private static final String comma = Localisation.getString("org.technikradio.engine.plugin.row.comma", ".");
 
 	private long value;
 	private long id;
@@ -193,6 +197,34 @@ public class Row {
 	 */
 	protected void setSum(long sum) {
 		this.sum = sum;
+	}
+
+	/**
+	 * This method formats the number correctly in order to be human readable.
+	 * @param value The number to format.
+	 * @return The generated string.
+	 */
+	public static String getDString(long value) {
+		//TODO fix
+		boolean neg = false;
+		long v;
+		if(value < 0){
+			neg = true;
+			v = value * (-1);
+		} else {
+			v = value;
+		}
+		long pre = v / 100;
+		long post = v - pre;
+		StringBuilder sb = new StringBuilder();
+		if(neg)
+			sb.append("-");
+		sb.append(Long.toString(pre));
+		sb.append(comma);
+		if(post < 10)
+			sb.append("0");
+		sb.append(Long.toString(post));
+		return sb.toString();
 	}
 
 }

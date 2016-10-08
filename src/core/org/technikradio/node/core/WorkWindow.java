@@ -34,6 +34,8 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -46,11 +48,14 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.event.EventResponder;
 import org.technikradio.node.engine.plugin.DataObject;
+import org.technikradio.node.engine.plugin.Foldable;
 import org.technikradio.node.engine.plugin.WorkFile;
 import org.technikradio.node.engine.plugin.ui.Colors;
 import org.technikradio.node.engine.plugin.ui.Window;
@@ -135,7 +140,45 @@ public class WorkWindow {
 	 */
 	public void setWorkFile(WorkFile file) {
 		this.file = file;
-		
+		DataObject[] objs = file.getChildArray();
+		tree.setData(objs);
+		tree.addListener(SWT.SetData, new Listener() {
+				    public void handleEvent(org.eclipse.swt.widgets.Event event) {
+				       TreeItem item = (TreeItem)event.item;
+				       TreeItem parentItem = item.getParentItem();
+				       DataObject d = null;
+				       if (parentItem == null) {
+				          /* root-level item */
+				          DataObject [] objs = (DataObject [])tree.getData();
+				          d = objs [event.index];
+				          item.setText(d.getTitle());
+				       } else {
+				    	   DataObject [] objs = (DataObject [])parentItem.getData();
+				          d = objs [event.index];
+				          item.setText(d.getTitle());
+				       }
+				       if (d instanceof Foldable) {
+				    	   Foldable f = (Foldable) d;
+				    	   DataObject [] objs = getMembersArray(f);
+				          if (objs != null) {
+				             item.setData(objs);
+				             item.setItemCount(objs.length);
+				          }
+				       }
+				    }
+
+					private DataObject[] getMembersArray(Foldable f) {
+						ArrayList<DataObject> m = new ArrayList<DataObject>();
+						Iterator<DataObject> i = f.getMembers();
+						DataObject d = i.next();
+						while(i != null){
+							m.add(d);
+							d = i.next();
+						}
+						return m.toArray(new DataObject[m.size()]);
+					}
+				});
+		tree.setItemCount(file.getChildCount());
 	}
 	
 	/**

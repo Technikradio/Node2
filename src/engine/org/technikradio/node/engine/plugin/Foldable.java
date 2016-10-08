@@ -43,10 +43,16 @@ import java.util.Iterator;
 public interface Foldable {
 	
 	/**
+	 * This method will return an iterator of all containing entries by their identifier.
+	 * @return the iterator
+	 */
+	public abstract Iterator<String> getMembersByIdentifier();
+	
+	/**
 	 * This method will return an iterator of all containing entries.
 	 * @return the iterator
 	 */
-	public abstract Iterator<String> getMembers();
+	public abstract Iterator<DataObject> getMembers();
 	
 	/**
 	 * This method tells the Object to select a specific member.

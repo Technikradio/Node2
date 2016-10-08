@@ -175,12 +175,12 @@ public class TableObject extends DataObject implements Calculatable {
 		descColumn.setText(Localisation.getString("org.technikradio.node.core.DESColumnText", "Description"));
 		descColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.DESColumnTTText",
 				"This field contains the descriptions of the positions."));
-		descColumn.setWidth(150);
+		descColumn.setWidth(200);
 		TableColumn ccColumn = new TableColumn(table, SWT.NONE);
 		ccColumn.setText(Localisation.getString("org.technikradio.node.core.CostCentreColumnText", "Cost Centre"));
 		ccColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.CostCentreColumnTTText",
 				"This field contains the cost centres of the positions."));
-		ccColumn.setWidth(50);
+		ccColumn.setWidth(70);
 		TableColumn valueColumn = new TableColumn(table, SWT.NONE);
 		valueColumn.setText(Localisation.getString("org.technikradio.node.core.ValueColumnText", "Value"));
 		valueColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.ValueColumnTTText",
@@ -199,8 +199,8 @@ public class TableObject extends DataObject implements Calculatable {
 				item.setText(0, Long.toString(r.getId()));
 				item.setText(1, r.getDescription());
 				item.setText(2, r.getCostCenter());
-				item.setText(3, Double.toString(r.getValue() / 100));
-				item.setText(4, Double.toString(r.getSum() / 100));
+				item.setText(3, Row.getDString(r.getValue()));
+				item.setText(4, Row.getDString(r.getSum()));
 			}
 		});
 		table.setItemCount(rows.size());
