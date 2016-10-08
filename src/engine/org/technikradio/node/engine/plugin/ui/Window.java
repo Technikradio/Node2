@@ -172,7 +172,7 @@ public class Window {
 	 *            The height to set
 	 */
 	public void setSize(int width, int height) {
-		shell.setSize(width, height);
+		shell.setSize(height, width);
 	}
 
 	/**

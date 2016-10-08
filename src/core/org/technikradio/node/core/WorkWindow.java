@@ -29,15 +29,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.node.core;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DirectColorModel;
+import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.event.EventResponder;
+import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.WorkFile;
+import org.technikradio.node.engine.plugin.ui.Colors;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.node.engine.plugin.ui.WindowOrientation;
 
@@ -52,6 +67,7 @@ public class WorkWindow {
 
 	private final Window w;
 	private final Tree tree;
+	private final CTabFolder tabs;
 	private WorkFile file;
 
 	/**
@@ -74,12 +90,32 @@ public class WorkWindow {
 
 			}
 		});
-
+		tabs = new CTabFolder(w.getContainer(WindowOrientation.CENTER), SWT.BORDER);
+		
 		{
 			EventResponder<Composite> er = new EventResponder<Composite>();
 			Event e = new Event(Identifiers.WORK_WINDOW_CREATING_EVENT, null, er);
 			EventRegistry.raiseEvent(e, true);
 		}
+		w.setSize(800, 600);
+	}
+	
+	/**
+	 * Use this method in order to open a data object.
+	 * @param o The data object to open
+	 */
+	public void openObject(DataObject o){
+		if(o == null)
+			return;
+		Composite composite = new Composite(tabs, SWT.NONE);
+        composite.setLayout(new FillLayout());
+        composite.setBackground(Colors.BLACK);
+        CTabItem item = new CTabItem(tabs, SWT.NONE);
+        item.setControl(composite);
+        item.setText(o.getTitle());
+        if(o.getIcon() != null)
+        	item.setImage(new Image(w.getShell().getDisplay(), convertToSWT(o.getIcon())));
+        o.onOpen(composite); 
 	}
 
 	/**
@@ -99,5 +135,86 @@ public class WorkWindow {
 	 */
 	public void setWorkFile(WorkFile file) {
 		this.file = file;
+		
+	}
+	
+	/**
+	 * snippet 156: convert between SWT Image and AWT BufferedImage.
+	 * <p>
+	 * For a list of all SWT example snippets see
+	 * http://www.eclipse.org/swt/snippets/
+	 */
+	public static ImageData convertToSWT(BufferedImage bufferedImage) {
+	    if (bufferedImage.getColorModel() instanceof DirectColorModel) {
+	        DirectColorModel colorModel = (DirectColorModel)bufferedImage.getColorModel();
+	        PaletteData palette = new PaletteData(
+	                colorModel.getRedMask(),
+	                colorModel.getGreenMask(),
+	                colorModel.getBlueMask());
+	        ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(),
+	                colorModel.getPixelSize(), palette);
+	        for (int y = 0; y < data.height; y++) {
+	            for (int x = 0; x < data.width; x++) {
+	                int rgb = bufferedImage.getRGB(x, y);
+	                int pixel = palette.getPixel(new RGB((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF));
+	                data.setPixel(x, y, pixel);
+	                if (colorModel.hasAlpha()) {
+	                    data.setAlpha(x, y, (rgb >> 24) & 0xFF);
+	                }
+	            }
+	        }
+	        return data;
+	    }
+	    else if (bufferedImage.getColorModel() instanceof IndexColorModel) {
+	        IndexColorModel colorModel = (IndexColorModel)bufferedImage.getColorModel();
+	        int size = colorModel.getMapSize();
+	        byte[] reds = new byte[size];
+	        byte[] greens = new byte[size];
+	        byte[] blues = new byte[size];
+	        colorModel.getReds(reds);
+	        colorModel.getGreens(greens);
+	        colorModel.getBlues(blues);
+	        RGB[] rgbs = new RGB[size];
+	        for (int i = 0; i < rgbs.length; i++) {
+	            rgbs[i] = new RGB(reds[i] & 0xFF, greens[i] & 0xFF, blues[i] & 0xFF);
+	        }
+	        PaletteData palette = new PaletteData(rgbs);
+	        ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(),
+	                colorModel.getPixelSize(), palette);
+	        data.transparentPixel = colorModel.getTransparentPixel();
+	        WritableRaster raster = bufferedImage.getRaster();
+	        int[] pixelArray = new int[1];
+	        for (int y = 0; y < data.height; y++) {
+	            for (int x = 0; x < data.width; x++) {
+	                raster.getPixel(x, y, pixelArray);
+	                data.setPixel(x, y, pixelArray[0]);
+	            }
+	        }
+	        return data;
+	    }
+	    else if (bufferedImage.getColorModel() instanceof ComponentColorModel) {
+	        ComponentColorModel colorModel = (ComponentColorModel)bufferedImage.getColorModel();
+	        //ASSUMES: 3 BYTE BGR IMAGE TYPE
+	        PaletteData palette = new PaletteData(0x0000FF, 0x00FF00,0xFF0000);
+	        ImageData data = new ImageData(bufferedImage.getWidth(), bufferedImage.getHeight(),
+	                colorModel.getPixelSize(), palette);
+	        //This is valid because we are using a 3-byte Data model with no transparent pixels
+	        data.transparentPixel = -1;
+	        WritableRaster raster = bufferedImage.getRaster();
+	        int[] pixelArray = new int[3];
+	        for (int y = 0; y < data.height; y++) {
+	            for (int x = 0; x < data.width; x++) {
+	                raster.getPixel(x, y, pixelArray);
+	                int pixel = palette.getPixel(new RGB(pixelArray[0], pixelArray[1], pixelArray[2]));
+	                data.setPixel(x, y, pixel);
+	            }
+	        }
+	        return data;
+	    }
+	    return null;
+	}
+
+	public void open() {
+		w.open();
 	}
 }

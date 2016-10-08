@@ -169,6 +169,12 @@ public class Main {
 	 * @throws SWTException if the UI has a problem.
 	 */
 	private static void care() throws SWTException{
+		if(d.isDisposed()){
+			appRunning = false;
+			Event e = new Event(BasicEvents.APPLICATION_CLOSING_EVENT, null, new EventResponder<Object>());
+			EventRegistry.raiseEvent(e);
+			return;
+		}
 		while(!d.readAndDispatch()){}
 		d.sleep();
 	}

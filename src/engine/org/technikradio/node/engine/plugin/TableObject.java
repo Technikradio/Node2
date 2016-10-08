@@ -38,8 +38,14 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.technikradio.node.engine.Permission;
+import org.technikradio.node.engine.plugin.settings.Settings;
+import org.technikradio.node.engine.resources.Localisation;
 
 /**
  * This class is a sub class of the data object class and designed to be represented inside a table containing all the positions.
@@ -152,7 +158,42 @@ public class TableObject extends DataObject implements Calculatable {
 	 */
 	@Override
 	public void onOpen(Composite parent) {
-		table = new Table(parent, SWT.VIRTUAL | SWT.BORDER);
+		int display = Integer.parseInt(Settings.get("org.technikradio.node.core.defaultamountintable", "250"));
+		table = new Table(parent, SWT.VIRTUAL |  SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLinesVisible(true);
+	    table.setHeaderVisible(true);
+		TableColumn idcolumn = new TableColumn(table,SWT.NONE);
+		idcolumn.setText(Localisation.getString("org.technikradio.node.core.IDColumnText", "ID"));
+		idcolumn.setToolTipText(Localisation.getString("org.technikradio.node.core.IDColumnTTText", "This field contains the ids of the positions."));
+		idcolumn.setWidth(50);
+		TableColumn descColumn = new TableColumn(table,SWT.NONE);
+		descColumn.setText(Localisation.getString("org.technikradio.node.core.DESColumnText", "Description"));
+		descColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.DESColumnTTText", "This field contains the descriptions of the positions."));
+		descColumn.setWidth(150);
+		TableColumn ccColumn = new TableColumn(table,SWT.NONE);
+		ccColumn.setText(Localisation.getString("org.technikradio.node.core.CostCentreColumnText", "Cost Centre"));
+		ccColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.CostCentreColumnTTText", "This field contains the cost centres of the positions."));
+		ccColumn.setWidth(50);
+		TableColumn valueColumn = new TableColumn(table,SWT.NONE);
+		valueColumn.setText(Localisation.getString("org.technikradio.node.core.ValueColumnText", "Value"));
+		valueColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.ValueColumnTTText", "This field contains the values of the positions"));
+		valueColumn.setWidth(100);
+		TableColumn sumColumn = new TableColumn(table,SWT.NONE);
+		sumColumn.setText(Localisation.getString("org.technikradio.node.core.SumColumnText", "Sum"));
+		sumColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.SumColumnTTText", "This field contains the sum until the given position"));
+		sumColumn.setWidth(100);
+		long sum = 0;
+		
+		for(int i = 0; i < display && i < rows.size(); i++){
+			Row r = rows.get(i);
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(0, Long.toString(r.getId()));
+			item.setText(1, r.getDescription());
+			item.setText(2, r.getCostCenter());
+			item.setText(3, Double.toString(r.getValue() / 100));
+			sum += r.getValue();
+			item.setText(4, Double.toString(sum / 100));
+		}
 	}
 
 	/* (non-Javadoc)

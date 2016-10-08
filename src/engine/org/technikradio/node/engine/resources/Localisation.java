@@ -41,7 +41,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import org.technikradio.node.engine.action.Application;
 import org.technikradio.node.engine.plugin.settings.Settings;
@@ -88,12 +88,12 @@ import org.technikradio.universal_tools.Console.LogType;
  */
 public class Localisation {
 
-	private static final Hashtable<String, String> main;
-	private static final Hashtable<String, String> fallback;
+	private static final HashMap<String, String> main;
+	private static final HashMap<String, String> fallback;
 
 	static {
-		main = new Hashtable<String, String>();
-		fallback = new Hashtable<String, String>();
+		main = new HashMap<String, String>();
+		fallback = new HashMap<String, String>();
 		if (Settings.get("org.technikradio.node.engine.resources.defaultLanguageFile").equals("")) {
 			Settings.put("org.technikradio.node.engine.resources.defaultLanguageFile",
 					System.getProperty("user.language") + "_" + System.getProperty("user.country") + ".mml");
@@ -121,7 +121,7 @@ public class Localisation {
 	 * @param database
 	 *            The database to store the files content in.
 	 */
-	protected static void loadFile(String file, Hashtable<String, String> database) {
+	protected static void loadFile(String file, HashMap<String, String> database) {
 		BufferedReader br = null;
 		try {
 			if (Files.exists(Paths.get(file))) {

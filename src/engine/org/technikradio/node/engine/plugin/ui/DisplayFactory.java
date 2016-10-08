@@ -84,13 +84,14 @@ public class DisplayFactory {
 				Application.crash(e, CrashCodes.UI_CRASH);
 			} finally {
 				Console.log(LogType.StdOut, this, "disassembling swt display adapter...");
+				if(!d.isDisposed())
 				d.syncExec(new Runnable(){
 
 					@Override
 					public void run() {
-						Colors.disposeAll();
 						d.dispose();
 					}});
+				Colors.disposeAll();
 			}
 		}
 
