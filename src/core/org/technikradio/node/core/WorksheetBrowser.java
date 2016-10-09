@@ -136,8 +136,12 @@ public final class WorksheetBrowser {
 							URI uri = getCurrentSelectedDS().showResourceOpenDialog(w);
 							if (uri != null) {
 								WorkFile wf = getCurrentSelectedDS().load(uri);
-								// TODO implement window loading when branch got
-								// merged
+								WorkWindow w = new WorkWindow();
+								w.setWorkFile(wf);
+								w.openObject(wf.getChildObjects().next());
+								w.open();
+								Console.log(LogType.StdOut, this, "Opening window.");
+								close();
 							}
 
 						} else {
@@ -183,7 +187,7 @@ public final class WorksheetBrowser {
 		}
 		fillDSS();
 		w.open();
-		w.setSize(750, 400);
+		w.setSize(400, 750);
 		openedHandler = new EventHandler() {
 
 			@Override

@@ -29,9 +29,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
- * 
+ *
  */
 package org.technikradio.node.engine.plugin.ui;
+
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -51,11 +53,13 @@ import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class represents a window. Plug-ins can add their content to it.
- * 
+ *
  * @author doralitze
  *
  */
 public class Window {
+	
+	private static ArrayList<Window> openWindows = new ArrayList<Window>();
 
 	private Shell shell;
 	private CoolBar toolC;
@@ -67,8 +71,15 @@ public class Window {
 	private ColorPalette theme;
 
 	/**
+	 * This constructor creates a new window with an empty title.
+	 */
+	public Window() {
+		this("");
+	}
+
+	/**
 	 * This constructor initializes a new instance.
-	 * 
+	 *
 	 * @param title
 	 *            The title to use for the new window created.
 	 */
@@ -144,7 +155,7 @@ public class Window {
 			mc.setWeights(w);
 		}
 		shell.addListener(SWT.SELECTED, new Listener() {
-//TODO fix
+			//TODO fix
 			@Override
 			public void handleEvent(Event arg0) {
 				bringToForeground();
@@ -154,20 +165,20 @@ public class Window {
 
 	/**
 	 * This method is used to set the dimensions of the window.
-	 * 
+	 *
 	 * @param width
 	 *            The width to set.
 	 * @param height
 	 *            The height to set
 	 */
 	public void setSize(int width, int height) {
-		shell.setSize(width, height);
+		shell.setSize(height, width);
 	}
 
 	/**
 	 * Use this method in order to manipulate the underlying shell. Use the
 	 * methods of the window class in order to add UI elements.
-	 * 
+	 *
 	 * @return The shell of this window.
 	 */
 	public Shell getShell() {
@@ -180,6 +191,7 @@ public class Window {
 	public void open() {
 		shell.pack();
 		shell.open();
+		openWindows.add(this);
 	}
 
 	/**
@@ -201,6 +213,7 @@ public class Window {
 	public void close() {
 		internalClose();
 		shell.dispose();
+		openWindows.remove(this);
 	}
 
 	/**
@@ -212,10 +225,10 @@ public class Window {
 
 	/**
 	 * Use this method to access the different containers of this window.
-	 * 
+	 *
 	 * NOTE: It's highly recommended to pack every component that should go
 	 * inside the right tray inside a ExpandBar
-	 * 
+	 *
 	 * @param position
 	 *            The container to request.
 	 * @return The requested container.
@@ -244,7 +257,7 @@ public class Window {
 	 * Use this method in order to set the current active theme to a different
 	 * one. NOTE: that the closing method of this class won't dispose the
 	 * ColorPalette object.
-	 * 
+	 *
 	 * @param p
 	 *            The color theme to set.
 	 */
@@ -262,11 +275,24 @@ public class Window {
 
 	/**
 	 * Use this method to get the current active color theme.
-	 * 
+	 *
 	 * @return The currently applied color theme.
 	 */
 	public ColorPalette getColorTheme() {
 		return this.theme;
+	}
+
+	/**
+	 * This method sets the title of the window.
+	 *
+	 * @param newTitle
+	 *            The new title to set
+	 * @return The old title of this window.
+	 */
+	public String setTitle(String newTitle) {
+		String st = shell.getText();
+		shell.setText(newTitle);
+		return st;
 	}
 
 	/**
@@ -277,5 +303,13 @@ public class Window {
 		if(Application.isDevelopmentVersion())
 			Console.log(LogType.Information, this, "Window was brought to the front.");
 		PluginRegistry.setCurrentOpenWindow(this);
+	}
+	
+	/**
+	 * Use this method in order to retrieve an array of all open windows.
+	 * @return A list containing all open windows.
+	 */
+	public static Window[] getOpenWindows(){
+		return openWindows.toArray(new Window[openWindows.size()]);
 	}
 }

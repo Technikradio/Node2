@@ -45,6 +45,7 @@ public class EventResponder<E> {
 	private boolean isFinal;
 	private int pointer;
 	private ArrayList<EventResponse<E>> responses;
+	private ArrayList<ResponseListener<E>> rlisteners;
 	
 	/**
 	 * This constructor simply creates an empty instance of this class.
@@ -53,6 +54,7 @@ public class EventResponder<E> {
 		isFinal = false;
 		pointer = 0;
 		responses = new ArrayList<EventResponse<E>>();
+		rlisteners = new ArrayList<ResponseListener<E>>();
 	}
 	
 	/**
@@ -93,6 +95,9 @@ public class EventResponder<E> {
 		responses.add(response);
 		if(shouldBeFinal)
 			isFinal = true;
+		for(ResponseListener<E> rl : rlisteners){
+			rl.processResponse(response);
+		}
 		return true;
 	}
 
@@ -109,6 +114,14 @@ public class EventResponder<E> {
 	 */
 	public int getPointer() {
 		return pointer;
+	}
+	
+	/**
+	 * Use this method in order to add an response listener.
+	 * @param listener
+	 */
+	public void addResponseListener(ResponseListener<E> listener){
+		rlisteners.add(listener);
 	}
 
 }

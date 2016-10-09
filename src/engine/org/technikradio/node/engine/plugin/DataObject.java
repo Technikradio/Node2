@@ -183,9 +183,9 @@ public abstract class DataObject {
 	/**
 	 * This method gets called when the user opens the data object.
 	 * 
-	 * @return an SWT composite object to display the content of the data object
+	 * @param parent an SWT composite object to display the content of the data object in.
 	 */
-	public abstract Composite onOpen();
+	public abstract void onOpen(Composite parent);
 
 	/**
 	 * This method gets called when the user closes the content of the

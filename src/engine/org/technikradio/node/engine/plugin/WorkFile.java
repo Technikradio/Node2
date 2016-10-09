@@ -151,4 +151,20 @@ public class WorkFile {
 	public void setLocation(URI location) {
 		this.location = location;
 	}
+
+	/**
+	 * Use this method in order to get the top level data objects.
+	 * @return An array containing the top level data objects.
+	 */
+	public DataObject[] getChildArray() {
+		return childs.toArray(new DataObject[childs.size()]);
+	}
+
+	/**
+	 * Use this method in order to retrieve the number of top level data objects.
+	 * @return The number of data objects.
+	 */
+	public int getChildCount() {
+		return childs.size();
+	}
 }

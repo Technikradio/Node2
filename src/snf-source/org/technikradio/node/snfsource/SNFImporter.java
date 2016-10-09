@@ -38,12 +38,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.technikradio.node.core.CurrencyBrowser;
 import org.technikradio.node.engine.CurrencyCode;
 import org.technikradio.node.engine.plugin.Row;
 import org.technikradio.node.engine.plugin.TableObject;
 import org.technikradio.node.engine.plugin.WorkFile;
-import org.technikradio.node.engine.resources.Localisation;
 import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 

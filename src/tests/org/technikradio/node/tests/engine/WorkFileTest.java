@@ -63,8 +63,7 @@ public final class WorkFileTest {
 		}
 
 		@Override
-		public Composite onOpen() {
-			return null;
+		public void onOpen(Composite p) {
 		}
 
 		@Override
