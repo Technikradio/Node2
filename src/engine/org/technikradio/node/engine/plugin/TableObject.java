@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.technikradio.node.engine.Permission;
+import org.technikradio.node.engine.plugin.settings.Settings;
 import org.technikradio.node.engine.resources.Localisation;
 
 /**
@@ -55,6 +56,9 @@ import org.technikradio.node.engine.resources.Localisation;
  */
 public class TableObject extends DataObject implements Calculatable {
 
+	private static boolean pre = Boolean.parseBoolean(Settings.get("org.technikradio.node.core.putCurrencyBeforeNumber", "true"));
+	
+	private String unit = "$";
 	private final ArrayList<Row> rows;
 	private Table table;
 
@@ -171,6 +175,11 @@ public class TableObject extends DataObject implements Calculatable {
 		idcolumn.setToolTipText(Localisation.getString("org.technikradio.node.core.IDColumnTTText",
 				"This field contains the ids of the positions."));
 		idcolumn.setWidth(50);
+		TableColumn dateColumn = new TableColumn(table, SWT.NONE);
+		dateColumn.setText(Localisation.getString("org.technikradio.node.core.DateColumnText", "Date"));
+		dateColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.DateColumnTTText",
+				"This field contains the dates of the positions."));
+		dateColumn.setWidth(100);
 		TableColumn descColumn = new TableColumn(table, SWT.NONE);
 		descColumn.setText(Localisation.getString("org.technikradio.node.core.DESColumnText", "Description"));
 		descColumn.setToolTipText(Localisation.getString("org.technikradio.node.core.DESColumnTTText",
@@ -197,10 +206,11 @@ public class TableObject extends DataObject implements Calculatable {
 				int index = event.index;
 				Row r = rows.get(index);
 				item.setText(0, Long.toString(r.getId()));
-				item.setText(1, r.getDescription());
-				item.setText(2, r.getCostCenter());
-				item.setText(3, Row.getDString(r.getValue()));
-				item.setText(4, Row.getDString(r.getSum()));
+				item.setText(1, r.getDate());
+				item.setText(2, r.getDescription());
+				item.setText(3, r.getCostCenter());
+				item.setText(4, Row.getDString(r.getValue(), pre, unit));
+				item.setText(5, Row.getDString(r.getSum(), pre, unit));
 			}
 		});
 		table.setItemCount(rows.size());
@@ -225,7 +235,7 @@ public class TableObject extends DataObject implements Calculatable {
 	 */
 	@Override
 	public void onAddToWorkSheet(WorkFile wf) {
-
+		unit = wf.getCurrency().getSymbol();
 	}
 
 	/**

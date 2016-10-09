@@ -204,8 +204,7 @@ public class Row {
 	 * @param value The number to format.
 	 * @return The generated string.
 	 */
-	public static String getDString(long value) {
-		//TODO fix
+	public static String getDString(long value, boolean precast, String unit) {
 		boolean neg = false;
 		long v;
 		if(value < 0){
@@ -215,8 +214,12 @@ public class Row {
 			v = value;
 		}
 		long pre = v / 100;
-		long post = v - pre;
+		long post = v - (pre * 100);
 		StringBuilder sb = new StringBuilder();
+		if(precast){
+			sb.append(unit);
+			sb.append(' ');
+		}
 		if(neg)
 			sb.append("-");
 		sb.append(Long.toString(pre));
@@ -224,6 +227,10 @@ public class Row {
 		if(post < 10)
 			sb.append("0");
 		sb.append(Long.toString(post));
+		if(!precast){
+			sb.append(' ');
+			sb.append(unit);
+		}
 		return sb.toString();
 	}
 

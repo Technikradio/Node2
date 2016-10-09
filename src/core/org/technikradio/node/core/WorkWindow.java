@@ -120,7 +120,8 @@ public class WorkWindow {
         item.setText(o.getTitle());
         if(o.getIcon() != null)
         	item.setImage(new Image(w.getShell().getDisplay(), convertToSWT(o.getIcon())));
-        o.onOpen(composite); 
+        o.onOpen(composite);
+        tabs.setSelection(item);
 	}
 
 	/**
