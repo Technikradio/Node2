@@ -261,6 +261,9 @@ public class WorkWindow {
 		return null;
 	}
 
+	/**
+	 * Use this method in order to open this window.
+	 */
 	public void open() {
 		w.open();
 	}
