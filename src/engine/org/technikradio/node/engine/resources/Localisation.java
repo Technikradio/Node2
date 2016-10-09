@@ -74,7 +74,7 @@ import org.technikradio.universal_tools.Console.LogType;
  * treating the content as ASCII code.
  * 
  * Other MML files can be imported by writing a line of the following syntax:
- * <code>!!import <path to file> !!</code> with all escaping rules applying.
+ * <code>!!import &lt;path to file&gt !!</code> with all escaping rules applying.
  * This class will load the file then and returns after finishing that operation
  * with the loading of this file. Be aware of the fact that this can result in a
  * large number of open files.

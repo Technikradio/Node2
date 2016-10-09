@@ -36,8 +36,9 @@ package org.technikradio.node.engine.event;
 import java.util.ArrayList;
 
 /**
- * This class is designed to provide objects where event
- * processors can submit their results.
+ * This class is designed to provide objects where event processors can submit
+ * their results.
+ * 
  * @author doralitze
  */
 public class EventResponder<E> {
@@ -46,7 +47,7 @@ public class EventResponder<E> {
 	private int pointer;
 	private ArrayList<EventResponse<E>> responses;
 	private ArrayList<ResponseListener<E>> rlisteners;
-	
+
 	/**
 	 * This constructor simply creates an empty instance of this class.
 	 */
@@ -56,46 +57,52 @@ public class EventResponder<E> {
 		responses = new ArrayList<EventResponse<E>>();
 		rlisteners = new ArrayList<ResponseListener<E>>();
 	}
-	
+
 	/**
 	 * This method is used to submit an response to an event.
-	 * @param response The response to submit
+	 * 
+	 * @param response
+	 *            The response to submit
 	 * @return true if it was able to register the response or otherwise false.
 	 */
-	public boolean respond(EventResponse<E> response){
+	public boolean respond(EventResponse<E> response) {
 		return respond(response, false);
 	}
-	
+
 	/**
 	 * This method is used to cycle through the responses.
+	 * 
 	 * @return The next answer from the list
 	 */
-	public EventResponse<E> getNextResponse(){
-		if(responses.size() > pointer){
+	public EventResponse<E> getNextResponse() {
+		if (responses.size() > pointer) {
 			pointer++;
 			return responses.get(pointer - 1);
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * This method is used to response to an event. It will return false
-	 * if the final-response-given-flag was already set or the response
-	 * was already registered before. 
-	 * @param response The response to register
-	 * @param shouldBeFinal Should this be the last response available?
+	 * This method is used to response to an event. It will return false if the
+	 * final-response-given-flag was already set or the response was already
+	 * registered before.
+	 * 
+	 * @param response
+	 *            The response to register
+	 * @param shouldBeFinal
+	 *            Should this be the last response available?
 	 * @return true if it was able to register the response or otherwise false.
 	 */
-	public boolean respond(EventResponse<E> response, boolean shouldBeFinal){
-		if(isFinal)
+	public boolean respond(EventResponse<E> response, boolean shouldBeFinal) {
+		if (isFinal)
 			return false;
-		if(responses.contains(response))
+		if (responses.contains(response))
 			return false;
 		responses.add(response);
-		if(shouldBeFinal)
+		if (shouldBeFinal)
 			isFinal = true;
-		for(ResponseListener<E> rl : rlisteners){
+		for (ResponseListener<E> rl : rlisteners) {
 			rl.processResponse(response);
 		}
 		return true;
@@ -103,6 +110,7 @@ public class EventResponder<E> {
 
 	/**
 	 * This method checks if the final answer was already given.
+	 * 
 	 * @return true if the final answer already exists or otherwise false.
 	 */
 	public boolean isFinal() {
@@ -115,12 +123,14 @@ public class EventResponder<E> {
 	public int getPointer() {
 		return pointer;
 	}
-	
+
 	/**
 	 * Use this method in order to add an response listener.
+	 * 
 	 * @param listener
+	 *            The listener to add
 	 */
-	public void addResponseListener(ResponseListener<E> listener){
+	public void addResponseListener(ResponseListener<E> listener) {
 		rlisteners.add(listener);
 	}
 
