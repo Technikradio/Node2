@@ -100,6 +100,7 @@ public class WorkWindow {
 		{
 			EventResponder<Composite> er = new EventResponder<Composite>();
 			Event e = new Event(Identifiers.WORK_WINDOW_CREATING_EVENT, null, er);
+			e.setEventHint(w);
 			EventRegistry.raiseEvent(e, true);
 		}
 		w.setSize(800, 600);

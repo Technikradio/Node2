@@ -44,6 +44,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.technikradio.node.engine.action.Application;
@@ -58,7 +60,7 @@ import org.technikradio.universal_tools.Console.LogType;
  *
  */
 public class Window {
-	
+
 	private static ArrayList<Window> openWindows = new ArrayList<Window>();
 
 	private Shell shell;
@@ -155,7 +157,7 @@ public class Window {
 			mc.setWeights(w);
 		}
 		shell.addListener(SWT.SELECTED, new Listener() {
-			//TODO fix
+			// TODO fix
 			@Override
 			public void handleEvent(Event arg0) {
 				bringToForeground();
@@ -297,19 +299,21 @@ public class Window {
 
 	/**
 	 * Override this method when your implementation of an window needs to do
-	 * stuff when the window was brought to the front. Don not call this method on your own!
+	 * stuff when the window was brought to the front. Don not call this method
+	 * on your own!
 	 */
 	public void bringToForeground() {
-		if(Application.isDevelopmentVersion())
+		if (Application.isDevelopmentVersion())
 			Console.log(LogType.Information, this, "Window was brought to the front.");
 		PluginRegistry.setCurrentOpenWindow(this);
 	}
-	
+
 	/**
 	 * Use this method in order to retrieve an array of all open windows.
+	 * 
 	 * @return A list containing all open windows.
 	 */
-	public static Window[] getOpenWindows(){
+	public static Window[] getOpenWindows() {
 		return openWindows.toArray(new Window[openWindows.size()]);
 	}
 }
