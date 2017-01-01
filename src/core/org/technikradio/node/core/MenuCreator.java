@@ -48,13 +48,15 @@ import org.technikradio.universal_tools.Console;
 import org.technikradio.universal_tools.Console.LogType;
 
 /**
- * The purpose of this class is to create the most basic file entries for opening work windows.
+ * The purpose of this class is to create the most basic file entries for
+ * opening work windows.
+ * 
  * @author doralitze
  */
 public class MenuCreator {
 
-	public static void addEvents(){
-		EventRegistry.addEventHandler(Identifiers.WORK_WINDOW_CREATING_EVENT, new EventHandler(){
+	public static void addEvents() {
+		EventRegistry.addEventHandler(Identifiers.WORK_WINDOW_CREATING_EVENT, new EventHandler() {
 
 			@Override
 			public void handleEvent(Event e) {
@@ -64,41 +66,58 @@ public class MenuCreator {
 						Window w = (Window) e.getEventHint();
 						Menu menuBar = new Menu(w.getShell(), SWT.BAR);
 						MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
-				        cascadeFileMenu.setText("&File");
-				        
-				        //Add file menu entries
-				        Menu fileMenu = new Menu(w.getShell(), SWT.DROP_DOWN);
-				        cascadeFileMenu.setMenu(fileMenu);
-				        
-				        MenuItem openFileItem = new MenuItem(fileMenu, SWT.PUSH);
-				        openFileItem.setText("&Open");
-				        
-				        
-				        openFileItem.addListener(SWT.Selection, event-> {
-				        	DisplayFactory.getDisplay().syncExec(new Runnable() {
-								public void run() {
-									WorksheetBrowser wsb = new WorksheetBrowser();
-									wsb.setFirst(false);
-									Console.log(LogType.Information, this, "Opened worksheetbrowser.");
-								}
+						cascadeFileMenu.setText("&File");
+
+						// Add file menu entries
+						Menu fileMenu = new Menu(w.getShell(), SWT.DROP_DOWN);
+						cascadeFileMenu.setMenu(fileMenu);
+
+						{
+							MenuItem openFileItem = new MenuItem(fileMenu, SWT.PUSH);
+							openFileItem.setText("&Open");
+
+							openFileItem.addListener(SWT.Selection, event -> {
+								DisplayFactory.getDisplay().syncExec(new Runnable() {
+									public void run() {
+										WorksheetBrowser wsb = new WorksheetBrowser();
+										wsb.setFirst(false);
+										Console.log(LogType.Information, this, "Opened worksheetbrowser.");
+									}
+								});
 							});
-				        });
-				        
-				        MenuItem exitFileItem = new MenuItem(fileMenu, SWT.PUSH);
-				        exitFileItem.setText("&Exit");
-				        
-				        
-				        exitFileItem.addListener(SWT.Selection, event-> {
-				        	DisplayFactory.getDisplay().syncExec(new Runnable() {
-								public void run() {
-									Application.close();
-								}
+						}
+						
+						{
+							MenuItem saveFileItem = new MenuItem(fileMenu, SWT.PUSH);
+							saveFileItem.setText("&Save");
+
+							saveFileItem.addListener(SWT.Selection, event -> {
+								DisplayFactory.getDisplay().syncExec(new Runnable() {
+									public void run() {
+										WorksheetBrowser wsb = new WorksheetBrowser();
+										wsb.setFirst(false);
+										Console.log(LogType.Information, this, "Opened worksheetbrowser.");
+									}
+								});
 							});
-				        });
-				        
-				        w.getShell().setMenuBar(menuBar);
-				        
-				        EventResponder<Composite> er = new EventResponder<Composite>();
+						}
+
+						{
+							MenuItem exitFileItem = new MenuItem(fileMenu, SWT.PUSH);
+							exitFileItem.setText("&Exit");
+
+							exitFileItem.addListener(SWT.Selection, event -> {
+								DisplayFactory.getDisplay().syncExec(new Runnable() {
+									public void run() {
+										Application.close();
+									}
+								});
+							});
+						}
+
+						w.getShell().setMenuBar(menuBar);
+
+						EventResponder<Composite> er = new EventResponder<Composite>();
 						Event l = new Event(Identifiers.WORK_WINDOW_MENU_CREATED, null, er);
 						l.setEventHint(w);
 						EventRegistry.raiseEvent(l, true);
@@ -106,6 +125,7 @@ public class MenuCreator {
 
 					}
 				});
-		}});
+			}
+		});
 	}
 }
