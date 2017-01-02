@@ -54,12 +54,15 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.technikradio.node.engine.event.Event;
 import org.technikradio.node.engine.event.EventRegistry;
 import org.technikradio.node.engine.event.EventResponder;
+import org.technikradio.node.engine.plugin.DataNotYetLoadedException;
 import org.technikradio.node.engine.plugin.DataObject;
 import org.technikradio.node.engine.plugin.Foldable;
 import org.technikradio.node.engine.plugin.WorkFile;
 import org.technikradio.node.engine.plugin.ui.Colors;
 import org.technikradio.node.engine.plugin.ui.Window;
 import org.technikradio.node.engine.plugin.ui.WindowOrientation;
+import org.technikradio.universal_tools.Console;
+import org.technikradio.universal_tools.Console.LogType;
 
 /**
  * This class handles a window desired to be the one that contains the working
@@ -100,7 +103,7 @@ public class WorkWindow {
 		{
 			EventResponder<Composite> er = new EventResponder<Composite>();
 			Event e = new Event(Identifiers.WORK_WINDOW_CREATING_EVENT, null, er);
-			e.setEventHint(w);
+			e.setEventHint(this);
 			EventRegistry.raiseEvent(e, true);
 		}
 		w.setSize(800, 600);
@@ -267,5 +270,34 @@ public class WorkWindow {
 	 */
 	public void open() {
 		w.open();
+	}
+	
+	/**
+	 * Use this method in order to get the window.
+	 * @return The window used here.
+	 */
+	public Window getWindow(){
+		return w;
+	}
+	
+	/**
+	 * Use this method in order to save the data.
+	 */
+	public void saveAll(){
+		try {
+			for(DataObject d : file.getChildArray()){
+				d.save();
+			}
+		} catch (DataNotYetLoadedException e) {
+			Console.log(LogType.Error, this, "Unable to save data.");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Use this method in order to add a row to the current data set.
+	 */
+	public void add(){
+		
 	}
 }

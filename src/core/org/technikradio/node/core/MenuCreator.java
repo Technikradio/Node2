@@ -55,6 +55,10 @@ import org.technikradio.universal_tools.Console.LogType;
  */
 public class MenuCreator {
 
+	/**
+	 * This methods set up an event listener responsible to add some basic menus
+	 * to a work window.
+	 */
 	public static void addEvents() {
 		EventRegistry.addEventHandler(Identifiers.WORK_WINDOW_CREATING_EVENT, new EventHandler() {
 
@@ -63,12 +67,12 @@ public class MenuCreator {
 				DisplayFactory.getDisplay().syncExec(new Runnable() {
 					public void run() {
 						Console.log(LogType.StdOut, this, "Creating menu entries.");
-						Window w = (Window) e.getEventHint();
+						WorkWindow wq = (WorkWindow) e.getEventHint();
+						Window w = wq.getWindow();
 						Menu menuBar = new Menu(w.getShell(), SWT.BAR);
+
 						MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
 						cascadeFileMenu.setText("&File");
-
-						// Add file menu entries
 						Menu fileMenu = new Menu(w.getShell(), SWT.DROP_DOWN);
 						cascadeFileMenu.setMenu(fileMenu);
 
@@ -86,30 +90,46 @@ public class MenuCreator {
 								});
 							});
 						}
-						
-						{
-							MenuItem saveFileItem = new MenuItem(fileMenu, SWT.PUSH);
-							saveFileItem.setText("&Save");
 
-							saveFileItem.addListener(SWT.Selection, event -> {
+						{
+							MenuItem saveAllFileItem = new MenuItem(fileMenu, SWT.PUSH);
+							saveAllFileItem.setText("&SaveAll");
+
+							saveAllFileItem.addListener(SWT.Selection, event -> {
 								DisplayFactory.getDisplay().syncExec(new Runnable() {
 									public void run() {
-										WorksheetBrowser wsb = new WorksheetBrowser();
-										wsb.setFirst(false);
-										Console.log(LogType.Information, this, "Opened worksheetbrowser.");
+										wq.saveAll();
 									}
 								});
 							});
 						}
 
 						{
-							MenuItem exitFileItem = new MenuItem(fileMenu, SWT.PUSH);
-							exitFileItem.setText("&Exit");
+							MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
+							exitItem.setText("&Exit");
 
-							exitFileItem.addListener(SWT.Selection, event -> {
+							exitItem.addListener(SWT.Selection, event -> {
 								DisplayFactory.getDisplay().syncExec(new Runnable() {
 									public void run() {
 										Application.close();
+									}
+								});
+							});
+						}
+
+						MenuItem cascadeEditMenu = new MenuItem(menuBar, SWT.CASCADE);
+						cascadeEditMenu.setText("&Edit");
+						Menu editMenu = new Menu(w.getShell(), SWT.DROP_DOWN);
+						cascadeEditMenu.setMenu(editMenu);
+
+						{
+							MenuItem addEntryItem = new MenuItem(fileMenu, SWT.PUSH);
+							addEntryItem.setText("&Add");
+
+							addEntryItem.addListener(SWT.Selection, event -> {
+								DisplayFactory.getDisplay().syncExec(new Runnable() {
+									public void run() {
+										wq.add();
 									}
 								});
 							});
@@ -119,7 +139,7 @@ public class MenuCreator {
 
 						EventResponder<Composite> er = new EventResponder<Composite>();
 						Event l = new Event(Identifiers.WORK_WINDOW_MENU_CREATED, null, er);
-						l.setEventHint(w);
+						l.setEventHint(menuBar);
 						EventRegistry.raiseEvent(l, true);
 						Console.log(LogType.StdOut, this, "Created menu entries.");
 
