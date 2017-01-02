@@ -45,5 +45,6 @@ import org.technikradio.node.engine.event.EventType;
 public class Identifiers {
 
 	public static final EventType WORK_WINDOW_CREATING_EVENT = new EventType("org.technikradio.node.core.WorkWindowCreatingEvent");
+	public static final EventType WORK_WINDOW_MENU_CREATED = new EventType("org.technikradio.node.core.WorkWindowMenuCreated");
 	
 }

@@ -9,7 +9,7 @@
 <property name="dir.buildfolder" value="./build" />
 <property name="dir.projectfolder" value="." />
 
-<target name="all" depends="snf-source-plugin,launcher" description="This compiles a working program.">
+<target name="all" depends="snf-source-plugin,launcher,copyrsc" description="This compiles a working program.">
   <copy file="${dir.projectfolder}/src/tools/testlaunch.bash" tofile="${dir.buildfolder}/tmp/construct/testlaunch.bash"/>
   <chmod file="${dir.buildfolder}/tmp/construct/testlaunch.bash" perm="+x" />
 </target>
@@ -176,6 +176,12 @@
 	</jar>
 	<copy file="${dir.projectfolder}/src/snf-source/manifest.json"
 	        todir="${dir.buildfolder}/tmp/construct/plugins/snf-source/" />
+</target>
+
+<target name="copyrsc" depends="create-build-folders">
+  <copy todir="${dir.buildfolder}/tmp/construct/rsc" >
+        <fileset dir="${dir.projectfolder}/rsc" includes="**" excludes="**/*.svg"/>
+  </copy>
 </target>
 
 <target name="compile-json-lib" depends="create-build-folders">

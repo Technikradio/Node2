@@ -126,7 +126,7 @@ public class DataObjectTest {
 	}
 
 	/**
-	 * Test method for {@link org.technikradio.node.engine.plugin.DataObject#save()}.
+	 * Test method for org.technikradio.node.engine.plugin.DataObject#save().
 	 */
 	@Test(expected=DataNotYetLoadedException.class)
 	public final void testSave() {

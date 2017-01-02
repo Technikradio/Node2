@@ -35,75 +35,43 @@ package org.technikradio.node.tests.engine;
 
 import static org.junit.Assert.*;
 
-import java.util.Date;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.technikradio.node.engine.plugin.Row;
-import org.technikradio.node.engine.plugin.TableObject;
+import org.technikradio.node.engine.resources.Localisation;
 
 /**
- * This class is designed to test the TableObject class.
+ * This class is designed to test the row class.
  * @author doralitze
  *
  */
-public class TableObjectTest {
+public class RowTest {
 	
-	private TableObject to;
+	private static final String comma = Localisation.getString("org.technikradio.engine.plugin.row.comma", ".");
 
 	/**
-	 * @throws java.lang.Exception
-	 *             if anything goes wrong
+	 * Test method for {@link org.technikradio.node.engine.plugin.Row#Row(long, long, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
-	@Before
-	public void setUp() throws Exception {
-		to = new TableObject("Test table object");
-		for(int i = 0; i < 150500; i++){
-			Date d = new Date();
-			to.addRow(new Row(i * 100, i, "Row description #" + Integer.toString(i), "AMF", d.toString()));
-		}
+	@Test
+	public final void testRow() {
+		Row r = new Row(101, 2, "description", "costcentre", "date");
+		assertEquals("The value is incorrect", r.getValue(), 101);
+		assertEquals("The ID is incorrect", r.getId(), 2);
+		assertEquals("The description is incorrect", r.getDescription(), "description");
+		assertEquals("The costcentre isincorrect", r.getCostCenter(), "costcentre");
+		assertEquals("The date is incorrect", r.getDate(), "date");
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.technikradio.node.engine.plugin.TableObject#getRows(int, int)}.
+	 * Test method for {@link org.technikradio.node.engine.plugin.Row#getDString(long, boolean, java.lang.String)}.
 	 */
 	@Test
-	public final void testGetRows() {
-		for(int i = 0; i < to.getLength() / 5; i ++){
-			Row[] frag = to.getRows(i * 5, (i + 1) * 5);
-			for(int j = 0; j < 5; j++){
-				if(frag[j] == null){
-					fail("The query test failed.");
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Test method for the caching engine of the table object class
-	 */
-	@Test
-	public final void testSumcaching(){
-		long expected = 0;
-		TableObject t = new TableObject("Second test table object");
-		for(int i = 0; i <= 1_000_000; i++){
-			Date d = new Date();
-			t.addRow(new Row(i, i, "Row description #" + Integer.toString(i), "AMF", d.toString()));
-			expected += i;
-		}
-		assertEquals("The caching on adding should work", t.getSum(), expected);
-		t.recalculateCache();
-		assertEquals("The sum after recalculation of the cache should be correct", t.getSum(), expected);
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.technikradio.node.engine.plugin.TableObject#getSum()}.
-	 */
-	@Test
-	public final void testGetSum() {
-		assertTrue("The computed sum must be greater than 11325049700", to.getSum() > 11325049700L);
+	public final void testGetDString() {
+		assertEquals(Row.getDString(101, false, "€"), "1" + comma + "01 €");
+		assertEquals(Row.getDString(110, false, "€"), "1" + comma + "10 €");
+		assertEquals(Row.getDString(101, true, "€"), "€ 1" + comma + "01");
+		assertEquals(Row.getDString(101, false, "$"), "1" + comma + "01 $");
+		assertEquals(Row.getDString(110, false, "$"), "1" + comma + "10 $");
+		assertEquals(Row.getDString(101, true, "$"), "$ 1" + comma + "01");
 	}
 
 }

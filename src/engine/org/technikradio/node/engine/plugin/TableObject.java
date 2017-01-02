@@ -153,11 +153,8 @@ public class TableObject extends DataObject implements Calculatable {
 	 */
 	@Override
 	public long getSum() {
-		long sum = 0;
-		for (Row w : rows) {
-			sum += w.getValue();
-		}
-		return sum;
+		Row r = rows.get(rows.size() - 1);
+		return r.getSum();
 	}
 
 	/*

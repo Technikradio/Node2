@@ -42,7 +42,7 @@ import org.technikradio.node.engine.resources.Localisation;
  *
  */
 public class Row {
-	
+
 	private static final String comma = Localisation.getString("org.technikradio.engine.plugin.row.comma", ".");
 
 	private long value;
@@ -51,7 +51,6 @@ public class Row {
 	private String description;
 	private String costCenter;
 	private String date;
-	
 
 	/**
 	 * This constructor creates a new instance of the row element class.
@@ -174,17 +173,20 @@ public class Row {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	
+
 	/**
 	 * Use this function in order to retrieve an exact copy of this row.
+	 * 
 	 * @return The new copy of this row.
 	 */
-	public Row copy(){
+	public Row copy() {
 		return new Row(this.value, this.id, this.description, this.costCenter, this.date);
 	}
 
 	/**
-	 * Use this method in order to get the sum data of this row. Note that the sum data is computed at runtime.
+	 * Use this method in order to get the sum data of this row. Note that the
+	 * sum data is computed at runtime.
+	 * 
 	 * @return the sum of this row object
 	 */
 	protected long getSum() {
@@ -193,7 +195,9 @@ public class Row {
 
 	/**
 	 * Use this method in order to set the sum of this row object.
-	 * @param sum the sum to set
+	 * 
+	 * @param sum
+	 *            the sum to set
 	 */
 	protected void setSum(long sum) {
 		this.sum = sum;
@@ -201,13 +205,20 @@ public class Row {
 
 	/**
 	 * This method formats the number correctly in order to be human readable.
-	 * @param value The number to format.
+	 * 
+	 * @param value
+	 *            The number to format.
+	 * @param precast
+	 *            Put this field to true in order to display the currency symbol
+	 *            before the number or false otherwise.
+	 * @param unit
+	 *            This value defines the used currency symbol.
 	 * @return The generated string.
 	 */
 	public static String getDString(long value, boolean precast, String unit) {
 		boolean neg = false;
 		long v;
-		if(value < 0){
+		if (value < 0) {
 			neg = true;
 			v = value * (-1);
 		} else {
@@ -216,18 +227,18 @@ public class Row {
 		long pre = v / 100;
 		long post = v - (pre * 100);
 		StringBuilder sb = new StringBuilder();
-		if(precast){
+		if (precast) {
 			sb.append(unit);
 			sb.append(' ');
 		}
-		if(neg)
+		if (neg)
 			sb.append("-");
 		sb.append(Long.toString(pre));
 		sb.append(comma);
-		if(post < 10)
+		if (post < 10)
 			sb.append("0");
 		sb.append(Long.toString(post));
-		if(!precast){
+		if (!precast) {
 			sb.append(' ');
 			sb.append(unit);
 		}

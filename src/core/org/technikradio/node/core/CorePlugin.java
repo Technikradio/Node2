@@ -77,6 +77,7 @@ public class CorePlugin extends Plugin {
 				Console.log(LogType.Information, this,
 						"There are other plugin listening on the app start, registered before the core plugin.");
 			}
+			MenuCreator.addEvents();
 		}
 		CurrencyBrowser.setDefaultCurrency(CurrencyCode.EUR);
 		Console.log(LogType.StdOut, this, "Successfully loaded core plug-in.");
